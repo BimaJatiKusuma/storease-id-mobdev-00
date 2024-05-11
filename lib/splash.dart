@@ -9,7 +9,7 @@ class SplashPage extends StatelessWidget{
     return Scaffold(
       body: Container(
         alignment: Alignment.center,
-        child: const Text('Selamat Datang di Storease'),
+        child: const Text('Selamat Datang di Storease\nAyo wujudkan mimpimu'),
       ),
     );
   }

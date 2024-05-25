@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:storease_mobileapp_dev/auth/Login.dart';
+import 'package:storease_mobileapp_dev/auth/Signup.dart';
+import 'package:storease_mobileapp_dev/components/my_button_auth.dart';
+import 'package:storease_mobileapp_dev/components/square_tile_image.dart';
 
-class Auth extends StatefulWidget{
+class Auth extends StatefulWidget {
   const Auth({super.key});
 
   @override
@@ -13,53 +16,84 @@ class Auth extends StatefulWidget{
 class _AuthState extends State<Auth> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Text(
-            "Do You Have Account ?"
-          ),
-          Image.asset("images/account_circle_blue.png"),
-          Container(
-            child: Column(
-              children: [
-                Text("Create Account"),
-                ElevatedButton(onPressed: (){},
-                  child: Text(
-                    "SIGN UP"
-                  ))
-              ],
-            ),
-          ),
-          Container(
-            child: Column(
-              children: [
-                Text("I have account"),
-                ElevatedButton(
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context){
-                      return Login();
-                    }));
-                  },
-                  child: Text(
-                    "SIGN IN",
-                    style: TextStyle(
-                      color: Colors.white
-                    ),
+    return Scaffold(body: LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+                minWidth: constraints.maxWidth,
+                minHeight: constraints.maxHeight),
+            child: IntrinsicHeight(
+              child: SafeArea(
+                child: Center(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                          "Do You Have Account ?"),
+                      SizedBox(
+                        height: 50,
+                      ),
+                      SquareTileImage(
+                          imagePath: "images/account_circle_blue.png"),
+                      SizedBox(
+                        height: 50,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 25),
+                        child: Row(
+                          children: [
+                            Text("I don't have account"),
+                          ],
+                        ),
+                      ),
+                      MyButtonAuth(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return Signup();
+                            }));
+                          },
+                          label_name: "SIGN UP",
+                          boxBorder: Border.all(
+                              width: 1, color: Color.fromRGBO(0, 0, 0, 0.16)),
+                          backgroundColor: Color.fromRGBO(93, 118, 167, 0),
+                          textColor: Colors.black),
+                      SizedBox(
+                        height: 50,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 25),
+                        child: Row(
+                          children: [
+                            Text("I have account"),
+                          ],
+                        ),
+                      ),
+                      MyButtonAuth(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return Login();
+                            }));
+                          },
+                          label_name: "SIGN IN",
+                          backgroundColor: Color.fromRGBO(93, 118, 167, 1),
+                          textColor: Colors.white),
+                      Spacer(),
+                      Image.asset("images/logo_plus_name.png"),
+                      SizedBox(height: 10)
+                    ],
                   ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromRGBO(93, 118, 167, 1)
-                  )
                 ),
-                Image.asset("images/logo_plus_name.png")
-              ],
+              ),
             ),
           ),
-        ],
-      ),
-    );
+        );
+      },
+    ));
   }
-
-
 }

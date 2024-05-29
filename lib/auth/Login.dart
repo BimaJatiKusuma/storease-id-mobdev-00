@@ -2,11 +2,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:storease_mobileapp_dev/auth/ForgotPassword.dart';
 import 'package:storease_mobileapp_dev/auth/Signup.dart';
-import 'package:storease_mobileapp_dev/color/color.dart';
-import 'package:storease_mobileapp_dev/components/my_button_auth.dart';
+import 'package:storease_mobileapp_dev/color/color.dart'; 
 import 'package:storease_mobileapp_dev/components/my_button_auth_2.dart';
 import 'package:storease_mobileapp_dev/components/my_textfield_auth.dart';
 import 'package:storease_mobileapp_dev/components/square_tile_image.dart';
+import 'package:storease_mobileapp_dev/home/home.dart';
 
 class Login extends StatefulWidget {
   Login({super.key});
@@ -102,7 +102,11 @@ class _LoginState extends State<Login> {
                   height: 30,
                 ),
                 MyButtonAuth2(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context){
+                      return Home();
+                    }));
+                  },
                   label_name: "LOGIN",
                   backgroundColor: Colors.white,
                   textColor: Color.fromRGBO(71, 74, 151, 1),

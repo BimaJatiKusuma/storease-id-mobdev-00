@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:storease_mobileapp_dev/auth/Login.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
-import 'package:storease_mobileapp_dev/components/my_button_auth.dart';
 import 'package:storease_mobileapp_dev/components/my_button_auth_2.dart';
 import 'package:storease_mobileapp_dev/components/my_textfield_auth.dart';
 import 'package:storease_mobileapp_dev/components/square_tile_image.dart';

@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/components/my_content_homepage_vendor_item.dart';
+import 'package:storease_mobileapp_dev/vendor/vendorDetailProduct.dart';
 
 class MyContentHomepageVendor extends StatelessWidget {
   final String title;
@@ -17,7 +18,11 @@ class MyContentHomepageVendor extends StatelessWidget {
             padding: EdgeInsets.only(right: 10),
             child: Row(
               children: [
-                Expanded(child: Text(title, style: TextStyle(fontWeight: FontWeight.bold),)),
+                Expanded(
+                    child: Text(
+                  title,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                )),
                 RichText(
                     text: TextSpan(
                         text: "Lihat Semua",
@@ -35,15 +40,26 @@ class MyContentHomepageVendor extends StatelessWidget {
               ],
             ),
           ),
-      
           SizedBox(
             height: 175,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                MyContentHomepageVendorItem(onTap: (){}),
-                MyContentHomepageVendorItem(onTap: (){}),
-                MyContentHomepageVendorItem(onTap: (){}),
+                MyContentHomepageVendorItem(onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return VendorDetailProduct();
+                  }));
+                }),
+                MyContentHomepageVendorItem(onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return VendorDetailProduct();
+                  }));
+                }),
+                MyContentHomepageVendorItem(onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return VendorDetailProduct();
+                  }));
+                }),
               ],
             ),
           )

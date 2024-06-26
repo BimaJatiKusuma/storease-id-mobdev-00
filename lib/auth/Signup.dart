@@ -1,10 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:storease_mobileapp_dev/api/api_services.dart';
 import 'package:storease_mobileapp_dev/auth/Login.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/components/my_button_auth_2.dart';
 import 'package:storease_mobileapp_dev/components/my_textfield_auth.dart';
 import 'package:storease_mobileapp_dev/components/square_tile_image.dart';
+import 'package:storease_mobileapp_dev/model/signupRequestModel.dart';
 
 class Signup extends StatefulWidget {
   Signup({super.key});
@@ -23,10 +25,78 @@ class Signup extends StatefulWidget {
 class _SignupState extends State<Signup> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
   final usernameController = TextEditingController();
 
-  void signUserIn() {}
+
+    late SignupRequestModel requestModel;
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // void signUserUp() {
+  //   requestModel = SignupRequestModel(
+  //       password: passwordController.text, username: emailController.text);
+
+  //   ApiServices apiServices = ApiServices();
+  //   print(requestModel.toJson());
+  //   apiServices.signup(requestModel).then((value) {
+  //     if (value.message.isNotEmpty) {
+  //       _showSnackBar('Message: ${value.message}');
+  //       // Navigator.pushReplacement(
+  //       //   context,
+  //       //   MaterialPageRoute(builder: (context) => Home()),
+  //       // );
+  //     } else {
+  //       _showErrorDialog('Failed to connect.');
+  //     }
+  //   }).catchError((error) {
+  //     _showErrorDialog('An error occurred: $error');
+  //   });
+  // }
+
+void signUserUp() {
+  requestModel = SignupRequestModel(
+    username: usernameController.text,
+    password: passwordController.text,
+  );
+
+  ApiServices apiServices = ApiServices();
+  apiServices.signup(requestModel).then((value) {
+    if (value.message.isNotEmpty) {
+      _showSnackBar('Message: ${value.message}');
+    } else {
+      _showErrorDialog('Failed to connect.');
+    }
+  }).catchError((error) {
+    _showErrorDialog('An error occurred: $error');
+  });
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,7 +163,9 @@ class _SignupState extends State<Signup> {
                   height: 30,
                 ),
                 MyButtonAuth2(
-                  onTap: () {},
+                  onTap: () {
+                    signUserUp();                    
+                  },
                   label_name: "SIGNUP",
                   backgroundColor: Colors.white,
                   textColor: Color.fromRGBO(71, 74, 151, 1),

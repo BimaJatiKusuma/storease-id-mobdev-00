@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:storease_mobileapp_dev/auth/Auth.dart';
 
 class SplashPage extends StatefulWidget {

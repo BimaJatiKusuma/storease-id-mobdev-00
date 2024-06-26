@@ -5,7 +5,6 @@ import 'package:storease_mobileapp_dev/chat/chat.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/components/my_button_homepage_vendor.dart';
 import 'package:storease_mobileapp_dev/components/my_content_homepage_vendor.dart';
-import 'package:storease_mobileapp_dev/vendor/vendorCategory.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});

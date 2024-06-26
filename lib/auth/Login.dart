@@ -1,20 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:storease_mobileapp_dev/api/api_services.dart';
 import 'package:storease_mobileapp_dev/auth/ForgotPassword.dart';
 import 'package:storease_mobileapp_dev/auth/Signup.dart';
-import 'package:storease_mobileapp_dev/color/color.dart'; 
+import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/components/my_button_auth_2.dart';
 import 'package:storease_mobileapp_dev/components/my_textfield_auth.dart';
 import 'package:storease_mobileapp_dev/components/square_tile_image.dart';
 import 'package:storease_mobileapp_dev/home/home.dart';
+import 'package:http/http.dart' as http;
+import 'package:storease_mobileapp_dev/model/loginRequestModel.dart';
 
 class Login extends StatefulWidget {
   Login({super.key});
-
-  // final emailController = TextEditingController();
-  // final passwordController = TextEditingController();
-
-  // void signUserIn(){}
 
   @override
   State<StatefulWidget> createState() {
@@ -23,10 +23,59 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  List<dynamic> users = [];
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  late LoginRequestModel requestModel;
 
-  void signUserIn() {}
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void signUserIn() {
+    requestModel = LoginRequestModel(
+        password: passwordController.text, username: emailController.text);
+
+    ApiServices apiServices = ApiServices();
+    apiServices.login(requestModel).then((value) {
+      if (value.token.isNotEmpty) {
+        _showSnackBar('Token: ${value.token}');
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => Home()),
+        // );
+      } else {
+        _showErrorDialog(value.message);
+      }
+    }).catchError((error) {
+      _showErrorDialog('An error occurred: $error');
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,9 +152,7 @@ class _LoginState extends State<Login> {
                 ),
                 MyButtonAuth2(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context){
-                      return Home();
-                    }));
+                    signUserIn();
                   },
                   label_name: "LOGIN",
                   backgroundColor: Colors.white,
@@ -175,5 +222,21 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  void fetchUsers() async {
+    // const uri = "https://randomuser.me/api/?results=10";
+    // final finalUri = Uri.parse(uri);
+    // final response = await http.get(finalUri);
+    // final body = response.body;
+    // final json = jsonDecode(body);
+    // setState(() {
+    //   users = json['results'];
+    // });
+    // print('fetch users completed');
+    // print(users);
+    // Navigator.push(context, MaterialPageRoute(builder: (context) {
+    //   return Home();
+    // }));
   }
 }

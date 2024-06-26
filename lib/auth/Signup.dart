@@ -58,26 +58,6 @@ class _SignupState extends State<Signup> {
     );
   }
 
-  // void signUserUp() {
-  //   requestModel = SignupRequestModel(
-  //       password: passwordController.text, username: emailController.text);
-
-  //   ApiServices apiServices = ApiServices();
-  //   print(requestModel.toJson());
-  //   apiServices.signup(requestModel).then((value) {
-  //     if (value.message.isNotEmpty) {
-  //       _showSnackBar('Message: ${value.message}');
-  //       // Navigator.pushReplacement(
-  //       //   context,
-  //       //   MaterialPageRoute(builder: (context) => Home()),
-  //       // );
-  //     } else {
-  //       _showErrorDialog('Failed to connect.');
-  //     }
-  //   }).catchError((error) {
-  //     _showErrorDialog('An error occurred: $error');
-  //   });
-  // }
 
 void signUserUp() {
   requestModel = SignupRequestModel(
@@ -89,6 +69,11 @@ void signUserUp() {
   apiServices.signup(requestModel).then((value) {
     if (value.message.isNotEmpty) {
       _showSnackBar('Message: ${value.message}');
+      if (value.message == "User registered successfully"){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+          return Login();
+        }));
+      }
     } else {
       _showErrorDialog('Failed to connect.');
     }

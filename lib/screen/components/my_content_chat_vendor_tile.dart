@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:storease_mobileapp_dev/chat/chat_vendor_chatting.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
+import 'package:storease_mobileapp_dev/screen/chat/chat_vendor_chatting.dart';
 
 class MyContentChatVendorTile extends StatelessWidget {
   @override

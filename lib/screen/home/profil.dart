@@ -3,8 +3,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
-import 'package:storease_mobileapp_dev/components/my_button_profile_configure.dart';
-import 'package:storease_mobileapp_dev/components/my_button_profile_feature.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_button_profile_configure.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_button_profile_feature.dart';
 
 class Profil extends StatefulWidget {
   Profil({super.key});

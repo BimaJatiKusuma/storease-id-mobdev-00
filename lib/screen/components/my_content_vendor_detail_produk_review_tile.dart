@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:storease_mobileapp_dev/components/my_starrating.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_starrating.dart';
 
 class VendorDetailProdukReviewTile extends StatelessWidget {
   @override

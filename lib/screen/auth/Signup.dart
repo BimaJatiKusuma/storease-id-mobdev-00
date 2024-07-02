@@ -1,20 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:storease_mobileapp_dev/api/api_services.dart';
-import 'package:storease_mobileapp_dev/auth/Login.dart';
+import 'package:storease_mobileapp_dev/screen/auth/Login.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
-import 'package:storease_mobileapp_dev/components/my_button_auth_2.dart';
-import 'package:storease_mobileapp_dev/components/my_textfield_auth.dart';
-import 'package:storease_mobileapp_dev/components/square_tile_image.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_button_auth_2.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_textfield_auth.dart';
+import 'package:storease_mobileapp_dev/screen/components/square_tile_image.dart';
 import 'package:storease_mobileapp_dev/model/signupRequestModel.dart';
 
 class Signup extends StatefulWidget {
   Signup({super.key});
-
-  // final emailController = TextEditingController();
-  // final passwordController = TextEditingController();
-
-  // void signUserIn(){}
 
   @override
   State<StatefulWidget> createState() {

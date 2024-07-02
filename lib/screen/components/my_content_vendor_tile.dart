@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
-import 'package:storease_mobileapp_dev/components/my_starrating.dart';
-import 'package:storease_mobileapp_dev/vendor/vendorDetailProduct.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_starrating.dart';
+import 'package:storease_mobileapp_dev/screen/vendor/vendorDetailProduct.dart';
 
 class MyContentVendorTile extends StatelessWidget {
   const MyContentVendorTile({super.key});

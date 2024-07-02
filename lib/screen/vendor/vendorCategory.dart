@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:storease_mobileapp_dev/components/my_content_vendor_tile.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_content_vendor_tile.dart';
 
 class VendorCategory extends StatefulWidget {
   final String appBarName;

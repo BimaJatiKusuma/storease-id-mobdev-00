@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:storease_mobileapp_dev/vendor/vendorCategory.dart';
+import 'package:storease_mobileapp_dev/screen/vendor/vendorCategory.dart';
 
 class MyButtonHomepageVendor extends StatelessWidget {
   // final Function()? onTap;

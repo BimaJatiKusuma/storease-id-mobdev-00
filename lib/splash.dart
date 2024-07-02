@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:storease_mobileapp_dev/auth/Auth.dart';
+import 'package:storease_mobileapp_dev/screen/auth/Auth.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);

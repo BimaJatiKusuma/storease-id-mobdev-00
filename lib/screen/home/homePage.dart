@@ -1,10 +1,10 @@
 import 'package:another_carousel_pro/another_carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:storease_mobileapp_dev/chat/chat.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
-import 'package:storease_mobileapp_dev/components/my_button_homepage_vendor.dart';
-import 'package:storease_mobileapp_dev/components/my_content_homepage_vendor.dart';
+import 'package:storease_mobileapp_dev/screen/chat/chat.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_button_homepage_vendor.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_vendor.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -56,24 +56,6 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: 10,
               ),
-              // SizedBox(
-              //   height: 50,
-              //   child: SingleChildScrollView(
-              //     scrollDirection: Axis.horizontal,
-              //     child: Row(
-              //       children: [
-              //         ElevatedButton(onPressed: () {}, child: Text("Venue")),
-              //         ElevatedButton(
-              //             onPressed: () {}, child: Text("Photography")),
-              //         ElevatedButton(
-              //             onPressed: () {}, child: Text("Hair and Make up")),
-              //         ElevatedButton(onPressed: () {}, child: Text("Catering")),
-              //         ElevatedButton(
-              //             onPressed: () {}, child: Text("Souvenirs")),
-              //       ],
-              //     ),
-              //   ),
-              // ),
               SizedBox(
                 height: 150,
                 width: double.infinity,

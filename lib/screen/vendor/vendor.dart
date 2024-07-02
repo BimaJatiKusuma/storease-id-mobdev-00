@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:storease_mobileapp_dev/components/my_content_homepage_vendor.dart';
-import 'package:storease_mobileapp_dev/components/my_content_vendor_detail_produk_review_tile.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_vendor.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_content_vendor_detail_produk_review_tile.dart';
 
 class Vendor extends StatefulWidget {
   @override

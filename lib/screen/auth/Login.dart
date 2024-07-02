@@ -1,13 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:storease_mobileapp_dev/api/api_services.dart';
-import 'package:storease_mobileapp_dev/auth/ForgotPassword.dart';
-import 'package:storease_mobileapp_dev/auth/Signup.dart';
+import 'package:storease_mobileapp_dev/screen/auth/ForgotPassword.dart';
+import 'package:storease_mobileapp_dev/screen/auth/Signup.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
-import 'package:storease_mobileapp_dev/components/my_button_auth_2.dart';
-import 'package:storease_mobileapp_dev/components/my_textfield_auth.dart';
-import 'package:storease_mobileapp_dev/components/square_tile_image.dart';
-import 'package:storease_mobileapp_dev/home/home.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_button_auth_2.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_textfield_auth.dart';
+import 'package:storease_mobileapp_dev/screen/components/square_tile_image.dart';
+import 'package:storease_mobileapp_dev/screen/home/home.dart';
 import 'package:storease_mobileapp_dev/model/loginRequestModel.dart';
 
 class Login extends StatefulWidget {
@@ -54,23 +54,27 @@ class _LoginState extends State<Login> {
   }
 
   void signUserIn() {
-    requestModel = LoginRequestModel(
-        password: passwordController.text, username: emailController.text);
-
-    ApiServices apiServices = ApiServices();
-    apiServices.login(requestModel).then((value) {
-      if (value.token.isNotEmpty) {
-        _showSnackBar('Token: ${value.token}');
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => Home()),
         );
-      } else {
-        _showErrorDialog(value.message);
-      }
-    }).catchError((error) {
-      _showErrorDialog('An error occurred: $error');
-    });
+    // requestModel = LoginRequestModel(
+    //     password: passwordController.text, username: emailController.text);
+
+    // ApiServices apiServices = ApiServices();
+    // apiServices.login(requestModel).then((value) {
+    //   if (value.token.isNotEmpty) {
+    //     _showSnackBar('Token: ${value.token}');
+    //     Navigator.push(
+    //       context,
+    //       MaterialPageRoute(builder: (context) => Home()),
+    //     );
+    //   } else {
+    //     _showErrorDialog(value.message);
+    //   }
+    // }).catchError((error) {
+    //   _showErrorDialog('An error occurred: $error');
+    // });
   }
 
   @override

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:storease_mobileapp_dev/chat/chat_AI.dart';
-import 'package:storease_mobileapp_dev/chat/chat_vendor.dart';
+import 'package:storease_mobileapp_dev/screen/chat/chat_AI.dart';
+import 'package:storease_mobileapp_dev/screen/chat/chat_vendor.dart';
 
 class Chat extends StatefulWidget{
 

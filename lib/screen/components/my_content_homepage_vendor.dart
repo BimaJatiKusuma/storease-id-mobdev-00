@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
-import 'package:storease_mobileapp_dev/components/my_content_homepage_vendor_item.dart';
-import 'package:storease_mobileapp_dev/vendor/vendorDetailProduct.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_vendor_item.dart';
+import 'package:storease_mobileapp_dev/screen/vendor/vendorDetailProduct.dart';
 
 class MyContentHomepageVendor extends StatelessWidget {
   final String title;

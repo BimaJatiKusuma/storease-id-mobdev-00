@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:storease_mobileapp_dev/auth/Login.dart';
-import 'package:storease_mobileapp_dev/auth/Signup.dart';
-import 'package:storease_mobileapp_dev/components/my_button_auth.dart';
-import 'package:storease_mobileapp_dev/components/square_tile_image.dart';
+import 'package:storease_mobileapp_dev/screen/auth/Login.dart';
+import 'package:storease_mobileapp_dev/screen/auth/Signup.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_button_auth.dart';
+import 'package:storease_mobileapp_dev/screen/components/square_tile_image.dart';
 
 class Auth extends StatefulWidget {
   const Auth({super.key});

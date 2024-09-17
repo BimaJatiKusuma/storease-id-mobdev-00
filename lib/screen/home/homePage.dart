@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/screen/chat/chat.dart';
-import 'package:storease_mobileapp_dev/screen/components/my_button_homepage_vendor.dart';
-import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_vendor.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_button_homepage_package.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_Package.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -41,18 +41,6 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: 10,
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "My Vendor Discovery",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    )
-                  ],
-                ),
-              ),
               SizedBox(
                 height: 10,
               ),
@@ -72,61 +60,23 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: 10,
               ),
-              SizedBox(
-                height: 60,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 10, bottom: 5, top: 5),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        MyButtonHomepageVendor(
-                          icon: Icons.home_outlined,
-                          label_name: "Venue",
-                        ),
-                        MyButtonHomepageVendor(
-                          icon: Icons.remove_red_eye_outlined,
-                          label_name: "Make up",
-                        ),
-                        MyButtonHomepageVendor(
-                          icon: Icons.camera_alt_outlined,
-                          label_name: "Photography",
-                        ),
-                        MyButtonHomepageVendor(
-                          icon: Icons.videocam_outlined,
-                          label_name: "Souvenirs",
-                        ),
-                        MyButtonHomepageVendor(
-                          icon: Icons.inventory_2_outlined,
-                          label_name: "Invitation",
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
               Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5),
                   child: Divider(
                     color: MyColor.color1,
                   )),
-              MyContentHomepageVendor(title: "Venue Recommendation"),
+              MyContentHomepagePackage(title: "Paket Tipe A"),
               SizedBox(
                 height: 20,
               ),
-              MyContentHomepageVendor(title: "Catering Recommendation"),
+              MyContentHomepagePackage(title: "Paket Tipe B"),
               SizedBox(
                 height: 20,
               ),
-              MyContentHomepageVendor(title: "MUA Recommendation"),
+              MyContentHomepagePackage(title: "Paket Tipe C"),
               SizedBox(
                 height: 20,
               ),
-              MyContentHomepageVendor(title: "Souvenir Recommendation"),
-              SizedBox(
-                height: 20,
-              ),
-              MyContentHomepageVendor(title: "Invitation Recommendation"),
             ],
           ),
         ),

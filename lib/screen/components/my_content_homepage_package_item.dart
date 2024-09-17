@@ -4,9 +4,9 @@ import 'package:flutter/widgets.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_starrating.dart';
 
-class MyContentHomepageVendorItem extends StatelessWidget {
+class MyContentHomepagePackageItem extends StatelessWidget {
   final Function()? onTap;
-  const MyContentHomepageVendorItem({
+  const MyContentHomepagePackageItem({
     super.key,
     required this.onTap,
   });
@@ -31,7 +31,7 @@ class MyContentHomepageVendorItem extends StatelessWidget {
                   Container(
                     alignment: Alignment.center,
                     child: Image.asset(
-                      "images/vendor_image.png",
+                      "images/package_image.png",
                       height: 100,
                       width: double.infinity,
                       fit: BoxFit.cover,

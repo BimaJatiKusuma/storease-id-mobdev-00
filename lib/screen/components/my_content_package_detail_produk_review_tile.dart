@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_starrating.dart';
 
-class VendorDetailProdukReviewTile extends StatelessWidget {
+class PackageDetailProdukReviewTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(

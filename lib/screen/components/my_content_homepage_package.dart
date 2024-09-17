@@ -1,12 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
-import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_vendor_item.dart';
-import 'package:storease_mobileapp_dev/screen/vendor/vendorDetailProduct.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_package_item.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_package_item.dart';
+import 'package:storease_mobileapp_dev/screen/package/packageDetail.dart';
 
-class MyContentHomepageVendor extends StatelessWidget {
+class MyContentHomepagePackage extends StatelessWidget {
   final String title;
-  const MyContentHomepageVendor({required this.title, super.key});
+  const MyContentHomepagePackage({required this.title, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class MyContentHomepageVendor extends StatelessWidget {
                             decoration: TextDecoration.underline),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            //navigate to Vendor category page
+                            //navigate to Package category page
                             // Navigator.push(context,
                             //     MaterialPageRoute(builder: (context) {
                             //   return ForgotPassword();
@@ -45,19 +46,19 @@ class MyContentHomepageVendor extends StatelessWidget {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                MyContentHomepageVendorItem(onTap: () {
+                MyContentHomepagePackageItem(onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return VendorDetailProduct();
+                    return PackageDetailProduct();
                   }));
                 }),
-                MyContentHomepageVendorItem(onTap: () {
+                MyContentHomepagePackageItem(onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return VendorDetailProduct();
+                    return PackageDetailProduct();
                   }));
                 }),
-                MyContentHomepageVendorItem(onTap: () {
+                MyContentHomepagePackageItem(onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return VendorDetailProduct();
+                    return PackageDetailProduct();
                   }));
                 }),
               ],

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:storease_mobileapp_dev/screen/chat/chat_AI.dart';
-import 'package:storease_mobileapp_dev/screen/chat/chat_vendor.dart';
 
 class Chat extends StatefulWidget{
 
@@ -21,15 +19,14 @@ class _chatState extends State<Chat> {
           title: Text("Chat"),
           bottom: TabBar(
             tabs: [
-              Tab(text: "Vendor",),
+              Tab(text: "Package",),
               Tab(text: "AI Wedding Planner",),
             ],
           ),
         ),
-        body: TabBarView(children: [
-          ChatVendor(),
-          ChatAI(),
-        ],),
+        body: ElevatedButton(onPressed: (){}, child: Text(
+          "Ini akan mengarah ke whatsapp"
+        ))
       ),
     );
   }

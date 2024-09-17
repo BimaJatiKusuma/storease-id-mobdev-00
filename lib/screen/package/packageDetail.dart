@@ -1,43 +1,41 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
-import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_vendor.dart';
-import 'package:storease_mobileapp_dev/screen/components/my_content_vendor_detail_produk_review_tile.dart';
-import 'package:storease_mobileapp_dev/screen/vendor/vendor.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_package.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_content_package_detail_produk_review_tile.dart';
 import 'package:storease_mobileapp_dev/screen/vr/vrDisplay.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class VendorDetailProduct extends StatefulWidget {
-  const VendorDetailProduct({super.key});
+class PackageDetailProduct extends StatefulWidget {
+  const PackageDetailProduct({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return _VendorDetailProductState();
+    return _PackageDetailProductState();
   }
 }
 
-class _VendorDetailProductState extends State<VendorDetailProduct> {
+class _PackageDetailProductState extends State<PackageDetailProduct> {
   DateTime _dateTime = DateTime.now();
   TimeOfDay _timeOfDay = TimeOfDay(hour: 7, minute: 0);
 
   void _selectDate() {
     showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now(),
-        lastDate: DateTime(DateTime.now().year + 5)).then((value){
-          setState(() {
-            _dateTime = value!;
-          });
-        });
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime.now(),
+            lastDate: DateTime(DateTime.now().year + 5))
+        .then((value) {
+      setState(() {
+        _dateTime = value!;
+      });
+    });
   }
 
   void _selectTime() {
-    showTimePicker(
-        context: context,
-        initialTime: _timeOfDay
-    ).then((pickedTime){
-      if (pickedTime != null){
+    showTimePicker(context: context, initialTime: _timeOfDay)
+        .then((pickedTime) {
+      if (pickedTime != null) {
         setState(() {
           _timeOfDay = pickedTime;
         });
@@ -106,7 +104,7 @@ class _VendorDetailProductState extends State<VendorDetailProduct> {
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Text(
-                                    "[Nama Vendor]",
+                                    "[Nama Package]",
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
@@ -127,10 +125,11 @@ class _VendorDetailProductState extends State<VendorDetailProduct> {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return Vendor();
-                              }));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("You press button in packageDetail file"),
+                                ),
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.only(
@@ -143,7 +142,7 @@ class _VendorDetailProductState extends State<VendorDetailProduct> {
                                 borderRadius: BorderRadius.circular(5),
                               ),
                             ),
-                            child: const Text("Kunjungi Vendor"),
+                            child: const Text("Kunjungi Package"),
                           ),
                         ],
                       ),
@@ -161,7 +160,7 @@ class _VendorDetailProductState extends State<VendorDetailProduct> {
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           const Text(
-                            "Ini adalah detail dari produk yang berisi deskripsi mendalam. \n Ini adalah list 1\nlist 2\nini adalah deskripsi yang bisa diberikan oleh vendor",
+                            "Ini adalah detail dari produk yang berisi deskripsi mendalam. \n Ini adalah list 1\nlist 2\nini adalah deskripsi yang bisa diberikan oleh Package",
                           ),
                           const SizedBox(
                             height: 10,
@@ -232,12 +231,12 @@ class _VendorDetailProductState extends State<VendorDetailProduct> {
                           ],
                         ),
                         const Divider(),
-                        VendorDetailProdukReviewTile(),
+                        PackageDetailProdukReviewTile(),
                         const SizedBox(
                           height: 10,
                         ),
                         const Divider(),
-                        const MyContentHomepageVendor(title: "Other"),
+                        const MyContentHomepagePackage(title: "Other"),
                       ],
                     ),
                   ],
@@ -253,7 +252,7 @@ class _VendorDetailProductState extends State<VendorDetailProduct> {
                 ),
                 ElevatedButton(
                   onPressed: () {},
-                  child: const Text("Chat Vendor"),
+                  child: const Text("Chat Package"),
                 ),
               ],
             ),
@@ -263,4 +262,3 @@ class _VendorDetailProductState extends State<VendorDetailProduct> {
     );
   }
 }
-

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_starrating.dart';
-import 'package:storease_mobileapp_dev/screen/vendor/vendorDetailProduct.dart';
+import 'package:storease_mobileapp_dev/screen/package/packageDetail.dart';
 
-class MyContentVendorTile extends StatelessWidget {
-  const MyContentVendorTile({super.key});
+class MyContentPackageTile extends StatelessWidget {
+  const MyContentPackageTile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class MyContentVendorTile extends StatelessWidget {
       child: InkWell(
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context){
-            return VendorDetailProduct();
+            return PackageDetailProduct();
           }));
         },
         child: Column(

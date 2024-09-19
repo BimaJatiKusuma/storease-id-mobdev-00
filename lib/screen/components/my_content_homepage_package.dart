@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_package_item.dart';
-import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_package_item.dart';
 import 'package:storease_mobileapp_dev/screen/package/packageDetail.dart';
 
 class MyContentHomepagePackage extends StatelessWidget {
@@ -41,8 +40,9 @@ class MyContentHomepagePackage extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
-            height: 175,
+          SizedBox(height: 10,),
+          Container(
+            constraints: BoxConstraints(maxHeight: 220),
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [

@@ -20,6 +20,8 @@ class MyButtonAuth2 extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        alignment: Alignment.center,
+        width: double.infinity,
         padding: EdgeInsets.all(15),
         // margin: EdgeInsets.symmetric(horizontal: 25),
         decoration: BoxDecoration(

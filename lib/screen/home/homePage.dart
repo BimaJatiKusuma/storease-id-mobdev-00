@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/screen/chat/chat.dart';
-import 'package:storease_mobileapp_dev/screen/components/my_button_homepage_package.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_Package.dart';
 
 class HomePage extends StatefulWidget {
@@ -30,6 +29,7 @@ class _HomePageState extends State<HomePage> {
               return Chat();
             }));
           }, icon: Icon(Icons.chat_bubble_outline)),
+          IconButton(onPressed: (){}, icon: Image.asset("images/Ai.png")),
           IconButton(onPressed: () {}, icon: Icon(Icons.notifications_outlined))
         ],
       ),

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_package.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_content_package_detail_produk_review_tile.dart';
+import 'package:storease_mobileapp_dev/screen/package/packageCheckout.dart';
 import 'package:storease_mobileapp_dev/screen/vr/vrDisplay.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class PackageDetailProduct extends StatefulWidget {
   const PackageDetailProduct({super.key});
@@ -16,32 +16,6 @@ class PackageDetailProduct extends StatefulWidget {
 }
 
 class _PackageDetailProductState extends State<PackageDetailProduct> {
-  DateTime _dateTime = DateTime.now();
-  TimeOfDay _timeOfDay = TimeOfDay(hour: 7, minute: 0);
-
-  void _selectDate() {
-    showDatePicker(
-            context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime.now(),
-            lastDate: DateTime(DateTime.now().year + 5))
-        .then((value) {
-      setState(() {
-        _dateTime = value!;
-      });
-    });
-  }
-
-  void _selectTime() {
-    showTimePicker(context: context, initialTime: _timeOfDay)
-        .then((pickedTime) {
-      if (pickedTime != null) {
-        setState(() {
-          _timeOfDay = pickedTime;
-        });
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,69 +58,6 @@ class _PackageDetailProductState extends State<PackageDetailProduct> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Container(
-                      decoration: BoxDecoration(color: Colors.grey.shade200),
-                      height: 100,
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 50,
-                            child:
-                                Image.asset("images/account_circle_blue.png"),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          const Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    "[Nama Package]",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("123 produk"),
-                                    Text("4.8 penilaian")
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("You press button in packageDetail file"),
-                                ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.only(
-                                top: 0,
-                                bottom: 0,
-                                left: 5,
-                                right: 5,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                            child: const Text("Kunjungi Package"),
-                          ),
-                        ],
-                      ),
-                    ),
                     const SizedBox(
                       height: 10,
                     ),
@@ -166,16 +77,6 @@ class _PackageDetailProductState extends State<PackageDetailProduct> {
                             height: 10,
                           ),
                           const Text(
-                            "Pembayaran",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const Text(
-                            "* Down Payment: 40%\n*Pembayaran Kedua: 40%\nPembayaran Terakhir: 20%",
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          const Text(
                             "Preview",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
@@ -189,56 +90,24 @@ class _PackageDetailProductState extends State<PackageDetailProduct> {
                             child:
                                 Image.asset("images/icon_virtual_reality.png"),
                           ),
-                          Text("Tanggal Pernikahan: ${_dateTime.toLocal()}"),
-                          ElevatedButton(
-                              onPressed: () {
-                                _selectDate();
-                              },
-                              child: Text("${_dateTime.toLocal()}")),
-                          Text(
-                              "Waktu Pernikahan: ${_timeOfDay.format(context)}"),
-                          ElevatedButton(
-                              onPressed: () {
-                                _selectTime();
-                              },
-                              child: Text("${_timeOfDay}")),
+                          const Text(
+                            "Pembayaran",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const Text(
+                            "* Down Payment: 40%\n*Pembayaran Kedua: 40%\nPembayaran Terakhir: 20%",
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
                         ],
                       ),
                     ),
                     const SizedBox(
                       height: 10,
                     ),
-                    Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text("Reviewed (3)"),
-                            RichText(
-                              text: TextSpan(
-                                text: "Lihat semua...",
-                                style: const TextStyle(
-                                  color: MyColor.color1,
-                                  decoration: TextDecoration.underline,
-                                  fontFamily: 'Poppins',
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    // Navigate to all review page
-                                  },
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Divider(),
-                        PackageDetailProdukReviewTile(),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Divider(),
-                        const MyContentHomepagePackage(title: "Other"),
-                      ],
-                    ),
+                    const Divider(),
+                    const MyContentHomepagePackage(title: "Paket Lainnya"),
                   ],
                 ),
               ),
@@ -248,11 +117,15 @@ class _PackageDetailProductState extends State<PackageDetailProduct> {
               children: [
                 ElevatedButton(
                   onPressed: () {},
-                  child: const Text("Pricelist"),
+                  child: const Text("Chat"),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
-                  child: const Text("Chat Package"),
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context){
+                      return PackageCheckout();
+                    }));
+                  },
+                  child: const Text("Buat Pesanan"),
                 ),
               ],
             ),

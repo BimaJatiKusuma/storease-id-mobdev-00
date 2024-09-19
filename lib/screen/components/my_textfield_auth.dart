@@ -4,11 +4,13 @@ class MyTextfieldAuth extends StatelessWidget {
   final controller;
   final String hintText;
   final bool obscureText;
+  final String labelText;
 
   const MyTextfieldAuth({
     super.key,
     required this.controller,
     required this.hintText,
+    required this.labelText,
     required this.obscureText,
   });
 
@@ -16,21 +18,27 @@ class MyTextfieldAuth extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 25.0),
-      child: TextFormField(
-        controller: controller,
-        obscureText: obscureText,
-        decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Color.fromRGBO(200, 200, 200, 1)),          
+      child: Column(
+        children: [
+          Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [Text(labelText)]),
+          TextFormField(
+            controller: controller,
+            obscureText: obscureText,
+            decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Color.fromRGBO(200, 200, 200, 1)),
                 ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey.shade200)
-            ),
-            fillColor: Colors.white,
-            filled: true,
-            hintText: hintText,
-            hintStyle: TextStyle(color: Colors.grey[500])
-            ),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade200)),
+                fillColor: Colors.white,
+                filled: true,
+                hintText: hintText,
+                hintStyle: TextStyle(color: Colors.grey[500])),
+          ),
+        ],
       ),
     );
   }

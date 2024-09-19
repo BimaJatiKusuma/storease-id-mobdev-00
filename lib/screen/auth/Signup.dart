@@ -22,8 +22,7 @@ class _SignupState extends State<Signup> {
   final passwordController = TextEditingController();
   final usernameController = TextEditingController();
 
-
-    late SignupRequestModel requestModel;
+  late SignupRequestModel requestModel;
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -53,29 +52,29 @@ class _SignupState extends State<Signup> {
     );
   }
 
+  void signUserUp() {
+    requestModel = SignupRequestModel(
+      username: usernameController.text,
+      password: passwordController.text,
+    );
 
-void signUserUp() {
-  requestModel = SignupRequestModel(
-    username: usernameController.text,
-    password: passwordController.text,
-  );
-
-  ApiServices apiServices = ApiServices();
-  apiServices.signup(requestModel).then((value) {
-    if (value.message.isNotEmpty) {
-      _showSnackBar('Message: ${value.message}');
-      if (value.message == "User registered successfully"){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-          return Login();
-        }));
+    ApiServices apiServices = ApiServices();
+    apiServices.signup(requestModel).then((value) {
+      if (value.message.isNotEmpty) {
+        _showSnackBar('Message: ${value.message}');
+        if (value.message == "User registered successfully") {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) {
+            return Login();
+          }));
+        }
+      } else {
+        _showErrorDialog('Failed to connect.');
       }
-    } else {
-      _showErrorDialog('Failed to connect.');
-    }
-  }).catchError((error) {
-    _showErrorDialog('An error occurred: $error');
-  });
-}
+    }).catchError((error) {
+      _showErrorDialog('An error occurred: $error');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,57 +93,66 @@ void signUserUp() {
           child: Center(
             child: Column(
               children: [
-                SquareTileImage(
-                  imagePath: "images/account_circle_blue.png",
-                ),
+                RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                        style: TextStyle(color: Colors.grey),
+                        children: [
+                          TextSpan(
+                              text:
+                                  "Selamat datang di Storease! Nikmati fitur kami sepuasnya, klik "),
+                          TextSpan(
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold),
+                              text: "Masuk ",
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return Login();
+                                  }));
+                                }),
+                          TextSpan(text: "jika Anda sudah terdaftar.")
+                        ])),
                 SizedBox(
                   height: 30,
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [Text("Username")]),
-                ),
                 MyTextfieldAuth(
+                    labelText: "Nama Lengkap",
                     controller: usernameController,
-                    hintText: "Username",
+                    hintText: "Masukkan nama lengkap Anda",
                     obscureText: false),
                 SizedBox(
                   height: 20,
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [Text("Email Address")]),
-                ),
                 MyTextfieldAuth(
+                    labelText: "Alamat E-Mail",
                     controller: emailController,
-                    hintText: "Email",
+                    hintText: "Masukkan alamat E-Mail Anda",
                     obscureText: false),
                 SizedBox(
                   height: 20,
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [Text("Password")]),
-                ),
                 MyTextfieldAuth(
+                    labelText: "Kata Sandi",
                     controller: passwordController,
-                    hintText: "Password",
+                    hintText: "Masukkan kata sandi",
                     obscureText: false),
                 SizedBox(
                   height: 5,
                 ),
+                MyTextfieldAuth(
+                    labelText: "Kata Sandi",
+                    controller: passwordController,
+                    hintText: "Masukkan ulang kata sandi",
+                    obscureText: false),
                 SizedBox(
                   height: 30,
                 ),
                 MyButtonAuth2(
                   onTap: () {
-                    signUserUp();                    
+                    signUserUp();
                   },
                   label_name: "SIGNUP",
                   backgroundColor: Colors.white,
@@ -154,12 +162,15 @@ void signUserUp() {
                 SizedBox(
                   height: 20,
                 ),
-                Text(
-                  "OR",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Row(
+                  children: [
+                    Expanded(child: Divider()),
+                    Text("Atau"),
+                    Expanded(child: Divider()),
+                  ],
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -175,39 +186,6 @@ void signUserUp() {
                         icon: Image.asset("images/icon_logintwitter.png"))
                   ],
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Already have account?"),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    RichText(
-                        text: TextSpan(
-                            text: "Sign In",
-                            style: TextStyle(
-                              color: MyColor.color1,
-                              decoration: TextDecoration.underline,
-                              fontFamily: 'Poppins',
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                //navigate to signin page
-                                Navigator.pushReplacement(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return Login();
-                                }));
-                              })),
-                  ],
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                Image.asset("images/logo_plus_name.png"),
-                SizedBox(height: 10)
               ],
             ),
           ),

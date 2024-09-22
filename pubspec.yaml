@@ -47,6 +47,10 @@ dependencies:
   shimmer: ^3.0.0
   flutter_dotenv: ^5.1.0
   table_calendar: ^3.1.2
+  url_launcher: ^6.3.0
+  syncfusion_flutter_pdfviewer: ^27.1.48
+  webview_flutter: ^4.9.0
+  image_picker: ^1.1.2
 
 
 dev_dependencies:

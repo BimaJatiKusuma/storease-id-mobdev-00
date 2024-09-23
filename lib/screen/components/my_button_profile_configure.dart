@@ -15,23 +15,26 @@ class MyButtonProfileConfigure extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.symmetric(horizontal: 25),
-        decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(10), border: Border.all(color: colorBorder)),
-        child: Center(
+    return Material(
+      borderRadius: BorderRadius.circular(10), // Rounded corners
+      child: InkWell(
+        onTap: () {
+          onTap;
+        },
+        borderRadius: BorderRadius.circular(10), // InkWell splash will follow rounded corners
+        splashColor: colorBorder.withOpacity(0.3), // Customize splash color
+        child: Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            border: Border.all(color: colorBorder),
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: Text(
             label_name,
-            style: TextStyle(
-              color: textColor,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(color: textColor),
           ),
         ),
-      ),
-    );
+      )
+      );
   }
 }

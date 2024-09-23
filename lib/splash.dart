@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:storease_mobileapp_dev/screen/auth/Auth.dart';
+import 'package:storease_mobileapp_dev/screen/onboarding/onboarding.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -19,7 +20,7 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
     Timer(Duration(seconds: 2), () {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return Auth();
+        return OnBoarding();
       }));
     });
   }

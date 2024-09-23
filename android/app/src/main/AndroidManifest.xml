@@ -2,7 +2,8 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <application android:label="Storease" android:name="${applicationName}" android:icon="@mipmap/launcher_icon">
+    <application android:label="Storease" android:name="${applicationName}" android:icon="@mipmap/launcher_icon" android:enableOnBackInvokedCallback="true">
+    
         <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTop" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
@@ -28,5 +29,10 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+                <!-- If you want to launch WhatsApp -->
+        <package android:name="com.whatsapp" />
+        
+        <!-- If you want to launch WhatsApp Business as well -->
+        <package android:name="com.whatsapp.w4b" />
     </queries>
 </manifest>

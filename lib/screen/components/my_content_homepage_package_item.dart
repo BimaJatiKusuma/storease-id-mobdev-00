@@ -1,33 +1,42 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:storease_mobileapp_dev/color/color.dart';
-import 'package:storease_mobileapp_dev/screen/components/my_starrating.dart';
 
 class MyContentHomepagePackageItem extends StatelessWidget {
-  final Function()? onTap;
+  final VoidCallback? onTap;
+
   const MyContentHomepagePackageItem({
-    super.key,
+    Key? key,
     required this.onTap,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(5),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Colors.black),
-            borderRadius: BorderRadius.all(Radius.circular(5))),
-        margin: EdgeInsets.only(right: 10),
+    return Container(
+      margin: EdgeInsets.only(right: 10),
+      child: Ink(
+        padding: const EdgeInsets.all(10),
+        // margin: const EdgeInsets.only(right: 10),
         width: 170,
-        child: Column(
-          children: [
-            Container(
-              child: Container(
-                alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Colors.grey.shade100,        
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              blurRadius: 10,
+              spreadRadius: 2,
+              offset: const Offset(0, 5),
+            ),
+          ],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(10),
+          splashColor: Colors.grey.withOpacity(0.3),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
                 child: Image.asset(
                   "images/package_image.png",
                   height: 100,
@@ -35,21 +44,37 @@ class MyContentHomepagePackageItem extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-            ),
-            Container(
-              width: double.infinity,
-              child: Text("Storease Wedding Organizer", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10), textAlign: TextAlign.start,)),
-            Container(
-              width: double.infinity,
-              child: Text(
-                "Elegant Afair Package | Outdoor Wedding | Paket Pernikahan Kelas A",
-                overflow: TextOverflow.ellipsis,
-                maxLines: 4,
-                style: TextStyle(fontWeight: FontWeight.w800),
+              const SizedBox(height: 8),
+              Text(
+                "Elegant Affair Package | Outdoor Wedding",
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  color: Colors.black87,
+                ),
               ),
-            ),
-
-          ],
+              const SizedBox(height: 3),
+              Text(
+                "by Storease Wedding Organizer",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 11,
+                  color: Colors.black54,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                "Rp. 11.000.000",
+                style: const TextStyle(
+                  color: Colors.redAccent,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -8,7 +8,7 @@ import 'package:storease_mobileapp_dev/screen/components/my_button_auth_2.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_button_auth_3.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_textfield_auth.dart';
 import 'package:storease_mobileapp_dev/screen/components/square_tile_image.dart';
-import 'package:storease_mobileapp_dev/screen/home/home.dart';
+import 'package:storease_mobileapp_dev/screen/home.dart';
 import 'package:storease_mobileapp_dev/model/loginRequestModel.dart';
 
 class Login extends StatefulWidget {
@@ -82,13 +82,10 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text("Masuk Akun"),
-        leading: BackButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        leading: null,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -129,7 +126,7 @@ class _LoginState extends State<Login> {
                 MyTextfieldAuth(
                     labelText: "Kata Sandi",
                     controller: passwordController,
-                    hintText: "Password",
+                    hintText: "Kata Sandi",
                     obscureText: false),
                 SizedBox(
                   height: 5,
@@ -163,7 +160,7 @@ class _LoginState extends State<Login> {
                   onTap: () {
                     signUserIn();
                   },
-                  label_name: "LOGIN",
+                  label_name: "MASUK",
                   backgroundColor: Colors.white,
                   textColor: Color.fromRGBO(71, 74, 151, 1),
                   boxBorder: Border.all(color: MyColor.color1),

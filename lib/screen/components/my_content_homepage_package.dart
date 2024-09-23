@@ -42,7 +42,7 @@ class MyContentHomepagePackage extends StatelessWidget {
           ),
           SizedBox(height: 10,),
           Container(
-            constraints: BoxConstraints(maxHeight: 220),
+            constraints: BoxConstraints(maxHeight: 250),
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [

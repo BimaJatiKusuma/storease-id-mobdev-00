@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:storease_mobileapp_dev/screen/home/homepage.dart';
-import 'package:storease_mobileapp_dev/screen/home/inspiration.dart';
-import 'package:storease_mobileapp_dev/screen/home/profil.dart';
+import 'package:storease_mobileapp_dev/screen/homepage/homepage.dart';
+import 'package:storease_mobileapp_dev/screen/inspiration/inspiration.dart';
+import 'package:storease_mobileapp_dev/screen/profile/profil.dart';
 
 class Home extends StatefulWidget {
   Home({super.key});

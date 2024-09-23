@@ -113,44 +113,66 @@ class _OrderState extends State<Order> {
                           //   title: Text(orders[tabs[index]]![orderIndex]),
                           // );
                           return GestureDetector(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context){
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
                                 return Orderdetail();
                               }));
                             },
                             child: Container(
                               padding: EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black),
-                                borderRadius: BorderRadius.all(Radius.circular(10))
-                              ),
+                                  border: Border.all(color: Colors.black),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
                               width: double.infinity,
                               margin: EdgeInsets.symmetric(horizontal: 10),
                               child: Column(
                                 children: [
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "Vendor | Category",
                                         style: TextStyle(fontSize: 12),
                                       ),
-                                      Text("Harap Melakukan Pembayaran Awal",
-                                          style: TextStyle(fontSize: 12))
+                                      SizedBox(width: 10,),
+                                      // Ensure that the Column expands within the Row
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment
+                                              .start, // Align the text to the start
+                                          children: [
+                                            // Text will wrap to the next line if it exceeds the available width
+                                            Text(
+                                              textAlign: TextAlign.end,
+                                              "Harap Melakukan Pembayaran Awal",
+                                              style: TextStyle(fontSize: 12),
+                                              softWrap:
+                                                  true, // Enables text to wrap
+                                              overflow: TextOverflow
+                                                  .visible, // Ensure overflow handling is visible
+                                            ),
+                                          ],
+                                        ),
+                                      )
                                     ],
                                   ),
-                                  SizedBox(height: 5,),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
                                   Container(
                                     padding: EdgeInsets.all(5),
                                     decoration: BoxDecoration(
-                                      color: MyColor.colorSecondary,
-                                      borderRadius: BorderRadius.all(Radius.circular(10))
-                                    ),
+                                        color: MyColor.colorSecondary,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10))),
                                     width: double.infinity,
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Container(
                                             width: 150,
@@ -169,11 +191,17 @@ class _OrderState extends State<Order> {
                                               Text(
                                                   "The Grand Karunia Function Hall - Bogor",
                                                   softWrap: true,
-                                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
                                               Text("ID Pesanan : xxx-xxx-xxx",
-                                                  style: TextStyle(fontSize: 12)),
-                                              Text("Total harga : Rp. 10.000.000",
-                                                  style: TextStyle(fontSize: 12)),
+                                                  style:
+                                                      TextStyle(fontSize: 12)),
+                                              Text(
+                                                  "Total harga : Rp. 10.000.000",
+                                                  style:
+                                                      TextStyle(fontSize: 12)),
                                               Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.end,
@@ -199,23 +227,28 @@ class _OrderState extends State<Order> {
                       margin: EdgeInsets.all(10),
                       padding: EdgeInsets.all(5),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: MyColor.colorSecondary
-                      ),
+                          borderRadius: BorderRadius.circular(10),
+                          color: MyColor.colorSecondary),
                       child: Column(
                         children: [
-                          Text("INFORMASI TAHAPAN", style: TextStyle(fontWeight: FontWeight.bold),),
-                          SizedBox(height: 10,),
+                          Text(
+                            "INFORMASI TAHAPAN",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Container(
                             child: Text(
-                              textAlign: TextAlign.justify,
-                              "Pada tahap “Rapat Perdana” pelanggan akan mendapatkan jadwal pertmuan pertama dengan tim storease. Rapat ini akan membahas lebih lanjut mengenai paket yang dipesan oleh pelanggan. Pelanggan bisa melakukan permintaan khusus di dalam paket yang sudah dipilih. Perubahan paket bisa menyebabkan perubahan harga. Rapat perdana ini gratis tidak dipungut biaya."
-                            ),
+                                textAlign: TextAlign.justify,
+                                "Pada tahap “Rapat Perdana” pelanggan akan mendapatkan jadwal pertmuan pertama dengan tim storease. Rapat ini akan membahas lebih lanjut mengenai paket yang dipesan oleh pelanggan. Pelanggan bisa melakukan permintaan khusus di dalam paket yang sudah dipilih. Perubahan paket bisa menyebabkan perubahan harga. Rapat perdana ini gratis tidak dipungut biaya."),
                           )
                         ],
                       ),
                     ),
-                    SizedBox(height: 25,)
+                    SizedBox(
+                      height: 25,
+                    )
                   ],
                 );
               },

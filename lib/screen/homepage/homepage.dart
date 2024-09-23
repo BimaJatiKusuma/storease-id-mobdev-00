@@ -1,8 +1,6 @@
 import 'package:another_carousel_pro/another_carousel_pro.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
-import 'package:storease_mobileapp_dev/screen/chat/chat.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_Package.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,9 +23,9 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context){
-              return Chat();
-            }));
+            // Navigator.push(context, MaterialPageRoute(builder: (context){
+            //   return Chat();
+            // }));
           }, icon: Icon(Icons.chat_bubble_outline)),
           IconButton(onPressed: (){}, icon: Image.asset("images/Ai.png")),
           IconButton(onPressed: () {}, icon: Icon(Icons.notifications_outlined))

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class MyTextfieldAuth extends StatelessWidget {
+class MyTextfieldProfileEdit extends StatelessWidget {
   final controller;
   final String hintText;
   final bool obscureText;
   final String labelText;
 
-  const MyTextfieldAuth({
+  const MyTextfieldProfileEdit({
     super.key,
     required this.controller,
     required this.hintText,

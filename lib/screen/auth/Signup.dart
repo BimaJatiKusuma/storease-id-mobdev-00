@@ -80,13 +80,9 @@ class _SignupState extends State<Signup> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
-        title: Text("Signup"),
-        leading: BackButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        title: Text("Daftar"),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -154,7 +150,7 @@ class _SignupState extends State<Signup> {
                   onTap: () {
                     signUserUp();
                   },
-                  label_name: "SIGNUP",
+                  label_name: "DAFTAR",
                   backgroundColor: Colors.white,
                   textColor: Color.fromRGBO(71, 74, 151, 1),
                   boxBorder: Border.all(color: MyColor.color1),

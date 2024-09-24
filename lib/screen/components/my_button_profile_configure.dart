@@ -6,12 +6,13 @@ class MyButtonProfileConfigure extends StatelessWidget {
   final Color textColor;
   final Color colorBorder;
 
-  const MyButtonProfileConfigure(
-      {super.key,
-      required this.colorBorder,
-      required this.onTap,
-      required this.label_name,
-      required this.textColor});
+  const MyButtonProfileConfigure({
+    super.key,
+    required this.colorBorder,
+    required this.onTap,
+    required this.label_name,
+    required this.textColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,9 @@ class MyButtonProfileConfigure extends StatelessWidget {
       borderRadius: BorderRadius.circular(10), // Rounded corners
       child: InkWell(
         onTap: () {
-          onTap;
+          if (onTap != null) {
+            onTap!(); // Call the onTap function when tapped
+          }
         },
         borderRadius: BorderRadius.circular(10), // InkWell splash will follow rounded corners
         splashColor: colorBorder.withOpacity(0.3), // Customize splash color
@@ -34,7 +37,7 @@ class MyButtonProfileConfigure extends StatelessWidget {
             style: TextStyle(color: textColor),
           ),
         ),
-      )
-      );
+      ),
+    );
   }
 }

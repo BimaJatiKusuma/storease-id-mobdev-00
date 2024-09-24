@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_package_item.dart';
+import 'package:storease_mobileapp_dev/screen/homepage/list_package.dart';
 import 'package:storease_mobileapp_dev/screen/package/packageDetail.dart';
 
 class MyContentHomepagePackage extends StatelessWidget {
@@ -31,11 +32,9 @@ class MyContentHomepagePackage extends StatelessWidget {
                             decoration: TextDecoration.underline),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            //navigate to Package category page
-                            // Navigator.push(context,
-                            //     MaterialPageRoute(builder: (context) {
-                            //   return ForgotPassword();
-                            // }));
+                            Navigator.push(context, MaterialPageRoute(builder: (context){
+                              return ListPackage(title_list: title,);
+                            }));
                           })),
               ],
             ),

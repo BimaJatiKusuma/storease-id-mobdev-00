@@ -6,8 +6,11 @@ import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/screen/auth/Login.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_button_profile_configure.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_button_profile_feature.dart';
+import 'package:storease_mobileapp_dev/screen/profile/help.dart';
 import 'package:storease_mobileapp_dev/screen/profile/history.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_button_profile_my_account.dart';
+import 'package:storease_mobileapp_dev/screen/profile/language.dart';
+import 'package:storease_mobileapp_dev/screen/profile/terms_and_condition.dart';
 import 'package:storease_mobileapp_dev/screen/profile/wedding_essentials.dart';
 import 'package:storease_mobileapp_dev/screen/profile/profile_edit.dart';
 import 'package:storease_mobileapp_dev/screen/order/order.dart';
@@ -149,7 +152,12 @@ class _ProfilState extends State<Profil> {
                 height: 30,
               ),
               MyButtonProfileConfigure(
-                  onTap: () {},
+                  onTap: () {
+                    print("Hallo");
+                    Navigator.push(context, MaterialPageRoute(builder: (context){
+                      return Language();
+                    }));
+                  },
                   label_name: "Bahasa",
                   colorBorder: MyColor.color1,
                   textColor: Colors.black),
@@ -157,7 +165,11 @@ class _ProfilState extends State<Profil> {
                 height: 30,
               ),
               MyButtonProfileConfigure(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context){
+                      return Help();
+                    }));
+                  },
                   label_name: "Bantuan",
                   colorBorder: MyColor.color1,
                   textColor: Colors.black),
@@ -165,7 +177,11 @@ class _ProfilState extends State<Profil> {
                 height: 30,
               ),
               MyButtonProfileConfigure(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context){
+                      return TermsAndcondition();
+                    }));
+                  },
                   label_name: "Syarat Dan Ketentuan",
                   colorBorder: MyColor.color1,
                   textColor: Colors.black),

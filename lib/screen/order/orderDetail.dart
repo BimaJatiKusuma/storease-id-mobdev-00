@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_order_cust_table.dart';
+import 'package:storease_mobileapp_dev/method/send_whatsapp_message.dart';
 import 'package:storease_mobileapp_dev/screen/order/orderPDFview.dart';
 import 'package:storease_mobileapp_dev/screen/payment/payment.dart';
 import 'package:storease_mobileapp_dev/screen/vr/vrDisplay.dart';
@@ -20,19 +21,8 @@ class _OrderdetailState extends State<Orderdetail> {
       "https://unej.ac.id/wp-content/uploads/2022/06/Buku-Akademik-UNEJ-14-Oktober-2021-1.pdf";
   final String id_user = "ini id user";
   final String id_pesanan = "ini id pesanan";
+  final String phone_number = "+6285895929918";
   
-sendWhatsAppMessage() async {
-  final String phoneNumber = "+6285895929918"; // Replace with the actual number
-  final String message = "*ID Pelanggan : ${id_user}*\n*ID Pesanan : ${id_pesanan}*\n=======================\n"; // Customize your message
-
-  final Uri whatsappUrl = Uri.parse("https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}");
-
-  if (await canLaunchUrl(whatsappUrl)) {
-    await launchUrl(whatsappUrl);
-  } else {
-    throw 'Could not launch $whatsappUrl';
-  }
-}
 // sendWhatsAppMessage() async {
 //   final String phoneNumber = "+6285895929918"; // Replace with the actual number
 //   final String message = "Hello from Flutter!"; // Customize your message
@@ -83,7 +73,7 @@ sendWhatsAppMessage() async {
           SizedBox(height: 10), // Adds some space between the two buttons
           ElevatedButton.icon(
             onPressed: () async {
-              sendWhatsAppMessage();
+              sendWhatsAppMessage(id_user, phone_number, id_pesanan: id_pesanan);
             },
             icon: Icon(Icons.message, size: 18), // Use the desired icon
             label: Text("Chat Admin"),

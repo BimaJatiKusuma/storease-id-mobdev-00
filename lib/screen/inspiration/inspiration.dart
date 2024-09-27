@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:storease_mobileapp_dev/screen/package/packageDetail.dart';
 
 class Inspiration extends StatefulWidget {
   Inspiration({super.key});
@@ -14,18 +15,17 @@ class Inspiration extends StatefulWidget {
 
 class _InspirationState extends State<Inspiration> {
   List<String> imageLink = [
-    "https://picsum.photos/id/237/200/300",
     "https://dummyimage.com/640x4:3/",
-    "https://picsum.photos/id/237/200/300",
     "https://dummyimage.com/16:9x1080/",
-    "https://picsum.photos/id/237/200/300",
-    "https://dummyimage.com/640x4:3/",
-    "https://picsum.photos/id/237/200/300",
-    "https://picsum.photos/id/237/200/300",
-    "https://picsum.photos/200/300",
+    "https://dummyimage.com/16:9x1080/",
+    "https://dummyimage.com/16:9x1080/",
+    "https://dummyimage.com/16:9x1080/",
+    "https://dummyimage.com/16:9x1080/",
     "https://dummyimage.com/16:9x1080/",
     "https://dummyimage.com/640x4:3/",
-    "https://picsum.photos/id/237/200/300",
+    "https://dummyimage.com/640x4:3/",
+    "https://dummyimage.com/640x4:3/",
+    "https://dummyimage.com/640x4:3/",
     "https://dummyimage.com/16:9x1080/",
   ];
 
@@ -34,18 +34,21 @@ class _InspirationState extends State<Inspiration> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Container(
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.all(10),
-                hintText: "Search Inspiration"
-              ),
-            ),
-          ),
-          actions: [
-            ElevatedButton(onPressed: () {}, child: Text("Filters (0)"))
-          ],
+          centerTitle: true,
+          title:
+          Text("INSPIRASI"),
+          // Container(
+          //   child: TextField(
+          //     decoration: InputDecoration(
+          //       border: OutlineInputBorder(),
+          //       contentPadding: EdgeInsets.all(10),
+          //       hintText: "Search Inspiration"
+          //     ),
+          //   ),
+          // ),
+          // actions: [
+          //   ElevatedButton(onPressed: () {}, child: Text("Filters (0)"))
+          // ],
           automaticallyImplyLeading: false,
         ),
         body: ListView(
@@ -57,13 +60,20 @@ class _InspirationState extends State<Inspiration> {
                 crossAxisSpacing: 10,
                 crossAxisCount: 2,
                 axisDirection: AxisDirection.down,
-                children: imageLink.map((asset) => CachedNetworkImage(
-                  imageUrl: asset,
-                  placeholder: (context, url) => ShimmerSkeleton(width: 50, height: 250),
-                  errorWidget: (context, url, error) {
-                    print('Error loading image: $url');
-                    return Icon(Icons.error);
+                children: imageLink.map((asset) => InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context){
+                      return PackageDetail();
+                    }));
                   },
+                  child: CachedNetworkImage(
+                    imageUrl: asset,
+                    placeholder: (context, url) => ShimmerSkeleton(width: 50, height: 250),
+                    errorWidget: (context, url, error) {
+                      print('Error loading image: $url');
+                      return Icon(Icons.error);
+                    },
+                  ),
                 )).toList(),
               ),
             ),

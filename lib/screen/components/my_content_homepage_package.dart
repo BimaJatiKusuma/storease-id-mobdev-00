@@ -47,17 +47,17 @@ class MyContentHomepagePackage extends StatelessWidget {
               children: [
                 MyContentHomepagePackageItem(onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return PackageDetailProduct();
+                    return PackageDetail();
                   }));
                 }),
                 MyContentHomepagePackageItem(onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return PackageDetailProduct();
+                    return PackageDetail();
                   }));
                 }),
                 MyContentHomepagePackageItem(onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return PackageDetailProduct();
+                    return PackageDetail();
                   }));
                 }),
               ],

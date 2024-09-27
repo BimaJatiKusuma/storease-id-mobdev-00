@@ -5,10 +5,7 @@ import 'package:storease_mobileapp_dev/method/send_whatsapp_message.dart';
 import 'package:storease_mobileapp_dev/screen/order/orderPDFview.dart';
 import 'package:storease_mobileapp_dev/screen/payment/payment.dart';
 import 'package:storease_mobileapp_dev/screen/vr/vrDisplay.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'dart:io' show Platform;
 
-// import 'package:url_launcher/url_launcher.dart';
 class Orderdetail extends StatefulWidget {
   const Orderdetail({super.key});
 
@@ -22,20 +19,6 @@ class _OrderdetailState extends State<Orderdetail> {
   final String id_user = "ini id user";
   final String id_pesanan = "ini id pesanan";
   final String phone_number = "+6285895929918";
-  
-// sendWhatsAppMessage() async {
-//   final String phoneNumber = "+6285895929918"; // Replace with the actual number
-//   final String message = "Hello from Flutter!"; // Customize your message
-
-//   final String whatsappUrl = "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}";
-
-//   if (await canLaunch(whatsappUrl)) {
-//     await launch(whatsappUrl);
-//   } else {
-//     throw 'Could not launch $whatsappUrl';
-//   }
-// }
-
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +56,8 @@ class _OrderdetailState extends State<Orderdetail> {
           SizedBox(height: 10), // Adds some space between the two buttons
           ElevatedButton.icon(
             onPressed: () async {
-              sendWhatsAppMessage(id_user, phone_number, id_pesanan: id_pesanan);
+              sendWhatsAppMessage(id_user, phone_number,
+                  id_pesanan: id_pesanan);
             },
             icon: Icon(Icons.message, size: 18), // Use the desired icon
             label: Text("Chat Admin"),
@@ -117,7 +101,7 @@ class _OrderdetailState extends State<Orderdetail> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
                 iconColor: MyColor.colorSecondary,
-                collapsedIconColor: MyColor.colorMain,
+                collapsedIconColor: const Color.fromARGB(255, 238, 243, 155),
                 collapsedBackgroundColor: MyColor.color1,
                 backgroundColor: MyColor.colorMain,
                 title: Text("Package by The Amaryllis Boutique Resort"),
@@ -155,8 +139,8 @@ class _OrderdetailState extends State<Orderdetail> {
                           child: Column(
                             children: [
                               Text("Detail"),
-                              Text(
-                                  "Ini adalah detail dari produk yang berisi deskripsi mendalam. \n Ini adalah list 1\nlist 2\nini adalah deskripsi yang bisa diberikan oleh Package"),
+                              const Text(
+                                  "Wedding orgenizer by Storease \n-	Konultasi konsep acara wedding (resepsi)\n-	Konsep wedding \n-	Rundown wedding\n-	1 x visit venue\n-	3x meeting (client, keluarga, all vendor/final)\n-	Manage vendor installation( loading catring sound, decoration)\n-	1 projek Manager 4 crew\n-	Undangan digital\n\nDécor by Yulis\n-	Dekorasi saat akad nikah (meja + kursi akad) 4 x 4\n-	Backdrop \n-	Dekorasi bunga\n-	Welcome sign\n-	Kotak uang 2\n-	Hand bouquet fresh flower\n-	Dekor pintu masuk\n\nMUA & Dress by Kholid\n  Mackup kedua mempelai\n-	1 busana akad\n-	1 busana temu tamu\n-	1 busana resepsi\n-	Melati akad non adat \n-	Softlens normal\n-	Henna  tangan\n-	Nail art\n\nDokumentasi By Dig Studio\n-	Unlimited photo +/- 4 jam\n-	Weeding box 50 pages\n-	1 photo printed 16 Rs (40 x 60 Cm)\n-	1 big frame 16 Rs\n-	1 photografer\n-	File in flasdisk"),
                             ],
                           ),
                         ),

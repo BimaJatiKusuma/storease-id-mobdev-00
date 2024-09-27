@@ -10,6 +10,13 @@ class History extends StatefulWidget {
 class _HistoryState extends State<History> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Riwayat"), // Use widget.title_list to access the passed title
+      ),
+      body: Center(
+        child: Text("Belum ada Riwayat Pembelian"),
+      )
+    );
   }
 }

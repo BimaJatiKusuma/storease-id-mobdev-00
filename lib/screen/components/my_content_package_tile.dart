@@ -24,7 +24,7 @@ class MyContentPackageTile extends StatelessWidget {
       child: InkWell(
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context){
-            return PackageDetailProduct();
+            return PackageDetail();
           }));
         },
         child: Column(

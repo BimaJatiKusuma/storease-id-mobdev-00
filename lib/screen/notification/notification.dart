@@ -39,7 +39,7 @@ class _NotificationPageState extends State<NotificationPage> {
                         Row(
                           children: [
                             Expanded(child: Text("Storease")),
-                            Text("Jan 2, 2024, 10.000"),
+                            Text("Jan 2, 2024, 10.00"),
                             Icon(Icons.circle)
                           ],
                         ),

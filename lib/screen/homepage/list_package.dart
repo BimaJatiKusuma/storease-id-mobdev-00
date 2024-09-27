@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_package_list_item.dart';
+import 'package:storease_mobileapp_dev/screen/package/packageDetail.dart';
 
 class ListPackage extends StatefulWidget {
   final String title_list;
@@ -13,31 +15,24 @@ class _ListPackageState extends State<ListPackage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title_list),  // Use widget.title_list to access the passed title
+        title: Text(widget.title_list), // Use widget.title_list to access the passed title
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
         child: Column(
           children: [
-            InkWell(
-              onTap: () {},
-              child: Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 3),
-                    )
-                  ],
-                ),
-                child: SizedBox(height: 100, width: double.infinity,),
-                // Further code...
-              ),
+            // Wrap PackageListItem in Container to add margin
+            Container(
+              margin: const EdgeInsets.only(bottom: 10), // Margin after the item
+              child: MyPackageListItem(),
+            ),
+            Container(
+              margin: const EdgeInsets.only(bottom: 10), // Margin after the item
+              child: MyPackageListItem(),
+            ),
+            Container(
+              margin: const EdgeInsets.only(bottom: 10), // Margin after the item
+              child: MyPackageListItem(),
             ),
           ],
         ),

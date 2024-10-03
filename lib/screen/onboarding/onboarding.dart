@@ -1,7 +1,11 @@
+// onboarding.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/screen/auth/Login.dart';
+import 'package:storease_mobileapp_dev/screen/home.dart';
+import 'package:storease_mobileapp_dev/method/secure_storage.dart';
 
 class OnBoarding extends StatefulWidget {
   const OnBoarding({super.key});
@@ -11,15 +15,15 @@ class OnBoarding extends StatefulWidget {
 }
 
 class _OnBoardingState extends State<OnBoarding> {
+  final SecureStorage _secureStorage = SecureStorage();
   int currentPage = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          decoration: BoxDecoration(
-            color: MyColor.onBoardColor
-          ),
+          decoration: BoxDecoration(color: MyColor.onBoardColor),
           child: Column(
             children: [
               const Spacer(flex: 2),
@@ -52,13 +56,30 @@ class _OnBoardingState extends State<OnBoarding> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => Login()),
-                      (Route<dynamic> route) =>
-                          false, // Remove all previous routes
+                  onPressed: () async {
+                    // Mark onboarding as completed in secure storage
+                    await _secureStorage.writeSecureData(
+                      dotenv.env["KEY_SPLASH"] ?? 'onBoardingCompleted',
+                      'true',
                     );
+
+                    // Check for token and navigate accordingly
+                    String? token =
+                        await _secureStorage.readSecureData(dotenv.env["KEY_TOKEN"] ?? 'token');
+
+                    if (token != null && token.isNotEmpty) {
+                      // Token exists, navigate to HomePage
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) =>Home()),
+                      );
+                    } else {
+                      // No token, navigate to LoginPage
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) =>Login()),
+                      );
+                    }
                   },
                   child: Text("Get Started".toUpperCase()),
                 ),
@@ -86,7 +107,7 @@ List<Map<String, dynamic>> demoData = [
     "title": "Free delivery offers",
     "subtitle": "Kebutuhan Pernikahan Anda",
     "text":
-        "Dengan Storease anda bisa rencanakan event dengan mudah, telusuri  vendor terdekat dengan mudah hanya dalam satu aplikasi",
+        "Dengan Storease anda bisa rencanakan event dengan mudah, telusuri vendor terdekat dengan mudah hanya dalam satu aplikasi.",
   },
   {
     "illustration": "images/image_onboard3.png",
@@ -127,7 +148,6 @@ class OnboardContent extends StatelessWidget {
               .titleLarge!
               .copyWith(fontWeight: FontWeight.bold),
         ),
-        // Only display the subtitle if it's not an empty string
         if (subtitle != null && subtitle!.isNotEmpty)
           Text(
             subtitle!,
@@ -161,7 +181,7 @@ class DotIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       margin: const EdgeInsets.symmetric(horizontal: 10),
       height: 5,
       width: isActive ? 16 : 8,

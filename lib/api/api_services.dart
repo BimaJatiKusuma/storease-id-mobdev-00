@@ -2,14 +2,18 @@ import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:storease_mobileapp_dev/method/secure_storage.dart';
 import 'package:storease_mobileapp_dev/model/loginRequestModel.dart';
 import 'package:storease_mobileapp_dev/model/loginResponseModel.dart';
+import 'package:storease_mobileapp_dev/model/profileResponseModel.dart';
 import 'package:storease_mobileapp_dev/model/signupRequestModel.dart';
 import 'package:storease_mobileapp_dev/model/signupResponseModel.dart';
 
 class ApiServices {
+  String baseAPiurl = '${dotenv.env['API_PORTAl']}';
+
   Future<LoginResponseModel> login(LoginRequestModel requestModel) async {
-    String url = "http://34.204.96.253:8010/api/auth/admin/login";
+    String url = "${baseAPiurl}/auth/customer/login";
     Uri finalURI = Uri.parse(url);
 
     // final response = await http.post(finalURI, body: requestModel.toJson());
@@ -25,22 +29,9 @@ class ApiServices {
       throw Exception('Failed to load data');
     }
   }
-  // Future<SignupResponseModel> signup(SignupRequestModel requestModel) async {
-  //   String url = "http://192.168.100.33:3000/register";
-  //   Uri finalURI = Uri.parse(url);
-
-  //   final response = await http.post(finalURI, body: requestModel.toJson());
-
-  //   if(response.statusCode == 200 || response.statusCode == 400){
-  //     return SignupResponseModel.fromJson(jsonDecode(response.body));
-  //   } else {
-  //     throw Exception('Failed to load data');
-  //   }
-  // }
 
   Future<SignupResponseModel> signup(SignupRequestModel requestModel) async {
-    // String url = "http://34.204.96.253:8010/register";
-    String url = "${dotenv.env}/register";
+    String url = "${baseAPiurl}/auth/customer/register";
     Uri finalURI = Uri.parse(url);
 
     final response = await http.post(
@@ -49,10 +40,48 @@ class ApiServices {
       body: jsonEncode(requestModel.toJson()),
     );
 
-    if (response.statusCode == 201 || response.statusCode == 400) {
+    if (response.statusCode == 200 || response.statusCode == 400) {
       return SignupResponseModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load data');
+    }
+  }
+
+  Future<ProfileResponseModel> getProfile() async{
+    String token = await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
+    String url = "${baseAPiurl}/customer";
+    Uri finalURI = Uri.parse(url);
+
+    final response = await http.get(finalURI,
+    headers: {
+      'Authorization': 'Bearer $token',
+      'Content-Type':'application/json',
+    },
+    );
+
+    print(response);
+    if(response.statusCode == 200){
+      return ProfileResponseModel.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed  to load data');
+    }
+  }
+  Future<bool> getTokenStatus() async{
+    String token = await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
+    String url = "${baseAPiurl}/customer";
+    Uri finalURI = Uri.parse(url);
+
+    final response = await http.get(finalURI,
+    headers: {
+      'Authorization': 'Bearer $token',
+      'Content-Type':'application/json',
+    },
+    );
+
+    if(response.statusCode == 200){
+      return true;
+    } else {
+      return false;
     }
   }
 }

@@ -20,7 +20,9 @@ class Signup extends StatefulWidget {
 class _SignupState extends State<Signup> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final passwordConfirmationController = TextEditingController();
   final usernameController = TextEditingController();
+  final phoneController = TextEditingController();
 
   late SignupRequestModel requestModel;
 
@@ -56,6 +58,9 @@ class _SignupState extends State<Signup> {
     requestModel = SignupRequestModel(
       username: usernameController.text,
       password: passwordController.text,
+      phone: phoneController.text,
+      email: emailController.text,
+      password_confirmation: passwordConfirmationController.text,
     );
 
     ApiServices apiServices = ApiServices();
@@ -139,9 +144,17 @@ class _SignupState extends State<Signup> {
                   height: 5,
                 ),
                 MyTextfieldAuth(
-                    labelText: "Kata Sandi",
-                    controller: passwordController,
+                    labelText: "Konfirmasi Kata Sandi",
+                    controller: passwordConfirmationController,
                     hintText: "Masukkan ulang kata sandi",
+                    obscureText: false),
+                SizedBox(
+                  height: 5,
+                ),
+                MyTextfieldAuth(
+                    labelText: "Nomor Telefon",
+                    controller: phoneController,
+                    hintText: "08xx-xxxx-xxxx",
                     obscureText: false),
                 SizedBox(
                   height: 30,

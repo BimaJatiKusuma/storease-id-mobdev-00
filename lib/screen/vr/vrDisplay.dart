@@ -22,7 +22,11 @@ class _VRDisplayState extends State<VRDisplay> {
         centerTitle: true,
       ),
       body: Center(
-        child: PanoramaViewer(
+        child:
+        // Panorama
+        PanoramaViewer(
+          animSpeed: 1,
+          sensorControl: SensorControl.orientation,
           child: Image.asset("images/image360.jpg"),
         ),
       ),

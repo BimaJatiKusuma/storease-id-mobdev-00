@@ -1,6 +1,8 @@
 import 'package:another_carousel_pro/another_carousel_pro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
+import 'package:storease_mobileapp_dev/method/secure_storage.dart';
 import 'package:storease_mobileapp_dev/screen/ai/ai.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_Package.dart';
 import 'package:storease_mobileapp_dev/screen/notification/notification.dart';
@@ -17,19 +19,34 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String id_user = "1234";
-  String phone_number = "+6285895929918";
+  String? idUser; // State variable for user ID
+  String phoneNumber = "+6285895929918";
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserId(); // Fetch user ID on initialization
+  }
+
+  Future<void> _loadUserId() async {
+    String? userId = await SecureStorage().readSecureData(dotenv.env["KEY_USER_ID"]!);
+    setState(() {
+      idUser = userId; // Set user ID once retrieved
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(Icons.search),
-        title: TextField(
-          decoration: InputDecoration(hintText: "Search"),
-        ),
+        leading: Image.asset("images/logo_white.png"),
+        title:
+        Text("STOREASE", style: TextStyle(fontWeight: FontWeight.bold),),
+        // TextField(
+        //   decoration: InputDecoration(hintText: "Search"),
+        // ),
         actions: [
           IconButton(onPressed: () {
-            sendWhatsAppMessage(id_user, phone_number);
+            sendWhatsAppMessage(idUser!, phoneNumber);
           }, icon: Icon(Icons.chat_bubble_outline)),
           IconButton(onPressed: (){
             Navigator.push(context, MaterialPageRoute(builder: (context){

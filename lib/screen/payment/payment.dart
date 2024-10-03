@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-
 class Payment extends StatefulWidget {
   const Payment({super.key});
 
@@ -25,6 +24,10 @@ class _PaymentState extends State<Payment> {
     }
   }
 
+  _sendImage(){
+    // Image sending logic goes here
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +39,7 @@ class _PaymentState extends State<Payment> {
           children: [
             ElevatedButton(
               onPressed: _pickImage, // Trigger the image picker
-              child: Text("Kirim Bukti Pembayaran"),
+              child: Text("Pilih Bukti Pembayaran"),
             ),
             Container(
               height: 200,
@@ -52,6 +55,18 @@ class _PaymentState extends State<Payment> {
                   : Center(
                       child: Text("Pilih Gambar"),
                     ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _selectedImage != null
+                  ? () {
+                      _sendImage();
+                    }
+                  : null, // Disable button when no image is selected
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _selectedImage != null ? Colors.blue : Colors.grey, // Change color based on state
+              ),
+              child: Text("Kirim"),
             ),
           ],
         ),

@@ -51,6 +51,11 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^27.1.48
   webview_flutter: ^4.9.0
   image_picker: ^1.1.2
+  flutter_secure_storage: ^4.2.1
+  provider: ^6.1.2
+  connectivity_plus: ^6.0.5
+  get: ^4.6.6
+  jwt_decoder: ^2.0.1
 
 
 dev_dependencies:
@@ -87,6 +92,7 @@ flutter:
     - images/
     - images/account_circle_blue.png
     - images/logo_plus_name.png
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

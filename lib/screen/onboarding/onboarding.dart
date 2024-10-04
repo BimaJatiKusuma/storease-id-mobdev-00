@@ -1,7 +1,6 @@
 // onboarding.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/screen/auth/Login.dart';
 import 'package:storease_mobileapp_dev/screen/home.dart';
@@ -104,7 +103,7 @@ List<Map<String, dynamic>> demoData = [
   },
   {
     "illustration": "images/image_onboard2.png",
-    "title": "Free delivery offers",
+    "title": "Storease Sediakan Berbagai",
     "subtitle": "Kebutuhan Pernikahan Anda",
     "text":
         "Dengan Storease anda bisa rencanakan event dengan mudah, telusuri vendor terdekat dengan mudah hanya dalam satu aplikasi.",

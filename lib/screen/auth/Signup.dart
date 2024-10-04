@@ -4,6 +4,7 @@ import 'package:storease_mobileapp_dev/api/api_services.dart';
 import 'package:storease_mobileapp_dev/screen/auth/Login.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_button_auth_2.dart';
+import 'package:storease_mobileapp_dev/screen/components/my_button_auth_3.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_textfield_auth.dart';
 import 'package:storease_mobileapp_dev/screen/components/square_tile_image.dart';
 import 'package:storease_mobileapp_dev/model/signupRequestModel.dart';
@@ -120,42 +121,38 @@ class _SignupState extends State<Signup> {
                   height: 30,
                 ),
                 MyTextfieldAuth(
-                    labelText: "Nama Lengkap",
-                    controller: usernameController,
-                    hintText: "Masukkan nama lengkap Anda",
-                    obscureText: false),
+                  labelText: "Nama Lengkap",
+                  controller: usernameController,
+                  hintText: "Masukkan nama lengkap Anda",
+                ),
                 SizedBox(
                   height: 20,
                 ),
                 MyTextfieldAuth(
                     labelText: "Alamat E-Mail",
                     controller: emailController,
-                    hintText: "Masukkan alamat E-Mail Anda",
-                    obscureText: false),
+                    hintText: "Masukkan alamat E-Mail Anda"),
                 SizedBox(
                   height: 20,
                 ),
                 MyTextfieldAuth(
                     labelText: "Kata Sandi",
                     controller: passwordController,
-                    hintText: "Masukkan kata sandi",
-                    obscureText: false),
+                    hintText: "Masukkan kata sandi"),
                 SizedBox(
                   height: 5,
                 ),
                 MyTextfieldAuth(
                     labelText: "Konfirmasi Kata Sandi",
                     controller: passwordConfirmationController,
-                    hintText: "Masukkan ulang kata sandi",
-                    obscureText: false),
+                    hintText: "Masukkan ulang kata sandi"),
                 SizedBox(
                   height: 5,
                 ),
                 MyTextfieldAuth(
                     labelText: "Nomor Telefon",
                     controller: phoneController,
-                    hintText: "08xx-xxxx-xxxx",
-                    obscureText: false),
+                    hintText: "08xx-xxxx-xxxx"),
                 SizedBox(
                   height: 30,
                 ),
@@ -181,19 +178,13 @@ class _SignupState extends State<Signup> {
                 SizedBox(
                   height: 20,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                        onPressed: () {},
-                        icon: Image.asset("images/icon_logingoogle.png")),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    IconButton(
-                        onPressed: () {},
-                        icon: Image.asset("images/icon_logintwitter.png"))
-                  ],
+                MyButtonAuth3(
+                  onTap: () {
+                    // Implement Google Sign-In functionality
+                  },
+                  label_name: "Daftar Menggunakan Google",
+                  backgroundColor: Colors.white,
+                  textColor: Colors.grey,
                 ),
               ],
             ),

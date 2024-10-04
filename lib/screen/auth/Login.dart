@@ -5,16 +5,14 @@ import 'package:storease_mobileapp_dev/api/api_services.dart';
 import 'package:storease_mobileapp_dev/screen/auth/ForgotPassword.dart';
 import 'package:storease_mobileapp_dev/screen/auth/Signup.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
-import 'package:storease_mobileapp_dev/screen/components/my_button_auth_2.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_button_auth_3.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_textfield_auth.dart';
-import 'package:storease_mobileapp_dev/screen/components/square_tile_image.dart';
 import 'package:storease_mobileapp_dev/screen/home.dart';
 import 'package:storease_mobileapp_dev/model/loginRequestModel.dart';
 import 'package:storease_mobileapp_dev/method/secure_storage.dart';
 
 class Login extends StatefulWidget {
-  Login({super.key});
+  Login({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -28,7 +26,6 @@ class _LoginState extends State<Login> {
   late LoginRequestModel requestModel;
 
   bool _isLoading = false; // Track loading state
-  bool _isPasswordObscured = true; // Track password visibility
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -75,9 +72,6 @@ class _LoginState extends State<Login> {
       if (value.token.isNotEmpty) {
         await SecureStorage()
             .writeSecureData("${dotenv.env['KEY_TOKEN']}", value.token);
-        // String? storedToken =
-        //     await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
-        // _showSnackBar('Token: $storedToken'); // Awaited token value
         Navigator.pop(context);
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => Home()),
@@ -107,123 +101,124 @@ class _LoginState extends State<Login> {
           child: Center(
             child: AbsorbPointer(
               absorbing: _isLoading, // Prevent user interaction when loading
-              child: Column(
-                children: [
-                  RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      style: TextStyle(color: Colors.grey),
-                      children: [
-                        TextSpan(
-                            text:
-                                "Selamat Datang kembali! Masuk untuk melanjutkan, atau "),
-                        TextSpan(
-                            style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold),
-                            text: "Daftar ",
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.pushReplacement(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return Signup();
-                                }));
-                              }),
-                        TextSpan(text: "jika Anda pengguna baru"),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 50),
-                  MyTextfieldAuth(
-                    labelText: "Alamat E-mail",
-                    controller: emailController,
-                    hintText: "Email",
-                    obscureText: false,
-                  ),
-                  SizedBox(height: 20),
-                  // Password field with toggleable obscure text
-                  TextFormField(
-                    controller: passwordController,
-                    obscureText: _isPasswordObscured,
-                    decoration: InputDecoration(
-                      labelText: 'Kata Sandi',
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Color.fromRGBO(200, 200, 200, 1)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey.shade200),
-                      ),
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: 'Kata Sandi',
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _isPasswordObscured
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isPasswordObscured = !_isPasswordObscured;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                              text: "Lupa Kata Sandi",
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Column(
+                  children: [
+                    SizedBox(height: 20),
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        style: TextStyle(color: Colors.grey),
+                        children: [
+                          TextSpan(
+                              text:
+                                  "Selamat Datang kembali! Masuk untuk melanjutkan, atau "),
+                          TextSpan(
                               style: TextStyle(
-                                  color: Colors.red,
-                                  decoration: TextDecoration.underline),
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold),
+                              text: "Daftar ",
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  Navigator.push(context,
+                                  Navigator.pushReplacement(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return ForgotPassword();
+                                    return Signup();
                                   }));
                                 }),
+                          TextSpan(text: "jika Anda pengguna baru"),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 50),
+                    // Email Field
+                    MyTextfieldAuth(
+                      labelText: "Alamat E-mail",
+                      controller: emailController,
+                      hintText: "Email",
+                      isPassword: false, // Not a password field
+                    ),
+                    SizedBox(height: 20),
+                    // Password Field with Toggle
+                    MyTextfieldAuth(
+                      labelText: "Kata Sandi",
+                      controller: passwordController,
+                      hintText: "Kata Sandi",
+                      isPassword: true, // Enable obscure text toggle
+                    ),
+                    SizedBox(height: 5),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                                text: "Lupa Kata Sandi",
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    decoration: TextDecoration.underline),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return ForgotPassword();
+                                    }));
+                                  }),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    ElevatedButton(
+                      onPressed: _isLoading ? null : signUserIn,
+                      style: ElevatedButton.styleFrom(
+                        side: BorderSide(color: MyColor.color1),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 100, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
+                        // primary: MyColor.color1, // Button background color
+                        // onPrimary: Colors.white, // Button text color
+                      ),
+                      child: _isLoading
+                          ? SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            ) // Loading indicator inside the button
+                          : Text(
+                              "MASUK",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                    ),
+                    SizedBox(height: 30),
+                    Row(
+                      children: [
+                        Expanded(child: Divider()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text("Atau"),
+                        ),
+                        Expanded(child: Divider()),
                       ],
                     ),
-                  ),
-                  SizedBox(height: 30),
-                  ElevatedButton(
-                    onPressed: _isLoading ? null : signUserIn,
-                    style: ElevatedButton.styleFrom(
-                      // primary: Colors.white,
-                      side: BorderSide(color: MyColor.color1),
-                      // onPrimary: Color.fromRGBO(71, 74, 151, 1),
+                    SizedBox(height: 30),
+                    MyButtonAuth3(
+                      onTap: () {
+                        // Implement Google Sign-In functionality
+                      },
+                      label_name: "Masuk Menggunakan Google",
+                      backgroundColor: Colors.white,
+                      textColor: Colors.grey,
                     ),
-                    child: _isLoading
-                        ? CircularProgressIndicator(
-                            color: Color.fromRGBO(71, 74, 151, 1),
-                          ) // Loading indicator inside the button
-                        : Text("MASUK"),
-                  ),
-                  SizedBox(height: 30),
-                  Row(
-                    children: [
-                      Expanded(child: Divider()),
-                      Text("Atau"),
-                      Expanded(child: Divider()),
-                    ],
-                  ),
-                  SizedBox(height: 30),
-                  MyButtonAuth3(
-                    onTap: () {},
-                    label_name: "Masuk Menggunakan Google",
-                    backgroundColor: Colors.white,
-                    textColor: Colors.grey,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

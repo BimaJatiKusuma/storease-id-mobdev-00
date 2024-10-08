@@ -121,7 +121,7 @@ class _LoginState extends State<Login> {
                               text: "Daftar ",
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  Navigator.pushReplacement(context,
+                                  Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
                                     return Signup();
                                   }));

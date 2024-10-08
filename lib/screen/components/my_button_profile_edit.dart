@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class MyButtonProfileEdit extends StatelessWidget {
+  final Function onTap;
   final String title;
   final Color color;
 
   const MyButtonProfileEdit({
+    required this.onTap,
     required this.color,
     required this.title,
     super.key,
@@ -16,7 +19,7 @@ class MyButtonProfileEdit extends StatelessWidget {
       borderRadius: BorderRadius.circular(10), // Rounded corners
       child: InkWell(
         onTap: () {
-          // Define your onTap action here
+          onTap;
         },
         borderRadius: BorderRadius.circular(10), // InkWell splash will follow rounded corners
         splashColor: color.withOpacity(0.3), // Customize splash color

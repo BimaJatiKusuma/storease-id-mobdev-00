@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_package_list_item.dart';
-import 'package:storease_mobileapp_dev/screen/package/packageDetail.dart';
 
 class ListPackage extends StatefulWidget {
   final String title_list;

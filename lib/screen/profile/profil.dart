@@ -1,9 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:http/http.dart' as http;
 import 'package:storease_mobileapp_dev/api/api_services.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/method/secure_storage.dart';
@@ -92,8 +89,8 @@ class _ProfilState extends State<Profil> {
                                     fit: StackFit.expand,
                                     children: [
                                       CircleAvatar(
-                                        backgroundImage: userData!.photo_profile != null
-                                            ? NetworkImage(userData!.photo_profile)
+                                        backgroundImage: userData!.photoProfile != null
+                                            ? NetworkImage(userData!.photoProfile)
                                             : AssetImage("images/account_circle_blue.png") as ImageProvider,
                                       ),
                                       Positioned(
@@ -105,6 +102,7 @@ class _ProfilState extends State<Profil> {
                                               context,
                                               MaterialPageRoute(builder: (context) {
                                                 return ProfileEdit();
+                                                // return ProfileEdit();
                                               }),
                                             );
                                           },

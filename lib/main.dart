@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/internet/dependency_injection.dart';
-import 'package:storease_mobileapp_dev/internet/internet_controller.dart';
-import 'package:storease_mobileapp_dev/screen/home.dart';
-import 'package:storease_mobileapp_dev/method/secure_storage.dart'; 
 import 'package:storease_mobileapp_dev/splash.dart';
 
 void main() async {

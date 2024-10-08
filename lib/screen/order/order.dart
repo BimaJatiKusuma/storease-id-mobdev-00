@@ -167,6 +167,5 @@ class OrderContent extends StatelessWidget {
       ),
     );
 
-    ;
   }
 }

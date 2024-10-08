@@ -1,6 +1,15 @@
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
+import 'package:storease_mobileapp_dev/method/secure_storage.dart';
+import 'package:storease_mobileapp_dev/model/profileUpdateResponseModel.dart';
+import 'package:storease_mobileapp_dev/model/profileUpdateRequestModel.dart';
+import 'package:http_parser/http_parser.dart'; // For MediaType
+import 'package:mime/mime.dart'; // For MIME type detection
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -9,6 +18,7 @@ import 'package:storease_mobileapp_dev/model/loginRequestModel.dart';
 import 'package:storease_mobileapp_dev/model/loginResponseModel.dart';
 import 'package:storease_mobileapp_dev/model/profileResponseModel.dart';
 import 'package:storease_mobileapp_dev/model/profileUpdateRequestModel.dart';
+import 'package:storease_mobileapp_dev/model/profileUpdateResponseModel.dart';
 import 'package:storease_mobileapp_dev/model/signupRequestModel.dart';
 import 'package:storease_mobileapp_dev/model/signupResponseModel.dart';
 
@@ -78,38 +88,50 @@ class ApiServices {
       throw Exception('Failed  to load data');
     }
   }
+Future<ProfileUpdateResponseModel?> updateProfile(ProfileUpdateRequestModel requestModel) async {
+  String token = await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
+  String url = "${baseAPiurl}/customer";
+  Uri finalURI = Uri.parse(url);
 
-  Future<ProfileUpdateRequestModel?> updateProfile() async {
-    String token =
-        await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
-    String url = "${baseAPiurl}/customer";
-    Uri finalURI = Uri.parse(url);
+  try {
+    var request = http.MultipartRequest("POST", finalURI);
+    request.headers['Authorization'] = 'Bearer $token';
 
-    try {
-      var request = http.MultipartRequest("POST", finalURI);
-      request.headers['Authorization'] = token;
-    } catch (e) {
-      print(e.toString());
+    // Add text fields
+    request.fields['name'] = requestModel.name;
+    request.fields['password'] = requestModel.password;
+    request.fields['email'] = requestModel.email;
+
+    // Add profile image if it exists
+    if (requestModel.profile_img != null) {
+      final mimeTypeData = lookupMimeType(requestModel.profile_img!.path, headerBytes: [0xFF, 0xD8])?.split('/');
+      request.files.add(await http.MultipartFile.fromPath(
+        'profile_img',
+        requestModel.profile_img!.path,
+        contentType: mimeTypeData != null && mimeTypeData.length == 2 
+            ? MediaType(mimeTypeData[0], mimeTypeData[1]) 
+            : MediaType('image', 'jpeg'), // Default to JPEG
+      ));
     }
+
+    // Send the request
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      var responseData = jsonDecode(response.body);
+      return ProfileUpdateResponseModel.fromJson(responseData);
+    } else {
+      print('Failed to update profile: ${response.body}');
+      throw Exception('Failed to update profile: ${response.body}');
+    }
+  } catch (e) {
+    print('Error in updateProfile: $e');
+    throw Exception('Failed to update profile: $e');
   }
+}
 
-  // Future<dynamic> uploadImage(Uint8List bytes, String fileName) async {
-  //   Uri url = Uri.parse("https://api.escuelajs.co/api/v1/files/upload");
-  //   var request = http.MultipartRequest("POST", url);
-  //   var myFile = http.MultipartFile(
-  //       "file", http.ByteStream.fromBytes(bytes), bytes.length,
-  //       filename: fileName
-  //       );
 
-  //   request.files.add(myFile);
-  //   final response = await request.send();
-  //   if (response.statusCode == 200) {
-  //     var data = await response.stream.bytesToString();
-  //     return jsonDecode(data);
-  //   } else {
-  //     return null;
-  //   }
-  // }
 
   Future<bool> getTokenStatus() async {
     String token =

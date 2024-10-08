@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class MyButtonProfileEdit extends StatelessWidget {
-  final Function onTap;
+  final VoidCallback onTap; // Use VoidCallback for better type safety
   final String title;
   final Color color;
 
@@ -18,9 +17,7 @@ class MyButtonProfileEdit extends StatelessWidget {
     return Material(
       borderRadius: BorderRadius.circular(10), // Rounded corners
       child: InkWell(
-        onTap: () {
-          onTap;
-        },
+        onTap: onTap, // Directly pass the callback
         borderRadius: BorderRadius.circular(10), // InkWell splash will follow rounded corners
         splashColor: color.withOpacity(0.3), // Customize splash color
         child: Container(
@@ -29,9 +26,11 @@ class MyButtonProfileEdit extends StatelessWidget {
             border: Border.all(color: color),
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Text(
-            title,
-            style: TextStyle(color: color),
+          child: Center( // Center the text
+            child: Text(
+              title,
+              style: TextStyle(color: color),
+            ),
           ),
         ),
       ),

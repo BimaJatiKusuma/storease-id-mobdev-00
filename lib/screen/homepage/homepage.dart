@@ -19,7 +19,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String? idUser; // State variable for user ID
+  late String idUser; // State variable for user ID
   String phoneNumber = "+6285895929918";
 
   @override
@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadUserId() async {
-    String? userId = await SecureStorage().readSecureData(dotenv.env["KEY_USER_ID"]!);
+    String userId = await SecureStorage().readSecureData(dotenv.env["KEY_USER_ID"]!);
     setState(() {
       idUser = userId; // Set user ID once retrieved
     });
@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
         // ),
         actions: [
           IconButton(onPressed: () {
-            sendWhatsAppMessage(idUser!, phoneNumber);
+            sendWhatsAppMessage(idUser, phoneNumber);
           }, icon: Icon(Icons.chat_bubble_outline)),
           IconButton(onPressed: (){
             Navigator.push(context, MaterialPageRoute(builder: (context){

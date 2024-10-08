@@ -32,14 +32,19 @@ class MyContentHomepagePackage extends StatelessWidget {
                             decoration: TextDecoration.underline),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context){
-                              return ListPackage(title_list: title,);
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return ListPackage(
+                                title_list: title,
+                              );
                             }));
                           })),
               ],
             ),
           ),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           Container(
             constraints: BoxConstraints(maxHeight: 250),
             child: ListView(
@@ -60,6 +65,33 @@ class MyContentHomepagePackage extends StatelessWidget {
                     return PackageDetail();
                   }));
                 }),
+                Container(
+                    child: Column(
+                  children: [
+                    Text("Lihat Lainnya"),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        shape:
+                            WidgetStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) {
+                            return ListPackage(
+                              title_list: title,
+                            );
+                          }),
+                        );
+                      },
+                      child: Icon(Icons.arrow_forward_ios),
+                    )
+                  ],
+                ))
               ],
             ),
           )

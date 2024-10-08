@@ -35,26 +35,25 @@ class _ProfilState extends State<Profil> {
     loadUserProfile();
   }
 
-   Future<void> loadUserProfile() async {
+  Future<void> loadUserProfile() async {
     ApiServices apiServices = ApiServices();
-    apiServices.getProfile().then((value){
-      
-    if (value != null && value != null) {
-      setState(() {
-        userData = value;
-        print(userData);
-        isLoading = false;
-      });
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-      // Optionally, handle unauthorized state by redirecting to login
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => Login()),
-        (Route<dynamic> route) => false,
-      );
-    }
+    apiServices.getProfile().then((value) {
+      if (value != null && value != null) {
+        setState(() {
+          userData = value;
+          print(userData);
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        // Optionally, handle unauthorized state by redirecting to login
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Login()),
+          (Route<dynamic> route) => false,
+        );
+      }
     });
   }
 
@@ -89,22 +88,37 @@ class _ProfilState extends State<Profil> {
                                     fit: StackFit.expand,
                                     children: [
                                       CircleAvatar(
-                                        backgroundImage: userData!.photoProfile != null
-                                            ? NetworkImage(userData!.photoProfile)
-                                            : AssetImage("images/account_circle_blue.png") as ImageProvider,
+                                        backgroundImage: userData!
+                                                    .photoProfile !=
+                                                null
+                                            ? NetworkImage(
+                                                userData!.photoProfile)
+                                            : AssetImage(
+                                                    "images/account_circle_blue.png")
+                                                as ImageProvider,
                                       ),
                                       Positioned(
                                         bottom: 0,
                                         right: -25,
                                         child: RawMaterialButton(
-                                          onPressed: () {
-                                            Navigator.push(
+                                          onPressed: () async {
+                                            // Navigate to ProfileEdit and wait for the result
+                                            bool? shouldReload =
+                                                await Navigator.push(
                                               context,
-                                              MaterialPageRoute(builder: (context) {
-                                                return ProfileEdit();
-                                                // return ProfileEdit();
-                                              }),
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ProfileEdit()),
                                             );
+
+                                            // If the user successfully edited their profile, reload the data
+                                            if (shouldReload == true) {
+                                              setState(() {
+                                                isLoading =
+                                                    true; // Show loading indicator
+                                              });
+                                              await loadUserProfile(); // Reload profile data
+                                            }
                                           },
                                           elevation: 2.0,
                                           fillColor: Colors.amber,
@@ -122,12 +136,16 @@ class _ProfilState extends State<Profil> {
                                   child: Container(
                                     alignment: Alignment.centerLeft,
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           userData!.name ?? "N/A",
-                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                         Text(
                                           "@${userData!.name ?? "N/A"}",
@@ -143,14 +161,18 @@ class _ProfilState extends State<Profil> {
                           Divider(),
                           Column(
                             children: [
-                              Text("Akun Saya", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              Text("Akun Saya",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)),
                               SizedBox(
                                 height: 10,
                               ),
                               MyButtonProfileMyAccount(
                                   icon: Icon(Icons.event),
                                   onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
                                       return WeddingEssentials();
                                     }));
                                   },
@@ -161,7 +183,8 @@ class _ProfilState extends State<Profil> {
                               MyButtonProfileMyAccount(
                                   icon: Icon(Icons.shopping_bag_outlined),
                                   onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
                                       return Order();
                                     }));
                                   },
@@ -172,7 +195,8 @@ class _ProfilState extends State<Profil> {
                               MyButtonProfileMyAccount(
                                   icon: Icon(Icons.history),
                                   onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
                                       return History();
                                     }));
                                   },
@@ -188,7 +212,8 @@ class _ProfilState extends State<Profil> {
                           ),
                           MyButtonProfileConfigure(
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
                                   return Language();
                                 }));
                               },
@@ -200,7 +225,8 @@ class _ProfilState extends State<Profil> {
                           ),
                           MyButtonProfileConfigure(
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
                                   return Help();
                                 }));
                               },
@@ -212,7 +238,8 @@ class _ProfilState extends State<Profil> {
                           ),
                           MyButtonProfileConfigure(
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
                                   return TermsAndcondition();
                                 }));
                               },
@@ -231,22 +258,31 @@ class _ProfilState extends State<Profil> {
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                       title: Text("Keluar Akun"),
-                                      content: Text("Apakah Anda yakin ingin keluar akun?"),
+                                      content: Text(
+                                          "Apakah Anda yakin ingin keluar akun?"),
                                       actions: <Widget>[
                                         TextButton(
                                           child: Text("Batal"),
                                           onPressed: () {
-                                            Navigator.of(context).pop(); // Close the dialog
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
                                           },
                                         ),
                                         TextButton(
                                           child: Text("Keluar"),
                                           onPressed: () async {
-                                            await SecureStorage().deleteSecureData("${dotenv.env["KEY_TOKEN"]}");
-                                            Navigator.of(context).pop(); // Close the dialog
-                                            Navigator.of(context).pushAndRemoveUntil(
-                                              MaterialPageRoute(builder: (context) => Login()),
-                                              (Route<dynamic> route) => false, // Remove all previous routes
+                                            await SecureStorage()
+                                                .deleteSecureData(
+                                                    "${dotenv.env["KEY_TOKEN"]}");
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                            Navigator.of(context)
+                                                .pushAndRemoveUntil(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Login()),
+                                              (Route<dynamic> route) =>
+                                                  false, // Remove all previous routes
                                             );
                                           },
                                         ),

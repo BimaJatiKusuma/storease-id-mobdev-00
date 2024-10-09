@@ -122,68 +122,6 @@ class _ProfileEditState extends State<ProfileEdit> {
     }
   }
 
-  // Future<void> updateUserProfile() async {
-  //   if (usernameController.text.isEmpty ||
-  //       emailController.text.isEmpty ||
-  //       passwordController.text.isEmpty ||
-  //       locationController.text.isEmpty) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Please fill all fields')),
-  //     );
-  //     return;
-  //   }
-
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
-
-  //   try {
-  //     ProfileUpdateRequestModel requestModel = ProfileUpdateRequestModel(
-  //       name: usernameController.text,
-  //       password: "password",
-  //       email: emailController.text,
-  //       // location: locationController.text, // Assuming location field
-  //       profile_img: _imageFile, // Handle if no image is selected
-  //     );
-
-  //     ApiServices apiServices = ApiServices();
-  //     ProfileUpdateResponseModel? response =
-  //         await apiServices.updateProfile(requestModel);
-
-  //     setState(() {
-  //       _isLoading = false;
-  //     });
-
-  //     if (response != null && response.message.isNotEmpty) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text(response.message)),
-  //       );
-  //       // Optionally, you can refresh the profile data here
-  //       // await loadUserProfile();
-
-  //       // Delay to allow the user to read the success message
-  //       await Future.delayed(Duration(seconds: 1));
-  //       // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-  //       //   return Profil();
-  //       // }));
-  //       Navigator.pop(context, true); // You can pass data back if needed
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(
-  //             content: Text(response?.message ?? 'Failed to update profile')),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     setState(() {
-  //       _isLoading = false;
-  //     });
-  //     print('Error updating profile: $e');
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('An error occurred')),
-  //     );
-  //   }
-  // }
-
 Future<void> updateUserProfile() async {
     if (usernameController.text.isEmpty ||
         emailController.text.isEmpty ||

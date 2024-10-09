@@ -1,24 +1,16 @@
 import 'dart:convert';
-import 'dart:math';
-import 'dart:typed_data';
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:storease_mobileapp_dev/method/secure_storage.dart';
+import 'package:storease_mobileapp_dev/model/packageResponseModel.dart';
 import 'package:storease_mobileapp_dev/model/profileUpdateResponseModel.dart';
 import 'package:storease_mobileapp_dev/model/profileUpdateRequestModel.dart';
 import 'package:http_parser/http_parser.dart'; // For MediaType
 import 'package:mime/mime.dart'; // For MIME type detection
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart' as http;
-import 'package:storease_mobileapp_dev/method/secure_storage.dart';
 import 'package:storease_mobileapp_dev/model/loginRequestModel.dart';
 import 'package:storease_mobileapp_dev/model/loginResponseModel.dart';
 import 'package:storease_mobileapp_dev/model/profileResponseModel.dart';
-import 'package:storease_mobileapp_dev/model/profileUpdateRequestModel.dart';
-import 'package:storease_mobileapp_dev/model/profileUpdateResponseModel.dart';
 import 'package:storease_mobileapp_dev/model/signupRequestModel.dart';
 import 'package:storease_mobileapp_dev/model/signupResponseModel.dart';
 
@@ -151,6 +143,44 @@ Future<ProfileUpdateResponseModel?> updateProfile(ProfileUpdateRequestModel requ
       return true;
     } else {
       return false;
+    }
+  }
+
+  Future<PackageResponseModel> getPackage() async {
+    String token = await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
+    String url = "https://dummyjson.com/products";
+    Uri finalURI = Uri.parse(url);
+
+    final response = await http.get(
+      finalURI,
+      
+    );
+
+    print(response);
+    if(response.statusCode == 200){
+      return PackageResponseModel.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to load data");
+
+    }
+  }
+
+    Future<PackageResponseModel> getPackagByCategory(String category) async {
+    String token = await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
+    String url = "https://dummyjson.com/products/category/$category";
+    Uri finalURI = Uri.parse(url);
+
+    final response = await http.get(
+      finalURI,
+      
+    );
+
+    print(response);
+    if(response.statusCode == 200){
+      return PackageResponseModel.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to load data");
+
     }
   }
 }

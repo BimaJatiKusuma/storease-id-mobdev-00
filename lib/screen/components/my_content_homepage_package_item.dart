@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:storease_mobileapp_dev/model/packageResponseModel.dart';
 
 class MyContentHomepagePackageItem extends StatelessWidget {
   final VoidCallback? onTap;
+  final PackageModel package;
 
   const MyContentHomepagePackageItem({
     Key? key,
     required this.onTap,
+    required this.package,
   }) : super(key: key);
 
   @override
@@ -37,16 +40,20 @@ class MyContentHomepagePackageItem extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  "images/package_image.png",
-                  height: 100,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
+                child:
+                Image.network(package.thumbnail_url,
+                  height: 100, width: double.infinity, fit: BoxFit.cover,
+                )
+                // Image.asset(
+                //   "images/package_image.png",
+                //   height: 100,
+                //   width: double.infinity,
+                //   fit: BoxFit.cover,
+                // ),
               ),
               const SizedBox(height: 8),
               Text(
-                "Elegant Affair Package | Outdoor Wedding",
+                package.title ?? "Elegant Affair Package | Outdoor Wedding",
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 13,

@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:storease_mobileapp_dev/api/api_services.dart';
 import 'package:storease_mobileapp_dev/screen/auth/ForgotPassword.dart';
 import 'package:storease_mobileapp_dev/screen/auth/Signup.dart';
@@ -21,6 +22,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final SecureStorage _secureStorage = SecureStorage();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   late LoginRequestModel requestModel;
@@ -72,6 +74,8 @@ class _LoginState extends State<Login> {
       if (value.token.isNotEmpty) {
         await SecureStorage()
             .writeSecureData("${dotenv.env['KEY_TOKEN']}", value.token);
+                    Map<String, dynamic> decodedToken = JwtDecoder.decode(value.token);
+            _secureStorage.writeSecureData(dotenv.env["KEY_USER_ID"]!, decodedToken["sub"]);
         Navigator.pop(context);
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => Home()),

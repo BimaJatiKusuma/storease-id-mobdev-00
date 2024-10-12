@@ -7,6 +7,7 @@ import 'package:storease_mobileapp_dev/method/secure_storage.dart';
 import 'package:storease_mobileapp_dev/model/packageResponseModel.dart';
 import 'package:storease_mobileapp_dev/screen/ai/ai.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_package.dart';
+import 'package:storease_mobileapp_dev/screen/components/shimmer_skeleton.dart';
 import 'package:storease_mobileapp_dev/screen/notification/notification.dart';
 
 import '../../method/send_whatsapp_message.dart';
@@ -42,6 +43,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  List<String> categoryList = ["beauty", "fragrances", "furniture"];
   List<PackageModel>? package1;
   List<PackageModel>? package2;
   List<PackageModel>? package3;
@@ -50,16 +52,14 @@ class _HomePageState extends State<HomePage> {
 
     try {
       PackageResponseModel beautyPackages =
-          await apiServices.getPackagByCategory("beauty");
+          await apiServices.getPackagByCategory(categoryList[0]);
       PackageResponseModel fragrancesPackages =
-          await apiServices.getPackagByCategory("fragrances");
+          await apiServices.getPackagByCategory(categoryList[1]);
       PackageResponseModel furniturePackages =
-          await apiServices.getPackagByCategory("furniture");
+          await apiServices.getPackagByCategory(categoryList[2]);
 
       setState(() {
         package1 = beautyPackages.package;
-        // package2 = beautyPackages.package;
-        // package3 = beautyPackages.package;
         package2 = fragrancesPackages.package;
         package3 = furniturePackages.package;
       });
@@ -72,12 +72,25 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLoading = package1 == null || package2 == null || package3 == null;
+
     return Scaffold(
       appBar: AppBar(
-        leading: Image.asset("images/logo_white.png"),
-        title: Text(
-          "STOREASE",
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+                width: 30,
+                height: 30,
+                child: Image.asset(
+                  "images/logo_white.png",
+                  fit: BoxFit.contain,
+                )),
+            Text(
+              "STOREASE",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
         actions: [
           IconButton(
@@ -85,7 +98,6 @@ class _HomePageState extends State<HomePage> {
               if (idUser != null) {
                 sendWhatsAppMessage(idUser, phoneNumber);
               } else {
-                // Handle the case where idUser is not yet loaded
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("User ID not loaded yet")),
                 );
@@ -117,47 +129,47 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 SizedBox(height: 10),
-                SizedBox(height: 10),
                 SizedBox(
                   height: 150,
                   width: double.infinity,
-                  child: AnotherCarousel(
-                    images: [
-                      AssetImage("images/banner.png"),
-                      AssetImage("images/banner.png"),
-                      AssetImage("images/banner.png"),
-                    ],
-                    dotSize: 6,
-                    indicatorBgPadding: 5.0,
-                  ),
+                  child: isLoading
+                      ? ShimmerSkeleton()
+                      : AnotherCarousel(
+                          images: [
+                            AssetImage("images/banner.png"),
+                            AssetImage("images/banner.png"),
+                            AssetImage("images/banner.png"),
+                          ],
+                          dotSize: 6,
+                          indicatorBgPadding: 5.0,
+                        ),
                 ),
                 SizedBox(height: 10),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5),
-                  child: Divider(
-                    color: MyColor.color1,
-                  ),
+                Divider(
+                  indent: 5,
+                  endIndent: 5,
+                  thickness: 2,
+                  color: MyColor.color1,
                 ),
-                // Check if packages are loaded
-                if (package1 != null &&
-                    package2 != null &&
-                    package3 != null) ...[
-                  MyContentHomepagePackage(
-                      title: "Paket Tipe A", packages: package1!),
-                  SizedBox(height: 20),
-                  MyContentHomepagePackage(
-                      title: "Paket Tipe B", packages: package2!),
-                  SizedBox(height: 20),
-                  MyContentHomepagePackage(
-                      title: "Paket Tipe C", packages: package3!),
-                  SizedBox(height: 20),
-                ] else ...[
-                  // Show a loading indicator while packages are being fetched
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: CircularProgressIndicator(),
-                  ),
-                ],
+                // Pass loading state to MyContentHomepagePackage
+                MyContentHomepagePackage(
+                  title: categoryList[0],
+                  packages: package1,
+                  loading: isLoading,
+                ),
+                SizedBox(height: 20),
+                MyContentHomepagePackage(
+                  title: categoryList[1],
+                  packages: package2,
+                  loading: isLoading,
+                ),
+                SizedBox(height: 20),
+                MyContentHomepagePackage(
+                  title: categoryList[2],
+                  packages: package3,
+                  loading: isLoading,
+                ),
+                SizedBox(height: 20),
               ],
             ),
           ),

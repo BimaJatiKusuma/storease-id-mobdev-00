@@ -8,6 +8,7 @@ import 'package:storease_mobileapp_dev/model/profileResponseModel.dart';
 import 'package:storease_mobileapp_dev/screen/auth/Login.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_button_profile_configure.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_button_profile_my_account.dart';
+import 'package:storease_mobileapp_dev/screen/components/shimmer_skeleton.dart';
 import 'package:storease_mobileapp_dev/screen/order/order.dart';
 import 'package:storease_mobileapp_dev/screen/profile/help.dart';
 import 'package:storease_mobileapp_dev/screen/profile/history.dart';
@@ -67,239 +68,248 @@ class _ProfilState extends State<Profil> {
         automaticallyImplyLeading: false,
       ),
       body: SafeArea(
-        child: isLoading
-            ? Center(child: CircularProgressIndicator())
-            : userData == null
-                ? Center(child: Text("Failed to load profile"))
-                : SingleChildScrollView(
-                    child: Center(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 100,
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(5),
-                                  width: 100,
-                                  height: 100,
-                                  child: Stack(
-                                    clipBehavior: Clip.none,
-                                    fit: StackFit.expand,
-                                    children: [
-                                      CircleAvatar(
-                                        backgroundImage: userData!
-                                                    .photoProfile !=
-                                                null
-                                            ? NetworkImage(
-                                                userData!.photoProfile)
-                                            : AssetImage(
-                                                    "images/account_circle_blue.png")
-                                                as ImageProvider,
-                                      ),
-                                      Positioned(
-                                        bottom: 0,
-                                        right: -25,
-                                        child: RawMaterialButton(
-                                          onPressed: () async {
-                                            // Navigate to ProfileEdit and wait for the result
-                                            bool? shouldReload =
-                                                await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ProfileEdit()),
-                                            );
-
-                                            // If the user successfully edited their profile, reload the data
-                                            if (shouldReload == true) {
-                                              setState(() {
-                                                isLoading =
-                                                    true; // Show loading indicator
-                                              });
-                                              await loadUserProfile(); // Reload profile data
-                                            }
-                                          },
-                                          elevation: 2.0,
-                                          fillColor: Colors.amber,
-                                          child: Icon(Icons.edit),
-                                          shape: CircleBorder(),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+        child: SingleChildScrollView(
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                children: [
+                  isLoading
+                      ? Container(
+                          height: 100,
+                          width: double.infinity,
+                          child: ShimmerSkeleton(),
+                        )
+                      : userData == null
+                          ? Center(
+                              child: Text("Gagal mendapatkan profil"),
+                            )
+                          : SizedBox(
+                              height: 100,
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(5),
+                                    width: 100,
+                                    height: 100,
+                                    child: Stack(
+                                      clipBehavior: Clip.none,
+                                      fit: StackFit.expand,
                                       children: [
-                                        Text(
-                                          userData!.name ?? "N/A",
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold),
+                                        CircleAvatar(
+                                          backgroundImage: userData!
+                                                      .photoProfile !=
+                                                  null
+                                              ? NetworkImage(
+                                                  userData!.photoProfile)
+                                              : AssetImage(
+                                                      "images/account_circle_blue.png")
+                                                  as ImageProvider,
                                         ),
-                                        Text(
-                                          "@${userData!.name ?? "N/A"}",
-                                          style: TextStyle(color: Colors.grey),
+                                        Positioned(
+                                          bottom: 0,
+                                          right: -25,
+                                          child: RawMaterialButton(
+                                            onPressed: () async {
+                                              // Navigate to ProfileEdit and wait for the result
+                                              bool? shouldReload =
+                                                  await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ProfileEdit()),
+                                              );
+              
+                                              // If the user successfully edited their profile, reload the data
+                                              if (shouldReload == true) {
+                                                setState(() {
+                                                  isLoading =
+                                                      true; // Show loading indicator
+                                                });
+                                                await loadUserProfile(); // Reload profile data
+                                              }
+                                            },
+                                            elevation: 2.0,
+                                            fillColor: Colors.amber,
+                                            child: Icon(Icons.edit),
+                                            shape: CircleBorder(),
+                                          ),
                                         )
                                       ],
                                     ),
                                   ),
-                                )
-                              ],
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      alignment: Alignment.centerLeft,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            userData!.name ?? "N/A",
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            "@${userData!.name ?? "N/A"}",
+                                            style: TextStyle(color: Colors.grey),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                          Divider(),
-                          Column(
-                            children: [
-                              Text("Akun Saya",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold)),
-                              SizedBox(
-                                height: 10,
+                  Divider(),
+                  Column(
+                    children: [
+                      Text("Akun Saya",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      MyButtonProfileMyAccount(
+                          loading: isLoading,
+                          icon: Icon(Icons.event),
+                          onPressed: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return WeddingEssentials();
+                            }));
+                          },
+                          title: "Kelengkapan Pernikahan"),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      MyButtonProfileMyAccount(
+                          loading: isLoading,
+                          icon: Icon(Icons.shopping_bag_outlined),
+                          onPressed: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return Order();
+                            }));
+                          },
+                          title: "Pesanan Saya"),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      MyButtonProfileMyAccount(
+                          loading: isLoading,
+                          icon: Icon(Icons.history),
+                          onPressed: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return History();
+                            }));
+                          },
+                          title: "Riwayat"),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
+                  Divider(),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  MyButtonProfileConfigure(
+                    loading: isLoading,
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return Language();
+                        }));
+                      },
+                      label_name: "Bahasa",
+                      colorBorder: MyColor.color1,
+                      textColor: Colors.black),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  MyButtonProfileConfigure(
+                    loading: isLoading,
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return Help();
+                        }));
+                      },
+                      label_name: "Bantuan",
+                      colorBorder: MyColor.color1,
+                      textColor: Colors.black),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  MyButtonProfileConfigure(
+                    loading: isLoading,
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return TermsAndcondition();
+                        }));
+                      },
+                      label_name: "Syarat Dan Ketentuan",
+                      colorBorder: MyColor.color1,
+                      textColor: Colors.black),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  MyButtonProfileConfigure(
+                    loading: isLoading,
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Keluar Akun"),
+                            content:
+                                Text("Apakah Anda yakin ingin keluar akun?"),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text("Batal"),
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                },
                               ),
-                              MyButtonProfileMyAccount(
-                                  icon: Icon(Icons.event),
-                                  onPressed: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return WeddingEssentials();
-                                    }));
-                                  },
-                                  title: "Kelengkapan Pernikahan"),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              MyButtonProfileMyAccount(
-                                  icon: Icon(Icons.shopping_bag_outlined),
-                                  onPressed: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return Order();
-                                    }));
-                                  },
-                                  title: "Pesanan Saya"),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              MyButtonProfileMyAccount(
-                                  icon: Icon(Icons.history),
-                                  onPressed: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return History();
-                                    }));
-                                  },
-                                  title: "Riwayat"),
-                              SizedBox(
-                                height: 10,
+                              TextButton(
+                                child: Text("Keluar"),
+                                onPressed: () async {
+                                  await SecureStorage().deleteSecureData(
+                                      "${dotenv.env["KEY_TOKEN"]}");
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context) => Login()),
+                                    (Route<dynamic> route) =>
+                                        false, // Remove all previous routes
+                                  );
+                                },
                               ),
                             ],
-                          ),
-                          Divider(),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          MyButtonProfileConfigure(
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return Language();
-                                }));
-                              },
-                              label_name: "Bahasa",
-                              colorBorder: MyColor.color1,
-                              textColor: Colors.black),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          MyButtonProfileConfigure(
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return Help();
-                                }));
-                              },
-                              label_name: "Bantuan",
-                              colorBorder: MyColor.color1,
-                              textColor: Colors.black),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          MyButtonProfileConfigure(
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return TermsAndcondition();
-                                }));
-                              },
-                              label_name: "Syarat Dan Ketentuan",
-                              colorBorder: MyColor.color1,
-                              textColor: Colors.black),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Container(
-                            width: 200,
-                            child: MyButtonProfileConfigure(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text("Keluar Akun"),
-                                      content: Text(
-                                          "Apakah Anda yakin ingin keluar akun?"),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: Text("Batal"),
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
-                                        ),
-                                        TextButton(
-                                          child: Text("Keluar"),
-                                          onPressed: () async {
-                                            await SecureStorage()
-                                                .deleteSecureData(
-                                                    "${dotenv.env["KEY_TOKEN"]}");
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                            Navigator.of(context)
-                                                .pushAndRemoveUntil(
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Login()),
-                                              (Route<dynamic> route) =>
-                                                  false, // Remove all previous routes
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                              label_name: "Keluar Akun",
-                              colorBorder: Colors.red,
-                              textColor: Colors.red,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                          );
+                        },
+                      );
+                    },
+                    label_name: "Keluar Akun",
+                    colorBorder: Colors.red,
+                    textColor: Colors.red,
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

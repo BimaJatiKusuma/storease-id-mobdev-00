@@ -1,9 +1,13 @@
 
 import 'package:flutter/material.dart';
+import 'package:storease_mobileapp_dev/model/packageResponseModel.dart';
 import 'package:storease_mobileapp_dev/screen/package/packageDetail.dart';
 
 class MyPackageListItem extends StatelessWidget {
-  const MyPackageListItem({
+  final PackageModel package;
+  
+  MyPackageListItem({
+    required this.package,
     super.key,
   });
 
@@ -12,7 +16,7 @@ class MyPackageListItem extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return PackageDetail();
+          return PackageDetail(productID: package.id,);
         }));
       },
       child: Container(
@@ -32,13 +36,10 @@ class MyPackageListItem extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              color: Colors.amber,
+              // color: Colors.amber,
               width: double.infinity,
               constraints: const BoxConstraints(maxHeight: 180),
-              child: Image.asset(
-                "images/venue_image.png",
-                fit: BoxFit.cover,
-              ),
+              child: Image.network(package.thumbnail_url,fit: BoxFit.contain,)
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -47,21 +48,21 @@ class MyPackageListItem extends StatelessWidget {
                 Flexible(
                   flex: 1,
                   child: Container(
-                    child: Text("Paket A"),
+                    child: Text(package.category),
                   ),
                 ),
                 // Second widget with flex 3
                 Flexible(
                   flex: 3,
                   child: Container(
-                    child: Text("Judul Paket"),
+                    child: Text(package.title),
                   ),
                 ),
                 // Third widget with flex 1
                 Flexible(
                   flex: 1,
                   child: Container(
-                    child: Text("Harga"),
+                    child: Text(package.price),
                   ),
                 ),
               ],

@@ -18,15 +18,18 @@ factory PackageResponseModel.fromJson(Map<String, dynamic> json) {
 }
 
 }
+
 class PackageModel {
   final int id;
   final String title;
   final String category;
+  final String description;
   final String price;
   final String thumbnail_url;
   final List<String> image_url;
 
   PackageModel({
+    required this.description,
     required this.id,
     required this.category,
     required this.price,
@@ -40,6 +43,7 @@ class PackageModel {
     List<String> images = imagesFromJson.map((image) => image as String).toList();
 
     return PackageModel(
+      description: json["description"],
       id: json["id"],
       category: json["category"],
       price: json["price"].toString(), // Ensuring price is a String

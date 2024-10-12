@@ -183,4 +183,38 @@ Future<ProfileUpdateResponseModel?> updateProfile(ProfileUpdateRequestModel requ
 
     }
   }
+    Future<PackageResponseModel> getPackagesAll() async {
+    String token = await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
+    String url = "https://dummyjson.com/products";
+    Uri finalURI = Uri.parse(url);
+
+    final response = await http.get(
+      finalURI,
+    );
+
+    print(response);
+    if(response.statusCode == 200){
+      return PackageResponseModel.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to load data");
+    }
+  }
+    Future<PackageModel> getPackagByID(int id) async {
+    String token = await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
+    String url = "https://dummyjson.com/products/$id";
+    Uri finalURI = Uri.parse(url);
+
+    final response = await http.get(
+      finalURI,
+      
+    );
+
+    print(response);
+    if(response.statusCode == 200){
+      return PackageModel.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to load data");
+
+    }
+  }
 }

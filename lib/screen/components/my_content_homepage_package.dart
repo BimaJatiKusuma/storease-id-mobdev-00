@@ -45,7 +45,8 @@ class MyContentHomepagePackage extends StatelessWidget {
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
                             return ListPackage(titleList: title);
                           }));
                         },
@@ -70,18 +71,57 @@ class MyContentHomepagePackage extends StatelessWidget {
                   )
                 : ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: packages?.length ?? 0,
+                    itemCount: (packages!.length > 4) ? 5 : packages!.length,
                     itemBuilder: (context, index) {
-                      final package = packages![index];
+                      if (index < 4) {
+                        final package = packages![index];
 
-                      return MyContentHomepagePackageItem(
-                        package: package,
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) {
-                            return PackageDetail(productID: package.id);
-                          }));
-                        },
-                      );
+                        return MyContentHomepagePackageItem(
+                          package: package,
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return PackageDetail(productID: package.id);
+                            }));
+                          },
+                        );
+                      } else {
+                        // The "Lihat Semua" button as the 5th item
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return ListPackage(titleList: title);
+                            }));
+                          },
+                          child: Center(
+                            // Center the button vertically within its parent
+                            child: SizedBox(
+                              // width: 150, // Button width
+                              // height: 50, // Button height
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors
+                                      .white, // iOS-like white button background
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        30), // Make button rounded
+                                  ),
+                                  elevation:
+                                      4, // Elevation to make it "pop" like an iOS button
+                                ),
+                                onPressed: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return ListPackage(titleList: title);
+                                  }));
+                                },
+                                child: Icon(Icons.arrow_forward_ios, size: 40,)
+                              ),
+                            ),
+                          ),
+                        );
+                      }
                     },
                   ),
           ),

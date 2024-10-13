@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_order_cust_table.dart';
 import 'package:storease_mobileapp_dev/screen/order/order.dart';
 import 'package:storease_mobileapp_dev/screen/vr/vrDisplay.dart';
@@ -11,20 +13,52 @@ class PackageCheckout extends StatefulWidget {
 }
 
 class _PackageCheckoutState extends State<PackageCheckout> {
-  DateTime _dateTime = DateTime.now();
+  DateTime? _dateTime;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initializeDateFormatting('id_ID', null);
+  }
 
   void _selectDate() {
     showDatePicker(
-            context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime.now(),
-            lastDate: DateTime(DateTime.now().year + 5))
-        .then((value) {
-      setState(() {
-        _dateTime = value!;
-      });
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(DateTime.now().year + 5),
+    ).then((value) {
+      if (value != null) {
+        setState(() {
+          _dateTime = value; // Set the selected date
+        });
+      }
     });
   }
+
+  String formatDate(DateTime date) {
+    return DateFormat('d MMMM yyyy', 'id_ID').format(date);
+  }
+  
+  // Method to handle the "Buat Pesanan" button press
+  void _onBuatPesananPressed() {
+    if (_dateTime == null) {
+      // If no date has been selected, show a SnackBar warning
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a wedding date before proceeding.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } else {
+      // If a date has been selected, proceed to the next page (Order page)
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return Order(); // Replace with your Order page
+      }));
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +71,7 @@ class _PackageCheckoutState extends State<PackageCheckout> {
         width: 160, // Adjust the width based on the text length
         height: 50, // Adjust the height if necessary
         child: ElevatedButton.icon(
-          onPressed: () {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) {
-              return Order();
-            }));
-          },
+          onPressed: _onBuatPesananPressed,
           icon: Icon(Icons.receipt_long, size: 18), // Use the desired icon
           label: Text("Buat Pesanan"),
           style: ElevatedButton.styleFrom(
@@ -67,14 +96,17 @@ class _PackageCheckoutState extends State<PackageCheckout> {
               child: Column(
                 children: [
                   Text(
-                    "Pilih Tanggal Pernikahan",
+                    "Tanggal Pernikahan",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  ElevatedButton(
-                      onPressed: () {
-                        _selectDate();
-                      },
-                      child: Text("${_dateTime.toLocal()}")),
+                    ElevatedButton(
+                      onPressed: _selectDate,
+                      child: Text(
+                        _dateTime == null
+                            ? "Pilih Tanggal Pernikahan" // If no date selected, show placeholder text
+                            : formatDate(_dateTime!), // Display the selected date
+                      ),
+                    ),
                 ],
               ),
             ),

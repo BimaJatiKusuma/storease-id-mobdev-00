@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:storease_mobileapp_dev/api/api_services.dart';
 import 'package:storease_mobileapp_dev/model/packageResponseModel.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_package_list_item.dart';
+import 'package:storease_mobileapp_dev/screen/components/shimmer_skeleton.dart';
 
 class ListPackage extends StatefulWidget {
   final String titleList;
-  const ListPackage({required this.titleList, super.key});
+  const ListPackage({required this.titleList, Key? key}) : super(key: key);
 
   @override
   State<ListPackage> createState() => _ListPackageState();
@@ -13,30 +14,33 @@ class ListPackage extends StatefulWidget {
 
 class _ListPackageState extends State<ListPackage> {
   late PackageResponseModel packages;
-  late List<PackageModel> package;
+  late List<PackageModel> packageList;
   bool _isLoading = true;
+  String? _errorMessage;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadPackageByCategory();
   }
 
-    Future<void> _loadPackageByCategory() async {
+  Future<void> _loadPackageByCategory() async {
     ApiServices apiServices = ApiServices();
     try {
       PackageResponseModel packagesResponse =
           await apiServices.getPackagByCategory(widget.titleList);
       setState(() {
         packages = packagesResponse;
-        package = packages.package;
+        packageList = packages.package;
         _isLoading = false;
       });
     } catch (e) {
       // Handle exceptions appropriately
       print("Error loading packages: $e");
+      setState(() {
         _isLoading = false;
-      // Optionally, set state to indicate an error occurred
+        _errorMessage = "Failed to load packages. Please try again.";
+      });
     }
   }
 
@@ -44,30 +48,46 @@ class _ListPackageState extends State<ListPackage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.titleList), // Use widget.title_list to access the passed title
+        title: Text(widget.titleList),
       ),
-      body: Center(
-        child: _isLoading ? CircularProgressIndicator() : SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-          child: Column(
-            children: [
-              // Wrap PackageListItem in Container to add margin
-              Container(
-                margin: const EdgeInsets.only(bottom: 10), // Margin after the item
-                child: MyPackageListItem(package: package[0],),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 10), // Margin after the item
-                child: MyPackageListItem(package: package[1],),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 10), // Margin after the item
-                child: MyPackageListItem(package: package[2],),
-              ),
-            ],
-          ),
-        ),
-      ),
+      body: _isLoading
+          ? ListView.builder(
+                      padding: const EdgeInsets.all(10),
+                      itemCount: 5,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          width: double.infinity,
+                          height: 150,
+                          margin: const EdgeInsets.only(bottom: 10),
+                          child: ShimmerSkeleton(),
+                        );
+                      },
+                    )
+          : _errorMessage != null
+              ? Center(
+                  child: Text(
+                    _errorMessage!,
+                    style: const TextStyle(color: Colors.red, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              : packageList.isEmpty
+                  ? const Center(
+                      child: Text(
+                        "No packages available.",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(10),
+                      itemCount: packageList.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          child: MyPackageListItem(package: packageList[index]),
+                        );
+                      },
+                    ),
     );
   }
 }

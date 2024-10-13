@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:storease_mobileapp_dev/api/api_services.dart';
+import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/method/secure_storage.dart';
 import 'package:storease_mobileapp_dev/method/send_whatsapp_message.dart';
 import 'package:storease_mobileapp_dev/model/packageResponseModel.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_package.dart';
+import 'package:storease_mobileapp_dev/screen/components/shimmer_skeleton.dart';
 import 'package:storease_mobileapp_dev/screen/package/packageCheckout.dart';
 import 'package:storease_mobileapp_dev/screen/vr/vrDisplay.dart';
 
@@ -37,25 +40,38 @@ class _PackageDetailState extends State<PackageDetail> {
     _loadPackageByID(widget.productID);
   }
 
+  // Helper method to safely call setState
+  void safeSetState(VoidCallback fn) {
+    if (mounted) {
+      setState(fn);
+    }
+  }
+
   Future<void> _loadUserId() async {
-    String userId =
-        await SecureStorage().readSecureData(dotenv.env["KEY_USER_ID"]!);
-    setState(() {
-      user_id = userId; // Set user ID once retrieved
-    });
+    try {
+      String userId = await SecureStorage().readSecureData(dotenv.env["KEY_USER_ID"]!);
+      safeSetState(() {
+        user_id = userId; // Set user ID once retrieved
+      });
+    } catch (error) {
+      // Handle error if needed
+      safeSetState(() {
+        isLoading = false; // Stop loading even if there's an error
+      });
+    }
   }
 
   Future<void> _loadPackageByID(int id) async {
     ApiServices apiServices = ApiServices();
     try {
       PackageModel fetchedPackage = await apiServices.getPackagByID(id);
-      setState(() {
+      safeSetState(() {
         package = fetchedPackage;
-        _loadPackageByCategory(); // Now load related packages by category
       });
+      await _loadPackageByCategory(); // Await to ensure sequence
     } catch (error) {
       // Handle error here if needed
-      setState(() {
+      safeSetState(() {
         isLoading = false; // Stop loading even if there's an error
       });
     }
@@ -66,16 +82,22 @@ class _PackageDetailState extends State<PackageDetail> {
     try {
       PackageResponseModel packageResponse =
           await apiServices.getPackagByCategory(package!.category);
-      setState(() {
+      safeSetState(() {
         packages = packageResponse.package;
         isLoading = false; // Stop loading after data is fetched
       });
     } catch (error) {
       // Handle error here if needed
-      setState(() {
+      safeSetState(() {
         isLoading = false; // Stop loading even if there's an error
       });
     }
+  }
+
+  @override
+  void dispose() {
+    // Clean up any controllers, streams, etc., if added in the future
+    super.dispose();
   }
 
   @override
@@ -85,152 +107,207 @@ class _PackageDetailState extends State<PackageDetail> {
         title: const Text("Detail Produk"),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  children: [
-                    if (package != null) ...[
+        child: AbsorbPointer(
+          absorbing: isLoading,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    children: [
                       Container(
-                        height: 250, // Set the height for the row of images
-                        child: ListView.builder(
-                          scrollDirection:
-                              Axis.horizontal, // Enables horizontal scrolling
-                          itemCount:
-                              package!.image_url.length, // Number of images
-                          itemBuilder: (context, index) {
-                            return Container(
-                              width: 150, // Set a width for each image
-                              margin: const EdgeInsets.only(
-                                  right: 10), // Spacing between images
-                              decoration:
-                                  BoxDecoration(color: Colors.grey.shade300),
-                              child: Image.network(
-                                package!.image_url[index],
-                                fit: BoxFit.contain,
+                        height: 300, // Set the height for the row of images
+                        child: isLoading
+                            ? ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 3,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(horizontal: 10),
+                                    child: ShimmerSkeleton(
+                                      width: 150,
+                                    ),
+                                  );
+                                })
+                            : ListView.builder(
+                                scrollDirection: Axis.horizontal, // Enables horizontal scrolling
+                                itemCount: package!.image_url.length, // Number of images
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    width: MediaQuery.of(context).size.width, // Set a width for each image
+                                    margin: const EdgeInsets.only(
+                                        right: 10), // Spacing between images
+                                    decoration: BoxDecoration(
+                                        color: Colors.white),
+                                    child: Image.network(
+                                      package!.image_url[index],
+                                      fit: BoxFit.contain,
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
                       ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              package!.title,
-                              textAlign: TextAlign.center,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                              softWrap: true,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                isBookmarked =
-                                    !isBookmarked; // Toggle bookmark state
-                              });
-                            },
-                            icon: Icon(
-                              isBookmarked
-                                  ? Icons.bookmark
-                                  : Icons.bookmark_border,
-                              color: isBookmarked ? Colors.blue : Colors.grey,
-                            ),
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: isLoading
+                            ? ShimmerSkeleton(width: double.infinity)
+                            : Container(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  // borderRadius: BorderRadius.circular(10)
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Rp. ${package!.price}",
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                    const Divider(height: 0),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            package!.title,
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                          ),
+                                        ),
+                                        // Uncomment if needed
+                                        // IconButton(
+                                        //   onPressed: () {
+                                        //     safeSetState(() {
+                                        //       isBookmarked = !isBookmarked; // Toggle bookmark state
+                                        //     });
+                                        //   },
+                                        //   icon: Icon(
+                                        //     isBookmarked
+                                        //         ? Icons.bookmark
+                                        //         : Icons.bookmark_border,
+                                        //     color: isBookmarked ? Colors.blue : Colors.grey,
+                                        //   ),
+                                        // ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
                       ),
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              blurRadius: 10,
-                              spreadRadius: 2,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Detail",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(package!.description),
-                            const SizedBox(height: 10),
-                            const Text(
-                              "Preview",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return VRDisplay();
-                                }));
-                              },
-                              child: Image.asset(
-                                  "images/icon_virtual_reality.png"),
-                            ),
-                            const Text(
-                              "Pembayaran",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            const Text(
-                                "* Down Payment: 40%\n* Final Payment: 40%"),
-                            const SizedBox(height: 10),
-                          ],
-                        ),
+                      const SizedBox(
+                        height: 10,
                       ),
-                    ] else
-                      const CircularProgressIndicator(), // Display loader while package is null
+                      isLoading
+                          ? const ShimmerSkeleton(
+                              height: 300,
+                              width: double.infinity,
+                            )
+                          : Container(
+                              padding: const EdgeInsets.all(5),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    blurRadius: 10,
+                                    spreadRadius: 2,
+                                    offset: const Offset(0, 5),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "Detail",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(package!.description),
+                                  const SizedBox(height: 10),
+                                  const Text(
+                                    "Preview",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return VRDisplay();
+                                      }));
+                                    },
+                                    child: Image.asset(
+                                        "images/icon_virtual_reality.png"),
+                                  ),
+                                  const Text(
+                                    "Pembayaran",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  const Text(
+                                      "* Down Payment: 60%\n* Final Payment: 40%"),
+                                  const SizedBox(height: 10),
+                                ],
+                              ),
+                            ),
 
-                    const SizedBox(height: 10),
-                    const Divider(),
+                      const SizedBox(height: 10),
+                      const Divider(),
 
-                    // Check loading or empty state before displaying packages
-                    if (isLoading)
-                      const CircularProgressIndicator()
-                    else if (packages == null || packages!.isEmpty)
-                      const Text("No packages available.")
-                    else
-                      MyContentHomepagePackage(
-                          title: package!.category, packages: packages!, loading: isLoading,),
+                      isLoading
+                          ? const ShimmerSkeleton(
+                              width: double.infinity,
+                              height: 60,
+                            )
+                          : MyContentHomepagePackage(
+                              title: package!.category,
+                              packages: packages!,
+                              loading: isLoading,
+                            ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(color:MyColor.colorSecondary),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        sendWhatsAppMessage(user_id, phone_number);
+                      },
+                      child: const Text("Chat"),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return const PackageCheckout();
+                        }));
+                      },
+                      child: const Text("Buat Pesanan"),
+                    ),
                   ],
                 ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    sendWhatsAppMessage(user_id, phone_number);
-                  },
-                  child: const Text("Chat"),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return PackageCheckout();
-                    }));
-                  },
-                  child: const Text("Buat Pesanan"),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -20,7 +20,7 @@ class MyContentHomepagePackageItem extends StatelessWidget {
         // margin: const EdgeInsets.only(right: 10),
         width: 170,
         decoration: BoxDecoration(
-          color: Colors.grey.shade100,        
+          color: Colors.white,        
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.2),

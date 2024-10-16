@@ -80,50 +80,52 @@ class ApiServices {
       throw Exception('Failed  to load data');
     }
   }
-Future<ProfileUpdateResponseModel?> updateProfile(ProfileUpdateRequestModel requestModel) async {
-  String token = await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
-  String url = "${baseAPiurl}/customer";
-  Uri finalURI = Uri.parse(url);
 
-  try {
-    var request = http.MultipartRequest("POST", finalURI);
-    request.headers['Authorization'] = 'Bearer $token';
+  Future<ProfileUpdateResponseModel?> updateProfile(
+      ProfileUpdateRequestModel requestModel) async {
+    String token =
+        await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
+    String url = "${baseAPiurl}/customer";
+    Uri finalURI = Uri.parse(url);
 
-    // Add text fields
-    request.fields['name'] = requestModel.name;
-    request.fields['password'] = requestModel.password;
-    request.fields['email'] = requestModel.email;
+    try {
+      var request = http.MultipartRequest("POST", finalURI);
+      request.headers['Authorization'] = 'Bearer $token';
 
-    // Add profile image if it exists
-    if (requestModel.profile_img != null) {
-      final mimeTypeData = lookupMimeType(requestModel.profile_img!.path, headerBytes: [0xFF, 0xD8])?.split('/');
-      request.files.add(await http.MultipartFile.fromPath(
-        'profile_img',
-        requestModel.profile_img!.path,
-        contentType: mimeTypeData != null && mimeTypeData.length == 2 
-            ? MediaType(mimeTypeData[0], mimeTypeData[1]) 
-            : MediaType('image', 'jpeg'), // Default to JPEG
-      ));
+      // Add text fields
+      request.fields['name'] = requestModel.name;
+      request.fields['password'] = requestModel.password;
+      request.fields['email'] = requestModel.email;
+
+      // Add profile image if it exists
+      if (requestModel.profile_img != null) {
+        final mimeTypeData = lookupMimeType(requestModel.profile_img!.path,
+            headerBytes: [0xFF, 0xD8])?.split('/');
+        request.files.add(await http.MultipartFile.fromPath(
+          'profile_img',
+          requestModel.profile_img!.path,
+          contentType: mimeTypeData != null && mimeTypeData.length == 2
+              ? MediaType(mimeTypeData[0], mimeTypeData[1])
+              : MediaType('image', 'jpeg'), // Default to JPEG
+        ));
+      }
+
+      // Send the request
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
+        return ProfileUpdateResponseModel.fromJson(responseData);
+      } else {
+        print('Failed to update profile: ${response.body}');
+        throw Exception('Failed to update profile: ${response.body}');
+      }
+    } catch (e) {
+      print('Error in updateProfile: $e');
+      throw Exception('Failed to update profile: $e');
     }
-
-    // Send the request
-    final streamedResponse = await request.send();
-    final response = await http.Response.fromStream(streamedResponse);
-
-    if (response.statusCode == 200) {
-      var responseData = jsonDecode(response.body);
-      return ProfileUpdateResponseModel.fromJson(responseData);
-    } else {
-      print('Failed to update profile: ${response.body}');
-      throw Exception('Failed to update profile: ${response.body}');
-    }
-  } catch (e) {
-    print('Error in updateProfile: $e');
-    throw Exception('Failed to update profile: $e');
   }
-}
-
-
 
   Future<bool> getTokenStatus() async {
     String token =
@@ -146,75 +148,87 @@ Future<ProfileUpdateResponseModel?> updateProfile(ProfileUpdateRequestModel requ
     }
   }
 
-  Future<PackageResponseModel> getPackage() async {
-    String token = await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
-    String url = "https://dummyjson.com/products";
-    Uri finalURI = Uri.parse(url);
+  // Future<PackageResponseModel> getPackage() async {
+  //   String token = await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
+  //   String url = "${baseAPiurl}/homepage";
+  //   Uri finalURI = Uri.parse(url);
 
-    final response = await http.get(
-      finalURI,
-      
-    );
+  //   final response = await http.get(
+  //     finalURI,
 
-    print(response);
-    if(response.statusCode == 200){
-      return PackageResponseModel.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception("Failed to load data");
+  //   );
 
-    }
-  }
+  //   print(response);
+  //   if(response.statusCode == 200){
+  //     return PackageResponseModel.fromJson(jsonDecode(response.body));
+  //   } else {
+  //     throw Exception("Failed to load data");
 
-    Future<PackageResponseModel> getPackagByCategory(String category) async {
-    String token = await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
+  //   }
+  // }
+
+  Future<PackageResponseModel> getPackagByCategory(String category) async {
+    String token =
+        await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
     String url = "https://dummyjson.com/products/category/$category";
     Uri finalURI = Uri.parse(url);
 
     final response = await http.get(
       finalURI,
-      
     );
 
     print(response);
-    if(response.statusCode == 200){
-      return PackageResponseModel.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception("Failed to load data");
-
-    }
-  }
-    Future<PackageResponseModel> getPackagesAll() async {
-    String token = await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
-    String url = "https://dummyjson.com/products";
-    Uri finalURI = Uri.parse(url);
-
-    final response = await http.get(
-      finalURI,
-    );
-
-    print(response);
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       return PackageResponseModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception("Failed to load data");
     }
   }
-    Future<PackageModel> getPackagByID(int id) async {
-    String token = await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
-    String url = "https://dummyjson.com/products/$id";
+
+  Future<PackageResponseModel> getPackagesAll() async {
+    String token =
+        await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
+    String url = "${baseAPiurl}/homepage";
     Uri finalURI = Uri.parse(url);
 
     final response = await http.get(
       finalURI,
-      
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
     );
 
-    print(response);
-    if(response.statusCode == 200){
-      return PackageModel.fromJson(jsonDecode(response.body));
+    
+    if (response.statusCode == 200) {
+      // print(response.body);
+      return PackageResponseModel.fromJson(jsonDecode(response.body));
+    } else {
+      // print(response.body);
+      throw Exception("Failed to load data");
+    }
+  }
+
+  Future<PackageDetailResponseModel> getPackagByID(int id) async {
+    String token =
+        await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
+    String url = "${baseAPiurl}/package/$id";
+    Uri finalURI = Uri.parse(url);
+
+    final response = await http.get(
+      finalURI,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    
+    if (response.statusCode == 200) {
+      print(response.body);
+      return PackageDetailResponseModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception("Failed to load data");
-
     }
   }
 }

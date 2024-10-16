@@ -45,12 +45,12 @@ class MyPackageListItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 // First widget with flex 1
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    child: Text(package.category),
-                  ),
-                ),
+                // Flexible(
+                //   flex: 1,
+                //   child: Container(
+                //     child: Text(package.),
+                //   ),
+                // ),
                 // Second widget with flex 3
                 Flexible(
                   flex: 3,

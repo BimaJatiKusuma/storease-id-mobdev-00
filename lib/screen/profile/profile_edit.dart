@@ -11,7 +11,7 @@ import 'package:storease_mobileapp_dev/model/profileUpdateRequestModel.dart';
 import 'package:storease_mobileapp_dev/model/profileUpdateResponseModel.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_textfield_profile_edit.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_button_profile_edit.dart';
-import 'package:storease_mobileapp_dev/screen/profile/profil.dart';
+import 'package:storease_mobileapp_dev/screen/components/shimmer_skeleton.dart';
 
 class ProfileEdit extends StatefulWidget {
   const ProfileEdit({super.key});
@@ -122,7 +122,7 @@ class _ProfileEditState extends State<ProfileEdit> {
     }
   }
 
-Future<void> updateUserProfile() async {
+  Future<void> updateUserProfile() async {
     if (usernameController.text.isEmpty ||
         emailController.text.isEmpty ||
         passwordController.text.isEmpty ||
@@ -177,7 +177,7 @@ Future<void> updateUserProfile() async {
         SnackBar(content: Text('An error occurred')),
       );
     }
-}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -187,134 +187,132 @@ Future<void> updateUserProfile() async {
         backgroundColor: MyColor.colorMain, // Customize your AppBar color
       ),
       body: SafeArea(
-        child: _isLoading
-            ? Center(child: CircularProgressIndicator())
-            : userData == null
-                ? Center(child: Text("Failed to load profile"))
-                : SingleChildScrollView(
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Profile Picture Section
-                        Row(
-                          children: [
-                            Container(
-                              width: 100,
-                              height: 100,
-                              child: CircleAvatar(
-                                radius: 50,
-                                backgroundImage: _imageFile != null
-                                    ? FileImage(_imageFile!)
-                                    : (userData!.photoProfile != null &&
-                                            userData!.photoProfile.isNotEmpty
-                                        ? NetworkImage(userData!.photoProfile)
-                                        : AssetImage(
-                                                "assets/images/account_circle_blue.png")
-                                            as ImageProvider),
-                              ),
-                            ),
-                            SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    userData!.name,
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: MyButtonProfileEdit(
-                                          onTap: _pickImage,
-                                          color: MyColor.colorMain,
-                                          title: "Ubah Foto",
-                                        ),
-                                      ),
-                                      SizedBox(width: 8),
-                                      Expanded(
-                                        child: MyButtonProfileEdit(
-                                          onTap: () {
-                                            setState(() {
-                                              _imageFile = null;
-                                            });
-                                          },
-                                          color: Colors.red,
-                                          title: "Hapus",
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 24),
-
-                        // Username Field
-                        MyTextfieldProfileEdit(
-                          controller: usernameController,
-                          hintText: "Username",
-                          labelText: "Username",
-                          obscureText: false,
-                        ),
-                        SizedBox(height: 16),
-
-                        // Location Field
-                        MyTextfieldProfileEdit(
-                          controller: locationController,
-                          hintText: "Lokasi",
-                          labelText: "Lokasi",
-                          obscureText: false,
-                        ),
-                        SizedBox(height: 16),
-
-                        // Email Field
-                        MyTextfieldProfileEdit(
-                          controller: emailController,
-                          hintText: "Alamat Email",
-                          labelText: "Alamat Email",
-                          obscureText: false,
-                          // keyboardType: TextInputType.emailAddress,
-                        ),
-                        SizedBox(height: 16),
-
-                        // Password Field
-                        MyTextfieldProfileEdit(
-                          controller: passwordController,
-                          hintText: "Kata Sandi",
-                          labelText: "Kata Sandi",
-                          obscureText: true,
-                        ),
-                        SizedBox(height: 24),
-
-                        // Action Buttons
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            MyButtonProfileEdit(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              color: Colors.red,
-                              title: "Batal",
-                            ),
-                            SizedBox(width: 16),
-                            MyButtonProfileEdit(
-                              onTap: updateUserProfile,
-                              color: MyColor.colorMain,
-                              title: "Simpan Perubahan",
-                            ),
-                          ],
-                        ),
-                      ],
+        child:  SingleChildScrollView(
+          padding: EdgeInsets.all(16.0),
+          child: AbsorbPointer(
+            absorbing: _isLoading,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Profile Picture Section
+                _isLoading ? ShimmerSkeleton(width: double.infinity, height: 100,) : Row(
+                  children: [
+                    Container(
+                      width: 100,
+                      height: 100,
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundImage: _imageFile != null
+                            ? FileImage(_imageFile!)
+                            : (userData!.photoProfile != null &&
+                                    userData!.photoProfile.isNotEmpty
+                                ? NetworkImage(userData!.photoProfile)
+                                : AssetImage(
+                                        "assets/images/account_circle_blue.png")
+                                    as ImageProvider),
+                      ),
                     ),
-                  ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            userData!.name,
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: MyButtonProfileEdit(
+                                  onTap: _pickImage,
+                                  color: MyColor.colorMain,
+                                  title: "Ubah Foto",
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: MyButtonProfileEdit(
+                                  onTap: () {
+                                    setState(() {
+                                      _imageFile = null;
+                                    });
+                                  },
+                                  color: Colors.red,
+                                  title: "Hapus",
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 24),
+            
+                // Username Field
+                _isLoading ? ShimmerSkeleton(width: double.infinity, height: 40,) : MyTextfieldProfileEdit(
+                  controller: usernameController,
+                  hintText: "Username",
+                  labelText: "Username",
+                  obscureText: false,
+                ),
+                SizedBox(height: 16),
+            
+                // Location Field
+                _isLoading ? ShimmerSkeleton(width: double.infinity, height: 40,) : MyTextfieldProfileEdit(
+                  controller: locationController,
+                  hintText: "Lokasi",
+                  labelText: "Lokasi",
+                  obscureText: false,
+                ),
+                SizedBox(height: 16),
+            
+                // Email Field
+                _isLoading ? ShimmerSkeleton(width: double.infinity, height: 40,):MyTextfieldProfileEdit(
+                  controller: emailController,
+                  hintText: "Alamat Email",
+                  labelText: "Alamat Email",
+                  obscureText: false,
+                  // keyboardType: TextInputType.emailAddress,
+                ),
+                SizedBox(height: 16),
+            
+                // Password Field
+                _isLoading ? ShimmerSkeleton(width: double.infinity, height: 40,): MyTextfieldProfileEdit(
+                  controller: passwordController,
+                  hintText: "Kata Sandi",
+                  labelText: "Kata Sandi",
+                  obscureText: true,
+                ),
+                SizedBox(height: 24),
+            
+                // Action Buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    _isLoading? ShimmerSkeleton(width: 40,) : MyButtonProfileEdit(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      color: Colors.red,
+                      title: "Batal",
+                    ),
+                    SizedBox(width: 16),
+                    _isLoading? ShimmerSkeleton(width: 40,) : MyButtonProfileEdit(
+                      onTap: updateUserProfile,
+                      color: MyColor.colorMain,
+                      title: "Simpan Perubahan",
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

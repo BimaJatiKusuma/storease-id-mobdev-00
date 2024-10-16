@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:storease_mobileapp_dev/api/api_services.dart';
@@ -39,9 +40,10 @@ class _PackageCheckoutState extends State<PackageCheckout> {
   Future<void> _loadPackageByID(int id) async {
     ApiServices apiServices = ApiServices();
     try {
-      PackageModel fetchedPackage = await apiServices.getPackagByID(id);
+      PackageDetailResponseModel fetchedPackage =
+          await apiServices.getPackagByID(id);
       safeSetState(() {
-        package = fetchedPackage;
+        package = fetchedPackage.package;
       });
       await _loadUser();
     } catch (error) {
@@ -95,7 +97,7 @@ class _PackageCheckoutState extends State<PackageCheckout> {
       // If no date has been selected, show a SnackBar warning
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please select a wedding date before proceeding.'),
+          content: Text('Pilih tanggal pernikahan untuk melanjutkan'),
           backgroundColor: Colors.red,
         ),
       );
@@ -111,7 +113,7 @@ class _PackageCheckoutState extends State<PackageCheckout> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Checkout"),
+        title: Text("Buat Pesanan"),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Container(
@@ -177,7 +179,6 @@ class _PackageCheckoutState extends State<PackageCheckout> {
                             child: Text(package.title),
                           ),
                           Container(
-                            color: Colors.amber,
                             child: Column(
                               children: [
                                 SizedBox(
@@ -198,9 +199,10 @@ class _PackageCheckoutState extends State<PackageCheckout> {
                                         return Container(
                                           width:
                                               MediaQuery.of(context).size.width,
-                                          margin: const EdgeInsets.only(right: 10),
-                                          decoration:
-                                              BoxDecoration(color: Colors.white),
+                                          margin:
+                                              const EdgeInsets.only(right: 10),
+                                          decoration: BoxDecoration(
+                                              color: Colors.white),
                                           child: Image.network(
                                             package.image_url[index],
                                             fit: BoxFit.contain,
@@ -215,16 +217,26 @@ class _PackageCheckoutState extends State<PackageCheckout> {
                           ),
                           Container(
                             child: Column(
-                              children: [
-                                Text("Rp. ${package.price}")
-                              ],
+                              children: [Text("Rp. ${package.price}")],
                             ),
                           ),
                           Container(
                             child: Column(
                               children: [
                                 Text("Detail"),
-                                Text(package.description),
+                                Html(
+                                  data: package?.description ??
+                                      'No description available.',
+                                  style: {
+                                    "p": Style(
+                                      fontSize: FontSize(16.0),
+                                      margin: Margins.symmetric(vertical: 4.0),
+                                    ),
+                                    "b": Style(
+                                        fontSize: FontSize(16.0),
+                                        fontWeight: FontWeight.bold)
+                                  },
+                                ),
                               ],
                             ),
                           ),

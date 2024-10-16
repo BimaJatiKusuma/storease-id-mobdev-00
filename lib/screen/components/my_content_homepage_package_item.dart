@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:storease_mobileapp_dev/model/packageResponseModel.dart';
 
 class MyContentHomepagePackageItem extends StatelessWidget {
@@ -13,6 +14,12 @@ class MyContentHomepagePackageItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+        final currencyFormatter = NumberFormat.currency(
+      locale: 'id_ID', // Indonesian locale
+      symbol: 'Rp. ', // Currency symbol
+      decimalDigits: 0, // No decimal places
+    );
+    double value = double.parse(package.price);
     return Container(
       margin: EdgeInsets.only(right: 10),
       child: Ink(
@@ -53,7 +60,9 @@ class MyContentHomepagePackageItem extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                package.title ?? "Elegant Affair Package | Outdoor Wedding",
+                package.title,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 13,
@@ -73,7 +82,7 @@ class MyContentHomepagePackageItem extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                "Rp. 11.000.000",
+                currencyFormatter.format(value),
                 style: const TextStyle(
                   color: Colors.redAccent,
                   fontWeight: FontWeight.bold,

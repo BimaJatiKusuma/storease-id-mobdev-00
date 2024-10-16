@@ -10,11 +10,13 @@ import 'package:storease_mobileapp_dev/screen/package/packageDetail.dart';
 class MyContentHomepagePackage extends StatelessWidget {
   final String title;
   final List<PackageModel>? packages;
+  final int packageCategory;
   final bool loading;
 
   const MyContentHomepagePackage({
     required this.packages,
     required this.title,
+    required this.packageCategory,
     required this.loading, // Add loading as a parameter
     super.key,
   });
@@ -47,7 +49,9 @@ class MyContentHomepagePackage extends StatelessWidget {
                         ..onTap = () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return ListPackage(titleList: title);
+                            return ListPackage(idCategory: (packageCategory - 1),
+                            // packageByCategory: packageCategory
+                            );
                           }));
                         },
                     ),
@@ -91,7 +95,9 @@ class MyContentHomepagePackage extends StatelessWidget {
                           onTap: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return ListPackage(titleList: title);
+                              return ListPackage(idCategory: packageCategory,
+                              // packageByCategory: packageCategory
+                              );
                             }));
                           },
                           child: Center(
@@ -113,7 +119,9 @@ class MyContentHomepagePackage extends StatelessWidget {
                                 onPressed: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return ListPackage(titleList: title);
+                                    return ListPackage(idCategory: packageCategory,
+                                    // packageByCategory: packageCategory
+                                    );
                                   }));
                                 },
                                 child: Icon(Icons.arrow_forward_ios, size: 40,)
@@ -125,6 +133,52 @@ class MyContentHomepagePackage extends StatelessWidget {
                     },
                   ),
           ),
+          SizedBox(height: 10,),
+          Divider()
+        ],
+      ),
+    );
+  }
+}
+class MyContentHomepagePackageLoading extends StatelessWidget {
+
+  const MyContentHomepagePackageLoading({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 10),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: ShimmerSkeleton()
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 10),
+          Container(
+            constraints: BoxConstraints(maxHeight: 250),
+            child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 5, // Show 5 shimmer items while loading
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: ShimmerSkeleton(width: 150, height: 150),
+                      );
+                    },
+                  )
+                
+          ),
+          SizedBox(height: 10,),
+          Divider()
         ],
       ),
     );

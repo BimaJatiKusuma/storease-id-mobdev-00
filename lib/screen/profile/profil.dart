@@ -36,17 +36,23 @@ class _ProfilState extends State<Profil> {
     loadUserProfile();
   }
 
+    void safeSetState(VoidCallback fn) {
+    if (mounted) {
+      setState(fn);
+    }
+  }
+
   Future<void> loadUserProfile() async {
     ApiServices apiServices = ApiServices();
     apiServices.getProfile().then((value) {
       if (value != null && value != null) {
-        setState(() {
+        safeSetState(() {
           userData = value;
           print(userData);
           isLoading = false;
         });
       } else {
-        setState(() {
+        safeSetState(() {
           isLoading = false;
         });
         // Optionally, handle unauthorized state by redirecting to login
@@ -122,7 +128,7 @@ class _ProfilState extends State<Profil> {
               
                                               // If the user successfully edited their profile, reload the data
                                               if (shouldReload == true) {
-                                                setState(() {
+                                                safeSetState(() {
                                                   isLoading =
                                                       true; // Show loading indicator
                                                 });

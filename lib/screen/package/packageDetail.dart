@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:intl/intl.dart';
 import 'package:storease_mobileapp_dev/api/api_services.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/method/secure_storage.dart';
@@ -25,19 +27,17 @@ class _PackageDetailState extends State<PackageDetail> {
   String phone_number = "+6285895929918";
   late String user_id;
 
-  bool isBookmarked = false;
+  PackageModel? package;
 
-  // Initialize packages and package as nullable
-  List<PackageModel>? packages;
-  late PackageModel package;
-
-  bool isLoading = true; // Track the loading state
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadUserId();
-    _loadPackageByID(widget.productID);
+    Future.wait([
+      _loadUserId(),
+      _loadPackageByID(widget.productID),
+    ]);
   }
 
   // Helper method to safely call setState
@@ -49,14 +49,21 @@ class _PackageDetailState extends State<PackageDetail> {
 
   Future<void> _loadUserId() async {
     try {
-      String userId = await SecureStorage().readSecureData(dotenv.env["KEY_USER_ID"]!);
+      String userId =
+          await SecureStorage().readSecureData(dotenv.env["KEY_USER_ID"]!);
       safeSetState(() {
         user_id = userId; // Set user ID once retrieved
       });
     } catch (error) {
       // Handle error if needed
+      // Optionally, show an error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load user ID: $error')),
+      );
+    } finally {
+      // Check if package has also loaded
       safeSetState(() {
-        isLoading = false; // Stop loading even if there's an error
+        isLoading = !(package != null && user_id.isNotEmpty);
       });
     }
   }
@@ -64,32 +71,21 @@ class _PackageDetailState extends State<PackageDetail> {
   Future<void> _loadPackageByID(int id) async {
     ApiServices apiServices = ApiServices();
     try {
-      PackageModel fetchedPackage = await apiServices.getPackagByID(id);
+      PackageDetailResponseModel fetchedPackage =
+          await apiServices.getPackagByID(id);
       safeSetState(() {
-        package = fetchedPackage;
-      });
-      await _loadPackageByCategory(); // Await to ensure sequence
-    } catch (error) {
-      // Handle error here if needed
-      safeSetState(() {
-        isLoading = false; // Stop loading even if there's an error
-      });
-    }
-  }
-
-  Future<void> _loadPackageByCategory() async {
-    ApiServices apiServices = ApiServices();
-    try {
-      PackageResponseModel packageResponse =
-          await apiServices.getPackagByCategory(package!.category);
-      safeSetState(() {
-        packages = packageResponse.package;
-        isLoading = false; // Stop loading after data is fetched
+        package = fetchedPackage.package;
       });
     } catch (error) {
       // Handle error here if needed
+      // Optionally, show an error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load package: $error')),
+      );
+    } finally {
+      // Check if user ID has also loaded
       safeSetState(() {
-        isLoading = false; // Stop loading even if there's an error
+        isLoading = !(package != null && user_id.isNotEmpty);
       });
     }
   }
@@ -102,6 +98,28 @@ class _PackageDetailState extends State<PackageDetail> {
 
   @override
   Widget build(BuildContext context) {
+    // Optionally, handle the case where 'package' is null but 'isLoading' is false
+    if (!isLoading && package == null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text("Detail Produk"),
+        ),
+        body: Center(
+          child: Text("Failed to load package details."),
+        ),
+      );
+    }
+
+    final currencyFormatter = NumberFormat.currency(
+      locale: 'id_ID', // Indonesian locale
+      symbol: 'Rp. ', // Currency symbol
+      decimalDigits: 0, // No decimal places
+    );
+    double value = (package?.price != null && package!.price.isNotEmpty) 
+    ? double.parse(package!.price) 
+    : 0.0;
+
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Detail Produk"),
@@ -124,23 +142,28 @@ class _PackageDetailState extends State<PackageDetail> {
                                 itemCount: 3,
                                 itemBuilder: (context, index) {
                                   return Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(horizontal: 10),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
                                     child: ShimmerSkeleton(
                                       width: 150,
                                     ),
                                   );
-                                })
+                                },
+                              )
                             : ListView.builder(
-                                scrollDirection: Axis.horizontal, // Enables horizontal scrolling
-                                itemCount: package!.image_url.length, // Number of images
+                                scrollDirection: Axis
+                                    .horizontal, // Enables horizontal scrolling
+                                itemCount: package?.image_url.length ??
+                                    0, // Number of images
                                 itemBuilder: (context, index) {
                                   return Container(
-                                    width: MediaQuery.of(context).size.width, // Set a width for each image
+                                    width: MediaQuery.of(context)
+                                        .size
+                                        .width, // Set a width for each image
                                     margin: const EdgeInsets.only(
                                         right: 10), // Spacing between images
-                                    decoration: BoxDecoration(
-                                        color: Colors.white),
+                                    decoration:
+                                        BoxDecoration(color: Colors.white),
                                     child: Image.network(
                                       package!.image_url[index],
                                       fit: BoxFit.contain,
@@ -154,7 +177,8 @@ class _PackageDetailState extends State<PackageDetail> {
                         child: isLoading
                             ? ShimmerSkeleton(width: double.infinity)
                             : Container(
-                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
                                 width: double.infinity,
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -166,7 +190,7 @@ class _PackageDetailState extends State<PackageDetail> {
                                     Row(
                                       children: [
                                         Text(
-                                          "Rp. ${package!.price}",
+                                          currencyFormatter.format(value),
                                           style: const TextStyle(
                                               fontSize: 16,
                                               color: Colors.red,
@@ -179,7 +203,7 @@ class _PackageDetailState extends State<PackageDetail> {
                                       children: [
                                         Expanded(
                                           child: Text(
-                                            package!.title,
+                                            package?.title ?? 'N/A',
                                             textAlign: TextAlign.center,
                                             style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
@@ -188,20 +212,6 @@ class _PackageDetailState extends State<PackageDetail> {
                                             maxLines: 2,
                                           ),
                                         ),
-                                        // Uncomment if needed
-                                        // IconButton(
-                                        //   onPressed: () {
-                                        //     safeSetState(() {
-                                        //       isBookmarked = !isBookmarked; // Toggle bookmark state
-                                        //     });
-                                        //   },
-                                        //   icon: Icon(
-                                        //     isBookmarked
-                                        //         ? Icons.bookmark
-                                        //         : Icons.bookmark_border,
-                                        //     color: isBookmarked ? Colors.blue : Colors.grey,
-                                        //   ),
-                                        // ),
                                       ],
                                     ),
                                   ],
@@ -236,13 +246,38 @@ class _PackageDetailState extends State<PackageDetail> {
                                 children: [
                                   const Text(
                                     "Detail",
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
-                                  Text(package!.description),
+                                  Html(
+                                    data: package?.description ??
+                                        'No description available.',
+                                    style: {
+                                      "p": Style(
+                                        fontSize: FontSize(16.0),
+                                        margin:
+                                            Margins.symmetric(vertical: 4.0),
+                                      ),
+                                      "b": Style(
+                                          fontSize: FontSize(16.0),
+                                          fontWeight: FontWeight.bold)
+                                      // You can add more styling for different HTML tags if needed
+                                    },
+                                    // onLinkTap:
+                                    //     (url, context, attributes, element) {
+                                    //   // Handle link taps if your HTML contains links
+                                    //   if (url != null) {
+                                    //     launchUrl(Uri.parse(
+                                    //         url)); // You might need to use url_launcher package
+                                    //   }
+                                    // },
+                                  ),
+                                  // Text(package?.description ?? 'No description available.'),
                                   const SizedBox(height: 10),
                                   const Text(
                                     "Preview",
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
@@ -256,7 +291,8 @@ class _PackageDetailState extends State<PackageDetail> {
                                   ),
                                   const Text(
                                     "Pembayaran",
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   const Text(
                                       "* Down Payment: 60%\n* Final Payment: 40%"),
@@ -264,27 +300,48 @@ class _PackageDetailState extends State<PackageDetail> {
                                 ],
                               ),
                             ),
-
                       const SizedBox(height: 10),
                       const Divider(),
-
                       isLoading
                           ? const ShimmerSkeleton(
                               width: double.infinity,
                               height: 60,
                             )
-                          : MyContentHomepagePackage(
-                              title: package!.category,
-                              packages: packages!,
-                              loading: isLoading,
-                            ),
+                          : Container(
+                              // child:Text(
+                              //   "MyContentHomepagePackage still on dev",
+                              // ),
+                              )
+                      // : MyContentHomepagePackage(
+                      //     // packageCategory: PackageCategoryModel(
+                      //     //     id: 1,
+                      //     //     name: "Gold",
+                      //     //     packages: <PackageModel>[
+                      //     //       PackageModel(
+                      //     //           description: "description",
+                      //     //           id: 1,
+                      //     //           category: "1",
+                      //     //           price: "75000",
+                      //     //           title: "test",
+                      //     //           thumbnail_url:
+                      //     //               "https://be.storease.id/media/12/Picsart_24-09-22_20-24-35-386.jpg",
+                      //     //           image_url: <String>[
+                      //     //             "https://be.storease.id/media/12/Picsart_24-09-22_20-24-35-386.jpg",
+                      //     //             "https://be.storease.id/media/13/Food-Truck-(HD).png",
+                      //     //             "https://be.storease.id/media/14/Food-Truck.png"
+                      //     //           ])
+                      //     //     ]),
+                      //     title: package!.category,
+                      //     packages: packages!,
+                      //     loading: isLoading,
+                      //   ),
                     ],
                   ),
                 ),
               ),
               Container(
                 width: double.infinity,
-                decoration: BoxDecoration(color:MyColor.colorSecondary),
+                decoration: BoxDecoration(color: MyColor.colorSecondary),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -296,10 +353,20 @@ class _PackageDetailState extends State<PackageDetail> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return PackageCheckout(id: package.id,);
-                        }));
+                        if (package != null) {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return PackageCheckout(
+                              id: package!.id,
+                            );
+                          }));
+                        } else {
+                          // Optionally, show an error message
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('Package data not available.')),
+                          );
+                        }
                       },
                       child: const Text("Buat Pesanan"),
                     ),

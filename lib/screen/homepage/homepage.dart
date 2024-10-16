@@ -5,10 +5,10 @@ import 'package:storease_mobileapp_dev/api/api_services.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/method/secure_storage.dart';
 import 'package:storease_mobileapp_dev/model/packageResponseModel.dart';
-import 'package:storease_mobileapp_dev/screen/ai/ai.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_package.dart';
 import 'package:storease_mobileapp_dev/screen/components/shimmer_skeleton.dart';
 import 'package:storease_mobileapp_dev/screen/notification/notification.dart';
+import 'package:storease_mobileapp_dev/screen/package/packageDetail.dart';
 
 import '../../method/send_whatsapp_message.dart';
 
@@ -25,70 +25,91 @@ class _HomePageState extends State<HomePage> {
   late String idUser; // State variable for user ID
   String phoneNumber = "+6285895929918";
 
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
     _loadUserId(); // Fetch user ID on initialization
-    _loadPackageByCategory();
-    // _loadPackageByCategory("beauty");
-    // _loadPackageByCategory("fragrances");
-    // _loadPackageByCategory("furniture");
+    _loadPackage();
   }
-
+  void safeSetState(VoidCallback fn) {
+    if (mounted) {
+      setState(fn);
+    }
+  }
   Future<void> _loadUserId() async {
     String userId =
         await SecureStorage().readSecureData(dotenv.env["KEY_USER_ID"]!);
-    setState(() {
+    safeSetState(() {
       idUser = userId; // Set user ID once retrieved
     });
   }
 
-  List<String> categoryList = ["beauty", "fragrances", "furniture"];
-  List<PackageModel>? package1;
-  List<PackageModel>? package2;
-  List<PackageModel>? package3;
-  Future<void> _loadPackageByCategory() async {
+  // List<String> categoryList = ["beauty", "fragrances", "furniture"];
+  late PackageResponseModel responseModel;
+  List<PackageCategoryModel> categoryList = [];
+  List<ImageWithPackageID> imageBanner = [];
+  Future<void> _loadPackage() async {
     ApiServices apiServices = ApiServices();
-
+    List<ImageWithPackageID> imageBannerData = [];
     try {
-      PackageResponseModel beautyPackages =
-          await apiServices.getPackagByCategory(categoryList[0]);
-      PackageResponseModel fragrancesPackages =
-          await apiServices.getPackagByCategory(categoryList[1]);
-      PackageResponseModel furniturePackages =
-          await apiServices.getPackagByCategory(categoryList[2]);
-
-      setState(() {
-        package1 = beautyPackages.package;
-        package2 = fragrancesPackages.package;
-        package3 = furniturePackages.package;
+      apiServices.getPackagesAll().then((value) {
+        for (var category in value.packageCategory) {
+          for (var package in category.packages) {
+            imageBannerData.add(ImageWithPackageID(
+                imageUrl: package.image_url[0], packageID: package.id));
+          }
+        }
+        safeSetState(() {
+          imageBanner = imageBannerData;
+          categoryList = value.packageCategory;
+          isLoading = false;
+        });
       });
     } catch (e) {
-      // Handle exceptions appropriately
       print("Error loading packages: $e");
-      // Optionally, set state to indicate an error occurred
+      safeSetState(() {
+        isLoading = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    bool isLoading = package1 == null || package2 == null || package3 == null;
+    // bool isLoading = package1 == null || package2 == null || package3 == null;
+
+    List<Widget> categoryListContentBuilder(
+        List<PackageCategoryModel> listPackageCategory) {
+      return listPackageCategory.map((category) {
+        return MyContentHomepagePackage(
+          packageCategory: category.id,
+          packages: category.packages,
+          title: category.name,
+          loading: isLoading,
+        );
+      }).toList();
+    }
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-                width: 30,
-                height: 30,
+                width: 40,
+                height: 40,
                 child: Image.asset(
                   "images/logo_white.png",
                   fit: BoxFit.contain,
                 )),
-            Text(
-              "STOREASE",
-              style: TextStyle(fontWeight: FontWeight.bold),
+            Expanded(
+              child: Text(
+                textAlign: TextAlign.center,
+                "STOREASE",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ],
         ),
@@ -104,14 +125,6 @@ class _HomePageState extends State<HomePage> {
               }
             },
             icon: Icon(Icons.chat_bubble_outline),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return AIPage();
-              }));
-            },
-            icon: Image.asset("images/Ai.png"),
           ),
           IconButton(
             onPressed: () {
@@ -135,40 +148,41 @@ class _HomePageState extends State<HomePage> {
                   child: isLoading
                       ? ShimmerSkeleton()
                       : AnotherCarousel(
-                          images: [
-                            AssetImage("images/banner.png"),
-                            AssetImage("images/banner.png"),
-                            AssetImage("images/banner.png"),
-                          ],
+                          images: imageBanner.map((imageData) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return PackageDetail(
+                                      productID: imageData.packageID);
+                                }));
+                                // Navigator.push()
+                                // _goToDetailPage(imageData.packageID);
+                              },
+                              child: Image.network(imageData.imageUrl,
+                                  fit: BoxFit.cover),
+                            );
+                          }).toList(),
                           dotSize: 6,
                           indicatorBgPadding: 5.0,
                         ),
                 ),
                 SizedBox(height: 10),
-                Divider(
-                  indent: 5,
-                  endIndent: 5,
-                  thickness: 2,
-                  color: MyColor.color1,
-                ),
-                // Pass loading state to MyContentHomepagePackage
-                MyContentHomepagePackage(
-                  title: categoryList[0],
-                  packages: package1,
-                  loading: isLoading,
-                ),
-                SizedBox(height: 20),
-                MyContentHomepagePackage(
-                  title: categoryList[1],
-                  packages: package2,
-                  loading: isLoading,
-                ),
-                SizedBox(height: 20),
-                MyContentHomepagePackage(
-                  title: categoryList[2],
-                  packages: package3,
-                  loading: isLoading,
-                ),
+                isLoading
+                    ? Container(
+                        width: double.infinity,
+                        child: ShimmerSkeleton(),
+                      )
+                    : Divider(
+                        indent: 5,
+                        endIndent: 5,
+                        thickness: 2,
+                        color: MyColor.color1,
+                      ),
+                // isLoading ? MyContentHomepagePackageLoading()*3 :
+                ...(isLoading
+                    ? List.generate(3, (_) => MyContentHomepagePackageLoading())
+                    : categoryListContentBuilder(categoryList)),
                 SizedBox(height: 20),
               ],
             ),
@@ -177,4 +191,10 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+class ImageWithPackageID {
+  final String imageUrl;
+  final int packageID;
+  ImageWithPackageID({required this.imageUrl, required this.packageID});
 }

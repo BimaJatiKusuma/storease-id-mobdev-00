@@ -5,33 +5,41 @@ import 'package:storease_mobileapp_dev/screen/components/my_package_list_item.da
 import 'package:storease_mobileapp_dev/screen/components/shimmer_skeleton.dart';
 
 class ListPackage extends StatefulWidget {
-  final String titleList;
-  const ListPackage({required this.titleList, Key? key}) : super(key: key);
+  final int idCategory;
+  // final PackageCategoryModel packageByCategory;
+  const ListPackage({required this.idCategory,
+  // required this.packageByCategory,
+  Key? key}) : super(key: key);
 
   @override
   State<ListPackage> createState() => _ListPackageState();
 }
 
 class _ListPackageState extends State<ListPackage> {
-  late PackageResponseModel packages;
+  // late PackageResponseModel pack
+  // ages;
+  late List<PackageCategoryModel> categoryList;
   late List<PackageModel> packageList;
   bool _isLoading = true;
   String? _errorMessage;
+  late PackageCategoryModel currentCategory;
 
   @override
   void initState() {
     super.initState();
-    _loadPackageByCategory();
+    _loadPackageByCategory(widget.idCategory);
   }
 
-  Future<void> _loadPackageByCategory() async {
+  Future<void> _loadPackageByCategory(int idCategory) async {
     ApiServices apiServices = ApiServices();
     try {
       PackageResponseModel packagesResponse =
-          await apiServices.getPackagByCategory(widget.titleList);
+          await apiServices.getPackagesAll();
       setState(() {
-        packages = packagesResponse;
-        packageList = packages.package;
+        // packages = packagesResponse;
+        categoryList = packagesResponse.packageCategory;
+        currentCategory = categoryList[idCategory];
+        packageList = currentCategory.packages;
         _isLoading = false;
       });
     } catch (e) {
@@ -48,7 +56,7 @@ class _ListPackageState extends State<ListPackage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.titleList),
+        title: _isLoading ? ShimmerSkeleton() : Text(currentCategory.name),
       ),
       body: _isLoading
           ? ListView.builder(

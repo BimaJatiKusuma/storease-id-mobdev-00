@@ -29,7 +29,7 @@ class _PackageDetailState extends State<PackageDetail> {
 
   // Initialize packages and package as nullable
   List<PackageModel>? packages;
-  PackageModel? package;
+  late PackageModel package;
 
   bool isLoading = true; // Track the loading state
 
@@ -298,7 +298,7 @@ class _PackageDetailState extends State<PackageDetail> {
                       onPressed: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return const PackageCheckout();
+                          return PackageCheckout(id: package.id,);
                         }));
                       },
                       child: const Text("Buat Pesanan"),

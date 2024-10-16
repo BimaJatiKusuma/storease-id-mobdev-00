@@ -10,11 +10,11 @@ import 'package:storease_mobileapp_dev/screen/components/my_button_profile_confi
 import 'package:storease_mobileapp_dev/screen/components/my_button_profile_my_account.dart';
 import 'package:storease_mobileapp_dev/screen/components/shimmer_skeleton.dart';
 import 'package:storease_mobileapp_dev/screen/order/order.dart';
+import 'package:storease_mobileapp_dev/screen/order/orderList.dart';
 import 'package:storease_mobileapp_dev/screen/profile/help.dart';
 import 'package:storease_mobileapp_dev/screen/profile/history.dart';
 import 'package:storease_mobileapp_dev/screen/profile/language.dart';
 import 'package:storease_mobileapp_dev/screen/profile/terms_and_condition.dart';
-import 'package:storease_mobileapp_dev/screen/profile/wedding_essentials.dart';
 import 'package:storease_mobileapp_dev/screen/profile/profile_edit.dart';
 
 class Profil extends StatefulWidget {
@@ -27,7 +27,7 @@ class Profil extends StatefulWidget {
 }
 
 class _ProfilState extends State<Profil> {
-  ProfileResponseModel? userData;
+  late ProfileResponseModel userData;
   bool isLoading = true;
 
   @override
@@ -176,26 +176,26 @@ class _ProfilState extends State<Profil> {
                       SizedBox(
                         height: 10,
                       ),
-                      MyButtonProfileMyAccount(
-                          loading: isLoading,
-                          icon: Icon(Icons.event),
-                          onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return WeddingEssentials();
-                            }));
-                          },
-                          title: "Kelengkapan Pernikahan"),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      // MyButtonProfileMyAccount(
+                      //     loading: isLoading,
+                      //     icon: Icon(Icons.event),
+                      //     onPressed: () {
+                      //       Navigator.push(context,
+                      //           MaterialPageRoute(builder: (context) {
+                      //         return WeddingEssentials(profile: userData,);
+                      //       }));
+                      //     },
+                      //     title: "Kelengkapan Pernikahan"),
+                      // SizedBox(
+                      //   height: 10,
+                      // ),
                       MyButtonProfileMyAccount(
                           loading: isLoading,
                           icon: Icon(Icons.shopping_bag_outlined),
                           onPressed: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return Order();
+                              return OrderList();
                             }));
                           },
                           title: "Pesanan Saya"),

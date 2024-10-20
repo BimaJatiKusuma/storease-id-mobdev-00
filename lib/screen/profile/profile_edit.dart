@@ -184,7 +184,6 @@ class _ProfileEditState extends State<ProfileEdit> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit Profile"),
-        backgroundColor: MyColor.colorMain, // Customize your AppBar color
       ),
       body: SafeArea(
         child:  SingleChildScrollView(

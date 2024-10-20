@@ -38,6 +38,7 @@ class _LanguageState extends State<Language> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text("BAHASA"),
       ),
       body: SingleChildScrollView(

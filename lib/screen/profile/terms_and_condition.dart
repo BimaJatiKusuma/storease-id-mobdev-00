@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storease_mobileapp_dev/color/color.dart';
 
 class TermsAndcondition extends StatefulWidget {
   const TermsAndcondition({super.key});
@@ -12,12 +13,27 @@ class _TermsAndconditionState extends State<TermsAndcondition> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text("SYARAT DAN KETENTUAN"),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Text(termsAndConditions)
+            Container(
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: MyColor.colorSecondary),
+                child: Column(
+                  children: [
+                    Text("SYARAT DAN KETENTUAN LAYANAN WEDDING ORGANIZER", style: TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                    Text(
+                      termsAndConditions,
+                      textAlign: TextAlign.justify,
+                    ),
+                  ],
+                ))
           ],
         ),
       ),
@@ -26,8 +42,6 @@ class _TermsAndconditionState extends State<TermsAndcondition> {
 }
 
 String termsAndConditions = '''
-SYARAT DAN KETENTUAN LAYANAN WEDDING ORGANIZER
-
 1. Pihak Terlibat
 - Wedding Organizer (WO): Pihak penyelenggara yang bertanggung jawab mengatur acara pernikahan sesuai dengan kesepakatan.
 - Pelanggan: Pihak yang menggunakan jasa WO untuk keperluan acara pernikahan.

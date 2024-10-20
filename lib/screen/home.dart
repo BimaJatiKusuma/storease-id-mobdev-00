@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/screen/homepage/homepage.dart';
 import 'package:storease_mobileapp_dev/screen/inspiration/inspiration.dart';
 import 'package:storease_mobileapp_dev/screen/profile/profil.dart';
@@ -28,6 +29,9 @@ class _HomeState extends State<Home> {
       body: tabs[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
+        selectedItemColor: MyColor.color1,
+        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+        unselectedItemColor: Colors.black,
         type: BottomNavigationBarType.fixed,
       items: [
         BottomNavigationBarItem(

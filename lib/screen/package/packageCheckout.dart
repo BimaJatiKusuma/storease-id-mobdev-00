@@ -251,7 +251,7 @@ class _PackageCheckoutState extends State<PackageCheckout> {
                                   onPressed: () {
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) {
-                                      return VRDisplay();
+                                      return VRDisplay(title: package.title,);
                                     }));
                                   },
                                   child: Image.asset(

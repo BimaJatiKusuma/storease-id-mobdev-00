@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:storease_mobileapp_dev/api/api_services.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/method/send_whatsapp_message.dart';
 import 'package:storease_mobileapp_dev/model/orderResponseModel.dart';
+import 'package:storease_mobileapp_dev/model/packageResponseModel.dart';
 import 'package:storease_mobileapp_dev/model/profileResponseModel.dart';
-import 'package:storease_mobileapp_dev/screen/ai/ai.dart';
+import 'package:storease_mobileapp_dev/screen/ai/aiOrder.dart';
 import 'package:storease_mobileapp_dev/screen/auth/Login.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_order_cust_table.dart';
+import 'package:storease_mobileapp_dev/screen/components/shimmer_skeleton.dart';
 import 'package:storease_mobileapp_dev/screen/order/order.dart';
-import 'package:storease_mobileapp_dev/screen/order/orderDetail.dart';
 import 'package:storease_mobileapp_dev/screen/order/orderPDFview.dart';
 import 'package:storease_mobileapp_dev/screen/order/wedding_essentials_detail.dart';
 import 'package:storease_mobileapp_dev/screen/payment/payment.dart';
@@ -32,6 +34,7 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
   final String phone_number = "+6285895929918";
   bool _isLoading = true; // Default to true to indicate loading
   ProfileResponseModel? userData; // Use nullable type
+  late PackageModel package;
 
   @override
   void initState() {
@@ -39,16 +42,23 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
     loadUserProfile();
   }
 
+  void safeSetState(VoidCallback fn) {
+    if (mounted) {
+      setState(fn);
+    }
+  }
+
   Future<void> loadUserProfile() async {
     ApiServices apiServices = ApiServices();
     apiServices.getProfile().then((value) {
       if (value != null) {
-        setState(() {
+        safeSetState(() {
           userData = value; // Assign userData when data is loaded
-          _isLoading = false;
+          // _isLoading = false;
+          _loadPackageByID(widget.orderData.id);
         });
       } else {
-        setState(() {
+        safeSetState(() {
           _isLoading = false;
         });
         Navigator.of(context).pushAndRemoveUntil(
@@ -59,48 +69,75 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
     });
   }
 
+  Future<void> _loadPackageByID(int id) async {
+    ApiServices apiServices = ApiServices();
+    try {
+      PackageDetailResponseModel fetchedPackage =
+          await apiServices.getPackagByID(id);
+      safeSetState(() {
+        package = fetchedPackage.package;
+        _isLoading = false;
+      });
+    } catch (error) {
+      // Handle error here if needed
+      // Optionally, show an error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load package: $error')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return AIPage();
-              }));
-            },
-            icon: Image.asset("images/Ai.png"),
+          Container(
+            width: 50,
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return AIPageOrder();
+                }));
+              },
+              icon: Image.asset("images/Ai.png"),
+            ),
           ),
         ],
         title: Text("Kelengkapan Pernikahan"),
         centerTitle: true,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          ElevatedButton.icon(
-            onPressed: () async {
-              sendWhatsAppMessage(id_user, phone_number,
-                  id_pesanan: id_pesanan);
-            },
-            icon: Icon(Icons.message, size: 18),
-            label: Text("Chat Admin"),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.blue,
-              side: BorderSide(color: Colors.blue),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 16),
+      floatingActionButton: _isLoading
+          ? Container(
+              height: 20,
+              width: 30,
+              child: ShimmerSkeleton(),
+            )
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () async {
+                    sendWhatsAppMessage(id_user, phone_number,
+                        id_pesanan: id_pesanan);
+                  },
+                  icon: Icon(Icons.message, size: 18),
+                  label: Text("Chat Admin"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.blue,
+                    side: BorderSide(color: Colors.blue),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? WeddingEssentialsLoading()
           : SingleChildScrollView(
               child: Column(
                 children: [
@@ -127,7 +164,7 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
                                     child: Column(
                                       children: [
                                         Text("status"),
-                                        Text("2/7"),
+                                        Text("${widget.orderData.status}/7"),
                                       ],
                                     ),
                                   ),
@@ -158,8 +195,17 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
                   Container(
                     child: Column(
                       children: [
-                        Text("Tanggal Pernikahan"),
-                        Text("24 OKTOBER 2024")
+                        Text(
+                          "Tanggal Pernikahan",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "24 OKTOBER 2024",
+                          style: TextStyle(
+                              color: Colors.redAccent,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        )
                       ],
                     ),
                     // width: double.infinity,
@@ -177,6 +223,9 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
                     profile:
                         userData!, // Use non-null assertion since it's loaded
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
                   ExpansionTile(
                     collapsedShape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
@@ -187,7 +236,7 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
                         const Color.fromARGB(255, 238, 243, 155),
                     collapsedBackgroundColor: MyColor.color1,
                     backgroundColor: MyColor.colorMain,
-                    title: Text("Package by The Amaryllis Boutique Resort"),
+                    title: Text(package.title),
                     children: [
                       Container(
                         padding: EdgeInsets.all(5),
@@ -195,35 +244,47 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
                         child: Column(
                           children: [
                             Container(
-                              color: Colors.amber,
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    height: 175,
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Row(
-                                        children: List.generate(4, (index) {
-                                          return Container(
-                                            margin: EdgeInsets.all(2),
-                                            height: double.infinity,
-                                            child: Image.asset(
-                                                "images/venue_image.png",
-                                                fit: BoxFit.cover),
-                                          );
-                                        }),
-                                      ),
+                              height:
+                                  300, // Set the height for the row of images
+                              child: ListView.builder(
+                                scrollDirection: Axis
+                                    .horizontal, // Enables horizontal scrolling
+                                itemCount: package?.image_url.length ??
+                                    0, // Number of images
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    width: MediaQuery.of(context)
+                                        .size
+                                        .width, // Set a width for each image
+                                    margin: const EdgeInsets.only(
+                                        right: 10), // Spacing between images
+                                    decoration:
+                                        BoxDecoration(color: Colors.white),
+                                    child: Image.network(
+                                      package!.image_url[index],
+                                      fit: BoxFit.contain,
                                     ),
-                                  )
-                                ],
+                                  );
+                                },
                               ),
                             ),
                             Container(
                               child: Column(
                                 children: [
                                   Text("Detail"),
-                                  const Text(
-                                      "Wedding orgenizer by Storease \n-	Konultasi konsep acara wedding (resepsi)\n-	Konsep wedding \n-	Rundown wedding\n-	1 x visit venue\n-	3x meeting (client, keluarga, all vendor/final)\n-	Manage vendor installation( loading catring sound, decoration)\n-	1 projek Manager 4 crew\n-	Undangan digital\n\nDécor by Yulis\n-	Dekorasi saat akad nikah (meja + kursi akad) 4 x 4\n-	Backdrop \n-	Dekorasi bunga\n-	Welcome sign\n-	Kotak uang 2\n-	Hand bouquet fresh flower\n-	Dekor pintu masuk\n\nMUA & Dress by Kholid\n  Mackup kedua mempelai\n-	1 busana akad\n-	1 busana temu tamu\n-	1 busana resepsi\n-	Melati akad non adat \n-	Softlens normal\n-	Henna  tangan\n-	Nail art\n\nDokumentasi By Dig Studio\n-	Unlimited photo +/- 4 jam\n-	Weeding box 50 pages\n-	1 photo printed 16 Rs (40 x 60 Cm)\n-	1 big frame 16 Rs\n-	1 photografer\n-	File in flasdisk"),
+                                  Html(
+                                    data: package.description,
+                                    style: {
+                                      "p": Style(
+                                        fontSize: FontSize(16.0),
+                                        margin:
+                                            Margins.symmetric(vertical: 4.0),
+                                      ),
+                                      "b": Style(
+                                          fontSize: FontSize(16.0),
+                                          fontWeight: FontWeight.bold)
+                                    },
+                                  ),
                                 ],
                               ),
                             ),
@@ -239,7 +300,9 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
                                     onPressed: () {
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
-                                        return VRDisplay();
+                                        return VRDisplay(
+                                          title: package.title,
+                                        );
                                       }));
                                     },
                                     child: Image.asset(
@@ -257,7 +320,7 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                      "* Down Payment: 40%\n*Pembayaran Kedua: 40%\nPembayaran Terakhir: 20%"),
+                                      "* Down Payment: 60%\n* Final Payment: 40%"),
                                 ],
                               ),
                             ),
@@ -270,7 +333,10 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
                   Container(
                     child: Column(
                       children: [
-                        Text("MONITORING PERSIAPAN"),
+                        Text(
+                          "MONITORING PERSIAPAN",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         InkWell(
                           onTap: () {
                             Navigator.push(context,
@@ -282,11 +348,10 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
                             decoration: BoxDecoration(
                               color: Colors.blueGrey[100],
                               borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Colors.blueAccent),
                             ),
                             child: Column(
                               children: [
-                                taskTile('Kerja Sama Vendor', '5/5'),
+                                taskTile('Persiapan Awal', '5/5'),
                                 taskTile('Persiapan Akhir', '0/6'),
                               ],
                             ),
@@ -299,10 +364,22 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
                   Container(
                     child: Column(
                       children: [
-                        Text("DOKUMEN"),
-                        SupportDocumentProfile(pdfURL: pdfURL),
-                        SupportDocumentProfile(pdfURL: pdfURL),
-                        SupportDocumentProfile(pdfURL: pdfURL),
+                        Text(
+                          "DOKUMEN",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SupportDocumentProfile(
+                          pdfURL: "https://be.storease.id/media/31/Notulensi-Rapat-Perencanaan-Wedding.pdf",
+                          title: "Notulensi Rapat Perdana",
+                        ),
+                        SupportDocumentProfile(
+                          pdfURL: "https://be.storease.id/media/32/rundown.pdf",
+                          title: "Rundown Acara",
+                        ),
+                        SupportDocumentProfile(
+                          pdfURL: "https://be.storease.id/media/37/DESAIN-VENUE.pdf",
+                          title: "Desain Venue",
+                        ),
                       ],
                     ),
                   ),
@@ -337,11 +414,13 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
 
 class SupportDocumentProfile extends StatelessWidget {
   const SupportDocumentProfile({
+    required this.title,
     super.key,
     required this.pdfURL,
   });
 
   final String pdfURL;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -351,7 +430,8 @@ class SupportDocumentProfile extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-                color: Colors.amber, borderRadius: BorderRadius.circular(10)),
+                color: MyColor.canvaMainColor.withOpacity(0.4),
+                borderRadius: BorderRadius.circular(10)),
             width: double.infinity,
             padding: EdgeInsets.all(10),
             child: Column(
@@ -366,7 +446,7 @@ class SupportDocumentProfile extends StatelessWidget {
                         child: Text(
                           softWrap: true,
                           overflow: TextOverflow.visible,
-                          "Notulensi Rapat Perdana",
+                          title,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -400,7 +480,7 @@ class SupportDocumentProfile extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return OrderPDFView(url: pdfURL);
+                        return OrderPDFView(url: pdfURL, title: title,);
                       }));
                     },
                     child: Text("Lihat PDF"),
@@ -409,6 +489,83 @@ class SupportDocumentProfile extends StatelessWidget {
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class WeddingEssentialsLoading extends StatelessWidget {
+  const WeddingEssentialsLoading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+              height: 100,
+              width: double.infinity,
+              padding: EdgeInsets.all(5),
+              child: ShimmerSkeleton()),
+          SizedBox(
+            height: 10,
+          ),
+          ShimmerSkeleton(),
+          SizedBox(
+            height: 10,
+          ),
+          Container(height: 60, child: ShimmerSkeleton()),
+          SizedBox(
+            height: 10,
+          ),
+          ShimmerSkeleton(),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+              height: 300, // Set the height for the row of images
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 3,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: ShimmerSkeleton(
+                      width: 150,
+                    ),
+                  );
+                },
+              )),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            height: 100,
+            child: ShimmerSkeleton(),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(height: 100, child: ShimmerSkeleton()),
+          SizedBox(
+            height: 10,
+          ),
+          ShimmerSkeleton(),
+          SizedBox(
+            height: 10,
+          ),
+          Container(height: 60, child: ShimmerSkeleton()),
+          SizedBox(
+            height: 10,
+          ),
+          Container(height: 60, child: ShimmerSkeleton()),
+          SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            height: 60,
+          )
         ],
       ),
     );

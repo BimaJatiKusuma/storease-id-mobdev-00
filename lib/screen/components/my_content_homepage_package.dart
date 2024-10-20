@@ -134,7 +134,7 @@ class MyContentHomepagePackage extends StatelessWidget {
                   ),
           ),
           SizedBox(height: 10,),
-          Divider()
+          Divider(indent: 5, endIndent: 5,)
         ],
       ),
     );
@@ -178,7 +178,7 @@ class MyContentHomepagePackageLoading extends StatelessWidget {
                 
           ),
           SizedBox(height: 10,),
-          Divider()
+          ShimmerSkeleton()
         ],
       ),
     );

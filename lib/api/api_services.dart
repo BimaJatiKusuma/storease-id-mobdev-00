@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:storease_mobileapp_dev/method/secure_storage.dart';
+import 'package:storease_mobileapp_dev/model/aiModel.dart';
 import 'package:storease_mobileapp_dev/model/packageResponseModel.dart';
 import 'package:storease_mobileapp_dev/model/profileUpdateResponseModel.dart';
 import 'package:storease_mobileapp_dev/model/profileUpdateRequestModel.dart';
@@ -199,7 +200,6 @@ class ApiServices {
       },
     );
 
-    
     if (response.statusCode == 200) {
       // print(response.body);
       return PackageResponseModel.fromJson(jsonDecode(response.body));
@@ -223,12 +223,52 @@ class ApiServices {
       },
     );
 
-    
     if (response.statusCode == 200) {
       print(response.body);
       return PackageDetailResponseModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception("Failed to load data");
+    }
+  }
+
+  Future<AIResponseModel> askAIOrder(AIRequestModel requestModel) async {
+    String url = "http://192.168.18.24:5000/api/ai/order";
+    Uri finalURI = Uri.parse(url);
+
+    final response = await http.post(
+      finalURI,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(requestModel.toJson()),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 400) {
+      return AIResponseModel.fromJson(jsonDecode(response.body));
+    } else {
+      print(response.body);
+      throw Exception('Failed to get response: ${response.body}');
+    }
+  }
+
+  Future<AIResponseModel> askAIHomepage(AIRequestModel requestModel) async {
+    String token =
+        await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
+    String url = "http://192.168.18.24:5000/api/ai/homepage";
+    Uri finalURI = Uri.parse(url);
+
+    final response = await http.post(
+      finalURI,
+      headers: {
+        'Authorization': 'Bearer $token',
+        "Content-Type": "application/json"
+      },
+      body: jsonEncode(requestModel.toJson()),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 400) {
+      return AIResponseModel.fromJson(jsonDecode(response.body));
+    } else {
+      print(response.body);
+      throw Exception('Failed to get response: ${response.body}');
     }
   }
 }

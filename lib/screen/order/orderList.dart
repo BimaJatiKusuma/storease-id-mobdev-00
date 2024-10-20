@@ -22,18 +22,19 @@ class _OrderListState extends State<OrderList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Order Detail"),
+        centerTitle: true,
+        title: Text("PESANAN SAYA"),
       ),
-      body: SafeArea(child: ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: orders.length,
-        itemBuilder: (context, index){
-          return OrderListContent(orderData: orders[index]);
-      })),
+      body: SafeArea(
+          child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: orders.length,
+              itemBuilder: (context, index) {
+                return OrderListContent(orderData: orders[index]);
+              })),
     );
   }
 }
-
 
 class OrderListContent extends StatelessWidget {
   final OrderResponseModel orderData;
@@ -41,102 +42,124 @@ class OrderListContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return WeddingEssentials(orderData: orderData,);
-        }));
-      },
-      child: Container(
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.black),
-            borderRadius: BorderRadius.all(Radius.circular(10))),
-        width: double.infinity,
-        margin: EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Vendor | Category",
-                  style: TextStyle(fontSize: 12),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                // Ensure that the Column expands within the Row
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start, // Align the text to the start
-                    children: [
-                      // Text will wrap to the next line if it exceeds the available width
-                      Text(
-                        textAlign: TextAlign.end,
-                        "Harap Melakukan Pembayaran Awal",
-                        style: TextStyle(fontSize: 12),
-                        softWrap: true, // Enables text to wrap
-                        overflow: TextOverflow
-                            .visible, // Ensure overflow handling is visible
-                      ),
-                    ],
-                  ),
+    return Container(
+      // decoration: BoxDecoration(color: Colors.amber),
+      margin: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return WeddingEssentials(
+              orderData: orderData,
+            );
+          }));
+        },
+        child: Container(
+          // padding: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: MyColor.colorMain.withOpacity(0.2),
+                  blurRadius: 10,
+                  spreadRadius: 1,
+                  offset: const Offset(0, 5),
                 )
               ],
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Container(
-              padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                  color: MyColor.colorSecondary,
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              width: double.infinity,
-              child: Column(
-                children: [
-                  Container(
-                      width: 150,
-                      child: Image.asset(
-                        "images/venue_image.png",
-                        fit: BoxFit.cover,
-                      )),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("The Grand Karunia Function Hall - Bogor",
-                            softWrap: true,
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.bold)),
-                        Text("ID Pesanan : xxx-xxx-xxx",
-                            style: TextStyle(fontSize: 12)),
-                        Text("Total harga : Rp. 10.000.000",
-                            style: TextStyle(fontSize: 12)),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return WeddingEssentials(orderData: orderData,);
-                                    }));
-                                  },
-                                  child: Text("Detail"))
-                            ])
-                      ],
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(10))),
+          width: double.infinity,
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    color: MyColor.colorMain,
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10),
+                        topLeft: Radius.circular(10))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "status ${orderData.status}/7",
+                      style: TextStyle(
+                          color: MyColor.textWhite,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold),
                     ),
-                  )
-                ],
+                    SizedBox(
+                      width: 10,
+                    ),
+                    // Ensure that the Column expands within the Row
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment
+                            .end, // Align the text to the start
+                        children: [
+                          // Text will wrap to the next line if it exceeds the available width
+                          Text(
+                            textAlign: TextAlign.end,
+                            "Harap Melakukan Pembayaran Awal",
+                            style: TextStyle(
+                                color: MyColor.textWhite,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold),
+                            softWrap: true, // Enables text to wrap
+                            overflow: TextOverflow
+                                .visible, // Ensure overflow handling is visible
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-            )
-          ],
+              // Divider(),
+              Container(
+                  height: 150,
+                  child: Image.asset(
+                    "images/venue_image.png",
+                    fit: BoxFit.cover,
+                  )),
+              SizedBox(
+                width: 10,
+              ),
+              Container(
+                decoration: BoxDecoration(
+              
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Text("The Grand Karunia Function Hall - Bogor",
+                          softWrap: true,
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold)),
+                    ),
+                    Text("ID Pesanan : xxx-xxx-xxx",
+                        style: TextStyle(fontSize: 12)),
+                    Text("Tanggal Pernikahan : 24 Oktober 2024",
+                        style: TextStyle(fontSize: 12)),
+                    Text("Total harga : Rp. 10.000.000",
+                        style: TextStyle(fontSize: 12)),
+                    Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return WeddingEssentials(
+                                orderData: orderData,
+                              );
+                            }));
+                          },
+                          child: Text("KELENGKAPAN PERNIKAHAN"))
+                    ])
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

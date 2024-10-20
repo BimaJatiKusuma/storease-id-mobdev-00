@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/method/send_whatsapp_message.dart';
 
 class Help extends StatefulWidget {
@@ -15,7 +16,8 @@ class _HelpState extends State<Help> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Pusat Bantuan")
+        title: Text("PUSAT BANTUAN"),
+        centerTitle: true,
       ),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.centerFloat, // Sets FAB location
@@ -46,11 +48,27 @@ class _HelpState extends State<Help> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Text("Pusat Bantuan Storease"),
-            Text("Pusat Bantuan Storease berisi panduan dalam penggunaan aplikasi dan layanan yang diberikan. Apabila terdapat kebingungan dari penjelasan yang tersedia, pelanggan bisa menghubungi admin Storease melalui tombol dibawah"),
-            Text("Tata urutan pemesanan"),
-            Text("1. Menunggu Jadwal Rapat"),
-            Text("Setelah pelanggan melakukan pemesanan melalui aplikasi, admin Storease akan menghubungi pelanggan melalui nomor whatsapp yang terdaftar. Pada tahap ini, pelanggan dan admin menyepakai jadwal melakukan rapat untuk membahas detail pemesanan lebih lanjut")
+            SizedBox(height:  10),
+            Text("Pusat Bantuan Storease", style: TextStyle(fontWeight: FontWeight.bold),),
+            SizedBox(height: 10,),
+            Container(
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: MyColor.colorSecondary
+              ),
+              child: Column(
+                children: [
+                  Text(textAlign: TextAlign.justify,
+                      "Pusat Bantuan Storease berisi panduan dalam penggunaan aplikasi dan layanan yang diberikan. Apabila terdapat kebingungan dari penjelasan yang tersedia, pelanggan bisa menghubungi admin Storease melalui tombol dibawah"),
+                  Text(textAlign: TextAlign.justify, "Tata urutan pemesanan"),
+                  Text(textAlign: TextAlign.justify, "1. Menunggu Jadwal Rapat"),
+                  Text(textAlign: TextAlign.justify,
+                      "Setelah pelanggan melakukan pemesanan melalui aplikasi, admin Storease akan menghubungi pelanggan melalui nomor whatsapp yang terdaftar. Pada tahap ini, pelanggan dan admin menyepakai jadwal melakukan rapat untuk membahas detail pemesanan lebih lanjut")
+                ],
+              ),
+            )
           ],
         ),
       ),

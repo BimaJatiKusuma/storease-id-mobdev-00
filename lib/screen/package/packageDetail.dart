@@ -283,7 +283,7 @@ class _PackageDetailState extends State<PackageDetail> {
                                     onPressed: () {
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
-                                        return VRDisplay();
+                                        return VRDisplay(title: package!.title,);
                                       }));
                                     },
                                     child: Image.asset(
@@ -301,7 +301,6 @@ class _PackageDetailState extends State<PackageDetail> {
                               ),
                             ),
                       const SizedBox(height: 10),
-                      const Divider(),
                       isLoading
                           ? const ShimmerSkeleton(
                               width: double.infinity,

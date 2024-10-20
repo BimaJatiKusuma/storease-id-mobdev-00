@@ -5,6 +5,7 @@ import 'package:storease_mobileapp_dev/api/api_services.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/method/secure_storage.dart';
 import 'package:storease_mobileapp_dev/model/packageResponseModel.dart';
+import 'package:storease_mobileapp_dev/screen/ai/aiHomepage.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_content_homepage_package.dart';
 import 'package:storease_mobileapp_dev/screen/components/shimmer_skeleton.dart';
 import 'package:storease_mobileapp_dev/screen/notification/notification.dart';
@@ -33,11 +34,13 @@ class _HomePageState extends State<HomePage> {
     _loadUserId(); // Fetch user ID on initialization
     _loadPackage();
   }
+
   void safeSetState(VoidCallback fn) {
     if (mounted) {
       setState(fn);
     }
   }
+
   Future<void> _loadUserId() async {
     String userId =
         await SecureStorage().readSecureData(dotenv.env["KEY_USER_ID"]!);
@@ -133,7 +136,18 @@ class _HomePageState extends State<HomePage> {
               }));
             },
             icon: Icon(Icons.notifications_outlined),
-          )
+          ),
+                    Container(
+            width: 50,
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return AIPageHomepage();
+                }));
+              },
+              icon: Image.asset("images/ai_homepage.png"),
+            ),
+          ),
         ],
       ),
       body: SafeArea(
@@ -141,9 +155,8 @@ class _HomePageState extends State<HomePage> {
           child: Center(
             child: Column(
               children: [
-                SizedBox(height: 10),
                 SizedBox(
-                  height: 150,
+                  height: 175,
                   width: double.infinity,
                   child: isLoading
                       ? ShimmerSkeleton()
@@ -163,8 +176,8 @@ class _HomePageState extends State<HomePage> {
                                   fit: BoxFit.cover),
                             );
                           }).toList(),
-                          dotSize: 6,
-                          indicatorBgPadding: 5.0,
+                          dotSize: 5,
+                          indicatorBgPadding: 3.0,
                         ),
                 ),
                 SizedBox(height: 10),
@@ -176,8 +189,6 @@ class _HomePageState extends State<HomePage> {
                     : Divider(
                         indent: 5,
                         endIndent: 5,
-                        thickness: 2,
-                        color: MyColor.color1,
                       ),
                 // isLoading ? MyContentHomepagePackageLoading()*3 :
                 ...(isLoading

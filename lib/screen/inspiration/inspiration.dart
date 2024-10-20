@@ -24,6 +24,7 @@ class _InspirationState extends State<Inspiration> {
     super.initState();
     _loadPackages();
   }
+
   void safeSetState(VoidCallback fn) {
     if (mounted) {
       setState(fn);
@@ -58,19 +59,20 @@ class _InspirationState extends State<Inspiration> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text("INSPIRASI"),
-            automaticallyImplyLeading: false,
+    return Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            "INSPIRASI",
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          body: _isLoading
-              ? _buildLoadingGrid()
-              : allImage.isEmpty
-                  ? Center(child: Text("Tidak ada gambar tersedia"))
-                  : _buildImageGrid()),
-    );
+          automaticallyImplyLeading: false,
+        ),
+        body: _isLoading
+            ? _buildLoadingGrid()
+            : allImage.isEmpty
+                ? Center(child: Text("Tidak ada gambar tersedia"))
+                : _buildImageGrid());
   }
 
   Widget _buildLoadingGrid() {
@@ -113,15 +115,15 @@ class _InspirationState extends State<Inspiration> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3), // changes position of shadow
-          ),
-        ],
+        borderRadius: BorderRadius.circular(10),
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.grey.withOpacity(0.3),
+        //     spreadRadius: 2,
+        //     blurRadius: 5,
+        //     offset: Offset(0, 3), // changes position of shadow
+        //   ),
+        // ],
       ),
       child: InkWell(
         onTap: () {
@@ -135,19 +137,23 @@ class _InspirationState extends State<Inspiration> {
             ),
           );
         },
-        child: CachedNetworkImage(
-          imageUrl: imageWithId.imageUrl,
-          placeholder: (context, url) => Shimmer.fromColors(
-            baseColor: Colors.grey[300]!,
-            highlightColor: Colors.grey[100]!,
-            child: Container(
-              color: Colors.white,
-              width: double.infinity,
-              height: double.infinity,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: CachedNetworkImage(
+            imageUrl: imageWithId.imageUrl,
+            placeholder: (context, url) => Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                width: double.infinity,
+                height: double.infinity,
+              ),
             ),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+            fit: BoxFit.cover,
           ),
-          errorWidget: (context, url, error) => Icon(Icons.error),
-          fit: BoxFit.cover,
         ),
       ),
     );

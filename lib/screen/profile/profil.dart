@@ -36,7 +36,7 @@ class _ProfilState extends State<Profil> {
     loadUserProfile();
   }
 
-    void safeSetState(VoidCallback fn) {
+  void safeSetState(VoidCallback fn) {
     if (mounted) {
       setState(fn);
     }
@@ -67,253 +67,264 @@ class _ProfilState extends State<Profil> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("My Profile"),
-        centerTitle: true,
-        elevation: 10,
-        automaticallyImplyLeading: false,
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                children: [
-                  isLoading
-                      ? Container(
-                          height: 100,
-                          width: double.infinity,
-                          child: ShimmerSkeleton(),
+      // appBar: AppBar(
+      //   title: Text("PROFIL SAYA", style: TextStyle(fontWeight: FontWeight.bold),),
+      //   centerTitle: true,
+      //   shape: RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))
+      //   ),
+      //   elevation: 10,
+      //   automaticallyImplyLeading: false,
+      // ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              isLoading
+                  ? Container(
+                      height: 100,
+                      width: double.infinity,
+                      child: ShimmerSkeleton(),
+                    )
+                  : userData == null
+                      ? Center(
+                          child: Text("Gagal mendapatkan profil"),
                         )
-                      : userData == null
-                          ? Center(
-                              child: Text("Gagal mendapatkan profil"),
-                            )
-                          : SizedBox(
-                              height: 100,
-                              child: Row(
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.all(5),
-                                    width: 100,
-                                    height: 100,
-                                    child: Stack(
-                                      clipBehavior: Clip.none,
-                                      fit: StackFit.expand,
-                                      children: [
-                                        CircleAvatar(
-                                          backgroundImage: userData!
-                                                      .photoProfile !=
-                                                  null
-                                              ? NetworkImage(
-                                                  userData!.photoProfile)
-                                              : AssetImage(
-                                                      "images/account_circle_blue.png")
-                                                  as ImageProvider,
+                      : Container(
+                          decoration: BoxDecoration(
+                              color: MyColor.color1,
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(20),
+                                  bottomRight: Radius.circular(20))),
+                          height: 150,
+                          child: SafeArea(
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(5),
+                                  width: 100,
+                                  height: 100,
+                                  child: Stack(
+                                    clipBehavior: Clip.none,
+                                    fit: StackFit.expand,
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundImage: userData!
+                                                    .photoProfile !=
+                                                null
+                                            ? NetworkImage(
+                                                userData!.photoProfile)
+                                            : AssetImage(
+                                                    "images/account_circle_blue.png")
+                                                as ImageProvider,
+                                      ),
+                                      Positioned(
+                                        bottom: 0,
+                                        right: -25,
+                                        child: RawMaterialButton(
+                                          onPressed: () async {
+                                            // Navigate to ProfileEdit and wait for the result
+                                            bool? shouldReload =
+                                                await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ProfileEdit()),
+                                            );
+
+                                            // If the user successfully edited their profile, reload the data
+                                            if (shouldReload == true) {
+                                              safeSetState(() {
+                                                isLoading =
+                                                    true; // Show loading indicator
+                                              });
+                                              await loadUserProfile(); // Reload profile data
+                                            }
+                                          },
+                                          elevation: 2.0,
+                                          fillColor: MyColor.colorSecondary,
+                                          child: Icon(Icons.edit),
+                                          shape: CircleBorder(),
                                         ),
-                                        Positioned(
-                                          bottom: 0,
-                                          right: -25,
-                                          child: RawMaterialButton(
-                                            onPressed: () async {
-                                              // Navigate to ProfileEdit and wait for the result
-                                              bool? shouldReload =
-                                                  await Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ProfileEdit()),
-                                              );
-              
-                                              // If the user successfully edited their profile, reload the data
-                                              if (shouldReload == true) {
-                                                safeSetState(() {
-                                                  isLoading =
-                                                      true; // Show loading indicator
-                                                });
-                                                await loadUserProfile(); // Reload profile data
-                                              }
-                                            },
-                                            elevation: 2.0,
-                                            fillColor: Colors.amber,
-                                            child: Icon(Icons.edit),
-                                            shape: CircleBorder(),
-                                          ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          userData.name,
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: MyColor.textWhite,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Divider(
+                                            color: MyColor.textWhite,
+                                            height: 0),
+                                        Text(
+                                          "@${userData.email}",
+                                          style: TextStyle(
+                                              color: MyColor.textWhite),
                                         )
                                       ],
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            userData!.name ?? "N/A",
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                            "@${userData!.name ?? "N/A"}",
-                                            style: TextStyle(color: Colors.grey),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
+                                )
+                              ],
                             ),
-                  Divider(),
-                  Column(
-                    children: [
-                      Text("Akun Saya",
+                          ),
+                        ),
+              SizedBox(
+                height: 20,
+              ),
+              Column(
+                children: [
+                  isLoading
+                      ? ShimmerSkeleton()
+                      : Text("MENU",
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      // MyButtonProfileMyAccount(
-                      //     loading: isLoading,
-                      //     icon: Icon(Icons.event),
-                      //     onPressed: () {
-                      //       Navigator.push(context,
-                      //           MaterialPageRoute(builder: (context) {
-                      //         return WeddingEssentials(profile: userData,);
-                      //       }));
-                      //     },
-                      //     title: "Kelengkapan Pernikahan"),
-                      // SizedBox(
-                      //   height: 10,
-                      // ),
-                      MyButtonProfileMyAccount(
-                          loading: isLoading,
-                          icon: Icon(Icons.shopping_bag_outlined),
-                          onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return OrderList();
-                            }));
-                          },
-                          title: "Pesanan Saya"),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      MyButtonProfileMyAccount(
-                          loading: isLoading,
-                          icon: Icon(Icons.history),
-                          onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return History();
-                            }));
-                          },
-                          title: "Riwayat"),
-                      SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                  ),
-                  Divider(),
                   SizedBox(
-                    height: 30,
+                    height: 10,
                   ),
-                  MyButtonProfileConfigure(
-                    loading: isLoading,
-                      onTap: () {
+                  // MyButtonProfileMyAccount(
+                  //     loading: isLoading,
+                  //     icon: Icon(Icons.event),
+                  //     onPressed: () {
+                  //       Navigator.push(context,
+                  //           MaterialPageRoute(builder: (context) {
+                  //         return WeddingEssentials(profile: userData,);
+                  //       }));
+                  //     },
+                  //     title: "Kelengkapan Pernikahan"),
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
+                  MyButtonProfileMyAccount(
+                      loading: isLoading,
+                      icon: Icon(Icons.shopping_bag_outlined),
+                      onPressed: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return Language();
+                          return OrderList();
                         }));
                       },
-                      label_name: "Bahasa",
-                      colorBorder: MyColor.color1,
-                      textColor: Colors.black),
+                      title: "Pesanan Saya"),
                   SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
-                  MyButtonProfileConfigure(
-                    loading: isLoading,
-                      onTap: () {
+                  MyButtonProfileMyAccount(
+                      loading: isLoading,
+                      icon: Icon(Icons.history),
+                      onPressed: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return Help();
+                          return History();
                         }));
                       },
-                      label_name: "Bantuan",
-                      colorBorder: MyColor.color1,
-                      textColor: Colors.black),
+                      title: "Riwayat"),
                   SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
-                  MyButtonProfileConfigure(
-                    loading: isLoading,
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return TermsAndcondition();
-                        }));
-                      },
-                      label_name: "Syarat Dan Ketentuan",
-                      colorBorder: MyColor.color1,
-                      textColor: Colors.black),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  MyButtonProfileConfigure(
-                    loading: isLoading,
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text("Keluar Akun"),
-                            content:
-                                Text("Apakah Anda yakin ingin keluar akun?"),
-                            actions: <Widget>[
-                              TextButton(
-                                child: Text("Batal"),
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .pop(); // Close the dialog
-                                },
-                              ),
-                              TextButton(
-                                child: Text("Keluar"),
-                                onPressed: () async {
-                                  await SecureStorage().deleteSecureData(
-                                      "${dotenv.env["KEY_TOKEN"]}");
-                                  Navigator.of(context)
-                                      .pop(); // Close the dialog
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (context) => Login()),
-                                    (Route<dynamic> route) =>
-                                        false, // Remove all previous routes
-                                  );
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    label_name: "Keluar Akun",
-                    colorBorder: Colors.red,
-                    textColor: Colors.red,
-                  )
                 ],
               ),
-            ),
+              isLoading ? ShimmerSkeleton() : Divider(),
+              SizedBox(
+                height: 30,
+              ),
+              MyButtonProfileConfigure(
+                  loading: isLoading,
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return Language();
+                    }));
+                  },
+                  label_name: "Bahasa",
+                  colorBorder: MyColor.color1,
+                  textColor: Colors.black),
+              SizedBox(
+                height: 20,
+              ),
+              MyButtonProfileConfigure(
+                  loading: isLoading,
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return Help();
+                    }));
+                  },
+                  label_name: "Bantuan",
+                  colorBorder: MyColor.color1,
+                  textColor: Colors.black),
+              SizedBox(
+                height: 20,
+              ),
+              MyButtonProfileConfigure(
+                  loading: isLoading,
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return TermsAndcondition();
+                    }));
+                  },
+                  label_name: "Syarat Dan Ketentuan",
+                  colorBorder: MyColor.color1,
+                  textColor: Colors.black),
+              SizedBox(
+                height: 20,
+              ),
+              MyButtonProfileConfigure(
+                loading: isLoading,
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Keluar Akun"),
+                        content: Text("Apakah Anda yakin ingin keluar akun?"),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text("Batal"),
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                          ),
+                          TextButton(
+                            child: Text("Keluar"),
+                            onPressed: () async {
+                              await SecureStorage().deleteSecureData(
+                                  "${dotenv.env["KEY_TOKEN"]}");
+                              Navigator.of(context).pop(); // Close the dialog
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => Login()),
+                                (Route<dynamic> route) =>
+                                    false, // Remove all previous routes
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                label_name: "Keluar Akun",
+                colorBorder: Colors.red,
+                textColor: Colors.red,
+              )
+            ],
           ),
         ),
       ),

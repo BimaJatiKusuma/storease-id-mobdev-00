@@ -12,14 +12,14 @@ class Order extends StatefulWidget {
 }
 
 class _OrderState extends State<Order> {
-  int curretnStep = 0;
-
-  
+  int currentStep = 0;
+  int selectedStep = 0; // Tracks the step whose content is being shown.
 
   @override
   void initState() {
     super.initState();
-    curretnStep = mapStatusToStep(widget.orderData.status);
+    currentStep = mapStatusToStep(widget.orderData.status);
+    selectedStep = currentStep;
   }
 
   // Function to map status to step index
@@ -46,14 +46,44 @@ class _OrderState extends State<Order> {
     }
   }
 
-  onStep(int value) {
+  onStepTapped(int step) {
     setState(() {
-      curretnStep = value;
+      selectedStep = step; // Update the selected step to show content
     });
   }
 
+  // Customizing the step state to change color for completed, current, and other steps
+  StepState getStepState(int step) {
+    if (step < currentStep) {
+      return StepState.complete; // Completed steps are green
+    } else if (step == currentStep) {
+      return StepState.editing; // Current step is purple
+    } else {
+      return StepState.indexed; // Other steps are grey
+    }
+  }
+
+  Color getStepColor(int step) {
+    if (step < currentStep) {
+      return Colors.green; // Green for completed
+    } else if (step == currentStep) {
+      return MyColor.color1; // Purple for current step
+    } else {
+      return Colors.grey; // Grey for others
+    }
+  }
+  Color getStepConnectorColor(int step) {
+    if (step < currentStep) {
+      return Colors.green; // Green for completed
+    } else if (step == currentStep) {
+      return Colors.purple; // Purple for current step
+    } else {
+      return Colors.grey; // Grey for others
+    }
+  }
+
   Widget controlsBuilder(context, details) {
-    return SizedBox.shrink();
+    return SizedBox.shrink(); // Disable the next/previous buttons
   }
 
   @override
@@ -64,57 +94,67 @@ class _OrderState extends State<Order> {
       ),
       body: SafeArea(
         child: Stepper(
-          currentStep: curretnStep,
-          // onStepTapped: onStep,
+          connectorThickness: 2,
+          // connectorColor: WidgetStateProperty.all(getStepConnectorColor(currentStep)),
+          currentStep: selectedStep, // Show content based on selectedStep
+          onStepTapped: onStepTapped, // Enable tapping on any step
           controlsBuilder: controlsBuilder,
           steps: [
             Step(
+              stepStyle: StepStyle(color: getStepColor(0)),
               title: Text("Penentuan Jadwal Rapat Perdana"),
-              content: OrderContent(currentStep: curretnStep),
-              state: curretnStep > 0 ? StepState.complete : StepState.indexed,
-              isActive: curretnStep >= 0,
+              content: OrderContent(currentStep: selectedStep),
+              state: getStepState(0), // Use custom step state
+              isActive: true, // Keep steps active
             ),
             Step(
+              stepStyle: StepStyle(color: getStepColor(1)),
               title: Text("Rapat Perdana"),
-              content: OrderContent(currentStep: curretnStep),
-              state: curretnStep > 1 ? StepState.complete : StepState.indexed,
-              isActive: curretnStep >= 1,
+              content: OrderContent(currentStep: selectedStep),
+              state: getStepState(1),
+              isActive: true,
             ),
             Step(
+              stepStyle: StepStyle(color: getStepColor(2)),
               title: Text("Pembayaran Awal"),
-              content: OrderContent(currentStep: curretnStep),
-              state: curretnStep > 2 ? StepState.complete : StepState.indexed,
-              isActive: curretnStep >= 2,
+              content: OrderContent(currentStep: selectedStep),
+              state: getStepState(2),
+              isActive: true,
             ),
             Step(
+              stepStyle: StepStyle(color: getStepColor(3)),
               title: Text("Persiapan Awal"),
-              content: OrderContent(currentStep: curretnStep),
-              state: curretnStep > 3 ? StepState.complete : StepState.indexed,
-              isActive: curretnStep >= 3,
+              content: OrderContent(currentStep: selectedStep),
+              state: getStepState(3),
+              isActive: true,
             ),
             Step(
+              stepStyle: StepStyle(color: getStepColor(4)),
               title: Text("Pembayaran Akhir"),
-              content: OrderContent(currentStep: curretnStep),
-              state: curretnStep > 4 ? StepState.complete : StepState.indexed,
-              isActive: curretnStep >= 4,
+              content: OrderContent(currentStep: selectedStep),
+              state: getStepState(4),
+              isActive: true,
             ),
             Step(
+              stepStyle: StepStyle(color: getStepColor(5)),
               title: Text("Persiapan Akhir"),
-              content: OrderContent(currentStep: curretnStep),
-              state: curretnStep > 5 ? StepState.complete : StepState.indexed,
-              isActive: curretnStep >= 5,
+              content: OrderContent(currentStep: selectedStep),
+              state: getStepState(5),
+              isActive: true,
             ),
             Step(
+              stepStyle: StepStyle(color: getStepColor(6)),
               title: Text("Hari Pernikahan"),
-              content: OrderContent(currentStep: curretnStep),
-              state: curretnStep > 6 ? StepState.complete : StepState.indexed,
-              isActive: curretnStep >= 6,
+              content: OrderContent(currentStep: selectedStep),
+              state: getStepState(6),
+              isActive: true,
             ),
             Step(
+              stepStyle: StepStyle(color: getStepColor(7)),
               title: Text("Pelaporan Akhir"),
-              content: OrderContent(currentStep: curretnStep,),
-              state: curretnStep > 7 ? StepState.complete : StepState.indexed,
-              isActive: curretnStep >= 7,
+              content: OrderContent(currentStep: selectedStep),
+              state: getStepState(7),
+              isActive: true,
             ),
           ],
         ),
@@ -123,30 +163,28 @@ class _OrderState extends State<Order> {
   }
 }
 
-
 class OrderContent extends StatelessWidget {
   final int currentStep;
   const OrderContent({super.key, required this.currentStep});
 
-  description<String>(){
-    switch (currentStep){
-      case 1:
+  description<String>() {
+    switch (currentStep) {
+      case 0:
         return "Tahap Penentuan Jadwal Perdana, adalah tahap untuk customer dan tim storease melakukan rapat pertama. Admin akan menghubungi customer sesaat setelah customer membuat pesanan. Customer bisa menghubungi tim storease apabila belum mendapatkan konfirmasi jadwal rapat perdana";
-      case 2:
+      case 1:
         return "Tahap Rapat Perdana, adalah tahap untuk customer dan tim storease melakukan rapat pertama. Admin akan menghubungi customer sesaat setelah customer membuat pesanan. Customer bisa menghubungi tim storease apabila belum mendapatkan konfirmasi jadwal rapat perdana";
-      case 3:
+      case 2:
         return "Tahap Pembayaran Awal, adalah tahap untuk customer dan tim storease melakukan rapat pertama. Admin akan menghubungi customer sesaat setelah customer membuat pesanan. Customer bisa menghubungi tim storease apabila belum mendapatkan konfirmasi jadwal rapat perdana";
-      case 4:
+      case 3:
         return "Tahap Persiapan Awal, adalah tahap untuk customer dan tim storease melakukan rapat pertama. Admin akan menghubungi customer sesaat setelah customer membuat pesanan. Customer bisa menghubungi tim storease apabila belum mendapatkan konfirmasi jadwal rapat perdana";
-      case 5:
+      case 4:
         return "Tahap Pembayaran Akhir, adalah tahap untuk customer dan tim storease melakukan rapat pertama. Admin akan menghubungi customer sesaat setelah customer membuat pesanan. Customer bisa menghubungi tim storease apabila belum mendapatkan konfirmasi jadwal rapat perdana";
-      case 6:
+      case 5:
         return "Tahap Persiapan Akhir, adalah tahap untuk customer dan tim storease melakukan rapat pertama. Admin akan menghubungi customer sesaat setelah customer membuat pesanan. Customer bisa menghubungi tim storease apabila belum mendapatkan konfirmasi jadwal rapat perdana";
-      case 7:
+      case 6:
         return "Tahap Hari Pernikahan, adalah tahap untuk customer dan tim storease melakukan rapat pertama. Admin akan menghubungi customer sesaat setelah customer membuat pesanan. Customer bisa menghubungi tim storease apabila belum mendapatkan konfirmasi jadwal rapat perdana";
-      case 8:
+      case 7:
         return "Tahap Pelaporan Akhir, adalah tahap untuk customer dan tim storease melakukan rapat pertama. Admin akan menghubungi customer sesaat setelah customer membuat pesanan. Customer bisa menghubungi tim storease apabila belum mendapatkan konfirmasi jadwal rapat perdana";
-
     }
   }
 
@@ -159,7 +197,6 @@ class OrderContent extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(10))),
         width: double.infinity,
         margin: EdgeInsets.symmetric(horizontal: 10),
-        child: Text(description())
-      );
+        child: Text(description()));
   }
 }

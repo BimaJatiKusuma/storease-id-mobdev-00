@@ -3,6 +3,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:storease_mobileapp_dev/api/api_services.dart';
+import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/model/packageResponseModel.dart';
 import 'package:storease_mobileapp_dev/model/profileResponseModel.dart';
 import 'package:storease_mobileapp_dev/screen/components/my_order_cust_table.dart';
@@ -116,24 +117,43 @@ class _PackageCheckoutState extends State<PackageCheckout> {
         title: Text("Buat Pesanan"),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Container(
-        width: 160, // Adjust the width based on the text length
-        height: 50, // Adjust the height if necessary
-        child: ElevatedButton.icon(
-          onPressed: _onBuatPesananPressed,
-          icon: Icon(Icons.receipt_long, size: 18), // Use the desired icon
-          label: Text("Buat Pesanan"),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white, // Set background color
-            foregroundColor: Colors.blue, // Set text and icon color
-            side: BorderSide(
-                color: Colors.blue), // Border color matching the style
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30), // Rounded shape
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(
+            horizontal: 10), // Adjust to position buttons
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  _onBuatPesananPressed();
+                },
+                borderRadius: BorderRadius.circular(
+                    8), // Ripple effect on the button's border
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                      vertical: 10.0), // Optional padding inside the button
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: MyColor.color1, // Background color of the button
+                  ),
+                  child: Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center, // Center icon and text
+                    children: [
+                      Icon(Icons.shopping_cart,
+                          color: Colors.white), // Shopping cart icon
+                      SizedBox(width: 8), // Spacing between icon and text
+                      Text(
+                        "Buat Pesanan",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            padding: EdgeInsets.symmetric(
-                horizontal: 16), // Padding inside the button
-          ),
+          ],
         ),
       ),
       body: SafeArea(
@@ -251,7 +271,9 @@ class _PackageCheckoutState extends State<PackageCheckout> {
                                   onPressed: () {
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) {
-                                      return VRDisplay(title: package.title,);
+                                      return VRDisplay(
+                                        title: package.title,
+                                      );
                                     }));
                                   },
                                   child: Image.asset(

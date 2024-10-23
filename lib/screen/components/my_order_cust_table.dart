@@ -49,7 +49,7 @@ class MyOrderCustTable extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(":"),
                   ),
-                  Text("Alamat ini")
+                  Text(profile!.address)
                 ]),
               ],
             ),

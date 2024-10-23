@@ -15,11 +15,15 @@ class _AIPageHomepageState extends State<AIPageHomepage> {
   final TextEditingController _controller = TextEditingController();
   // final List<Map<String, String>> _messages = [{"":""}];
   final List<Map<String, String>> _messages = [
-    {'type': 'ai', 'text': 'Selamat datang di halaman Tanya AI Pernikahan, masukkan pertanyaan mengenai ide pernikahan anda dan kami akan membantu merekomendasikan dari paket yang tersedia'}
-    ];
+    {
+      'type': 'ai',
+      'text':
+          'Selamat datang di halaman Tanya AI Pernikahan, masukkan pertanyaan mengenai ide pernikahan anda dan kami akan membantu merekomendasikan dari paket yang tersedia'
+    }
+  ];
   final ApiServices _apiServices = ApiServices();
   bool _isLoading = false;
-final ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
@@ -31,13 +35,14 @@ final ScrollController _scrollController = ScrollController();
       setState(fn);
     }
   }
-void _scrollToBottom() {
-  _scrollController.animateTo(
-    _scrollController.position.maxScrollExtent,
-    duration: const Duration(milliseconds: 300),
-    curve: Curves.easeOut,
-  );
-}
+
+  void _scrollToBottom() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+  }
 
   Future<void> _loadMessages() async {
     final prefs = await SharedPreferences.getInstance();
@@ -75,7 +80,8 @@ void _scrollToBottom() {
 
     try {
       // Get the AI response
-      final AIResponseModel response = await _apiServices.askAIHomepage(requestModel);
+      final AIResponseModel response =
+          await _apiServices.askAIHomepage(requestModel);
 
       // Add AI response to the list
       safeSetState(() {
@@ -113,8 +119,7 @@ void _scrollToBottom() {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Bersihkan Riwayat'),
-          content:
-              const Text('Apakah anda ingin menghapus riwayat pesan?'),
+          content: const Text('Apakah anda ingin menghapus riwayat pesan?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -161,18 +166,18 @@ void _scrollToBottom() {
                       ? Alignment.centerRight
                       : Alignment.centerLeft,
                   child: Container(
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: message['type'] == 'user'
-                          ? Colors.blue[200]
-                          : Colors.grey[300],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: BoldTextFromAPI(text: message['text']??"")
-                    // Text(message['text'] ?? ''),
-                  ),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 10),
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: message['type'] == 'user'
+                            ? Colors.blue[200]
+                            : Colors.grey[300],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: BoldTextFromAPI(text: message['text'] ?? "")
+                      // Text(message['text'] ?? ''),
+                      ),
                 );
               },
             ),
@@ -206,7 +211,6 @@ void _scrollToBottom() {
   }
 }
 
-
 class BoldTextFromAPI extends StatelessWidget {
   final String text;
 
@@ -216,10 +220,10 @@ class BoldTextFromAPI extends StatelessWidget {
   Widget build(BuildContext context) {
     // RegExp untuk mendeteksi teks yang diapit oleh **
     final RegExp boldRegex = RegExp(r'\*\*(.*?)\*\*');
-    
+
     // Menyimpan list TextSpan
     List<TextSpan> spans = [];
-    
+
     // Posisi mulai saat ini
     int currentIndex = 0;
 
@@ -231,13 +235,13 @@ class BoldTextFromAPI extends StatelessWidget {
           text: text.substring(currentIndex, match.start),
         ));
       }
-      
+
       // Bagian teks di dalam ** yang perlu dijadikan bold
       spans.add(TextSpan(
         text: match.group(1),
         style: TextStyle(fontWeight: FontWeight.bold),
       ));
-      
+
       // Update posisi currentIndex ke akhir match
       currentIndex = match.end;
     }
@@ -252,18 +256,19 @@ class BoldTextFromAPI extends StatelessWidget {
     // Menggunakan Text.rich untuk menampilkan teks dengan berbagai format
     return Text.rich(
       TextSpan(children: spans),
-      style: TextStyle(fontSize: 16),
+      textAlign: TextAlign.justify,
+      style: TextStyle(fontSize: 12),
     );
   }
 }
-
 
 class BouncingDot extends StatefulWidget {
   @override
   _BouncingDotState createState() => _BouncingDotState();
 }
 
-class _BouncingDotState extends State<BouncingDot> with SingleTickerProviderStateMixin {
+class _BouncingDotState extends State<BouncingDot>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 

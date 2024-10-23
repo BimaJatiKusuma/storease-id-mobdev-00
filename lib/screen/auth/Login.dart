@@ -201,26 +201,26 @@ class _LoginState extends State<Login> {
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                     ),
-                    SizedBox(height: 30),
-                    Row(
-                      children: [
-                        Expanded(child: Divider()),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Text("Atau"),
-                        ),
-                        Expanded(child: Divider()),
-                      ],
-                    ),
-                    SizedBox(height: 30),
-                    MyButtonAuth3(
-                      onTap: () {
-                        // Implement Google Sign-In functionality
-                      },
-                      label_name: "Masuk Menggunakan Google",
-                      backgroundColor: Colors.white,
-                      textColor: Colors.grey,
-                    ),
+                    // SizedBox(height: 30),
+                    // Row(
+                    //   children: [
+                    //     Expanded(child: Divider()),
+                    //     Padding(
+                    //       padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    //       child: Text("Atau"),
+                    //     ),
+                    //     Expanded(child: Divider()),
+                    //   ],
+                    // ),
+                    // SizedBox(height: 30),
+                    // MyButtonAuth3(
+                    //   onTap: () {
+                    //     // Implement Google Sign-In functionality
+                    //   },
+                    //   label_name: "Masuk Menggunakan Google",
+                    //   backgroundColor: Colors.white,
+                    //   textColor: Colors.grey,
+                    // ),
                   ],
                 ),
               ),

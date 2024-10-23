@@ -2,6 +2,7 @@ class SignupRequestModel {
   String username;
   String password;
   String password_confirmation;
+  String address;
   String phone;
   String email;
 
@@ -9,6 +10,7 @@ class SignupRequestModel {
     required this.password,
     required this.username,
     required this.email,
+    required this.address,
     required this.password_confirmation,
     required this.phone,
   });
@@ -19,7 +21,8 @@ class SignupRequestModel {
       "email": email.trim(),
       "password": password.trim(),
       "password_confirmation":password_confirmation.trim(),
-      "phone": phone.trim()
+      "phone": phone.trim(),
+      "address":address.trim()
     };
   }
 }

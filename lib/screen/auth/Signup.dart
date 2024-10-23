@@ -22,6 +22,9 @@ class _SignupState extends State<Signup> {
   final passwordConfirmationController = TextEditingController();
   final usernameController = TextEditingController();
   final phoneController = TextEditingController();
+  final addressController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>(); // Key to track form state
 
   late SignupRequestModel requestModel;
   bool _isLoading = false; // Track loading state
@@ -55,37 +58,40 @@ class _SignupState extends State<Signup> {
   }
 
   void signUserUp() {
-    setState(() {
-      _isLoading = true;
-    });
-    requestModel = SignupRequestModel(
-      username: usernameController.text,
-      password: passwordController.text,
-      phone: phoneController.text,
-      email: emailController.text,
-      password_confirmation: passwordConfirmationController.text,
-    );
-
-    ApiServices apiServices = ApiServices();
-    apiServices.signup(requestModel).then((value) {
+    if (_formKey.currentState?.validate() == true) { // Trigger validation
       setState(() {
-        _isLoading = false;
+        _isLoading = true;
       });
-      if (value.message == "Register successfull") {
-        _showSnackBar('Message: ${value.message}');
-        Navigator.pop(context);
-      } else {
-        _showErrorDialog('Failed to connect.');
+      requestModel = SignupRequestModel(
+        username: usernameController.text,
+        password: passwordController.text,
+        address: addressController.text,
+        phone: phoneController.text,
+        email: emailController.text,
+        password_confirmation: passwordConfirmationController.text,
+      );
+
+      ApiServices apiServices = ApiServices();
+      apiServices.signup(requestModel).then((value) {
         setState(() {
           _isLoading = false;
         });
-      }
-    }).catchError((error) {
-      _showErrorDialog('An error occurred: $error');
-      setState(() {
-        _isLoading = false;
+        if (value.message == "register success") {
+          _showSnackBar('Message: ${value.message}');
+          Navigator.pop(context);
+        } else {
+          _showErrorDialog('Failed to connect.');
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }).catchError((error) {
+        _showErrorDialog('An error occurred: $error');
+        setState(() {
+          _isLoading = false;
+        });
       });
-    });
+    }
   }
 
   @override
@@ -103,120 +109,127 @@ class _SignupState extends State<Signup> {
               absorbing: _isLoading,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 25.0),
-                child: Column(
-                  children: [
-                    RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                            style: TextStyle(color: Colors.grey),
-                            children: [
-                              TextSpan(
-                                  text:
-                                      "Selamat datang di Storease! Nikmati fitur kami sepuasnya, klik "),
-                              TextSpan(
-                                  style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold),
-                                  text: "Masuk ",
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      Navigator.pop(context);
-                                    }),
-                              TextSpan(text: "jika Anda sudah terdaftar.")
-                            ])),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    MyTextfieldAuth(
-                      labelText: "Nama Lengkap",
-                      controller: usernameController,
-                      hintText: "Masukkan nama lengkap Anda",
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    MyTextfieldAuth(
+                child: Form( // Wrap in Form widget
+                  key: _formKey, // Assign the form key
+                  child: Column(
+                    children: [
+                      RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                              style: TextStyle(color: Colors.grey),
+                              children: [
+                                TextSpan(
+                                    text: "Selamat datang di Storease! Nikmati fitur kami sepuasnya, klik "),
+                                TextSpan(
+                                    style: TextStyle(
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.bold),
+                                    text: "Masuk ",
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        Navigator.pop(context);
+                                      }),
+                                TextSpan(text: "jika Anda sudah terdaftar.")
+                              ])),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      MyTextfieldAuth(
+                        labelText: "Nama Lengkap",
+                        inputType: TextInputType.name,
+                        controller: usernameController,
+                        hintText: "Masukkan nama lengkap Anda",
+                        isRequired: true, // Mark as required
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      MyTextfieldAuth(
                         labelText: "Alamat E-Mail",
                         controller: emailController,
-                        hintText: "Masukkan alamat E-Mail Anda"),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    MyTextfieldAuth(
+                        inputType: TextInputType.emailAddress,
+                        hintText: "Masukkan alamat E-Mail Anda",
+                        regex: r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$', // Email regex pattern
+                        errorMessage: "Masukkan alamat email yang valid",
+                        isRequired: true, // Mark as required
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      MyTextfieldAuth(
+                        labelText: "Nomor Telepon",
+                        controller: phoneController,
+                        regex: r'^\d{12,}$',
+                        inputType: TextInputType.phone,
+                        errorMessage: "Maskkan 12 Digit nomor telepon",
+                        hintText: "08xxxxxxxxxx",
+                        isRequired: true, // Mark as required
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      MyTextfieldAuth(
+                        labelText: "Alamat",
+                        inputType: TextInputType.streetAddress,
+                        controller: addressController,
+                        hintText: "Jl. Nasional No. 03, Sumbersari, Jember, Jawa Timur",
+                        isRequired: true, // Mark as required
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      MyTextfieldAuth(
                         labelText: "Kata Sandi",
                         controller: passwordController,
                         isPassword: true,
-                        hintText: "Masukkan kata sandi"),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    MyTextfieldAuth(
+                        hintText: "Masukkan kata sandi",
+                        isRequired: true, // Mark as required
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      MyTextfieldAuth(
                         labelText: "Konfirmasi Kata Sandi",
                         controller: passwordConfirmationController,
                         isPassword: true,
-                        hintText: "Masukkan ulang kata sandi"),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    MyTextfieldAuth(
-                        labelText: "Nomor Telefon",
-                        controller: phoneController,
-                        hintText: "08xx-xxxx-xxxx"),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    ElevatedButton(
-                      onPressed: _isLoading ? null : signUserUp,
-                      style: ElevatedButton.styleFrom(
-                        side: BorderSide(color: MyColor.color1),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 100, vertical: 15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        // primary: MyColor.color1, // Button background color
-                        // onPrimary: Colors.white, // Button text color
+                        hintText: "Masukkan ulang kata sandi",
+                        isRequired: true, // Mark as required
                       ),
-                      child: _isLoading
-                          ? SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
+                      SizedBox(
+                        height: 5,
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      ElevatedButton(
+                        onPressed: _isLoading ? null : signUserUp, // Call signUserUp
+                        style: ElevatedButton.styleFrom(
+                          side: BorderSide(color: MyColor.color1),
+                          padding: EdgeInsets.symmetric(horizontal: 100, vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: _isLoading
+                            ? SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : Text(
+                                "DAFTAR",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
                               ),
-                            ) // Loading indicator inside the button
-                          : Text(
-                              "DAFTAR",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(child: Divider()),
-                        Text("Atau"),
-                        Expanded(child: Divider()),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    MyButtonAuth3(
-                      onTap: () {
-                        // Implement Google Sign-In functionality
-                      },
-                      label_name: "Daftar Menggunakan Google",
-                      backgroundColor: Colors.white,
-                      textColor: Colors.grey,
-                    ),
-                    SizedBox(
-                      height: 50,
-                    )
-                  ],
+                      ),
+                      SizedBox(
+                        height: 50,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

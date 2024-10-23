@@ -16,8 +16,8 @@ class _OrderListState extends State<OrderList> {
     OrderResponseModel(id: 1, package_id: 1, status: 2),
     OrderResponseModel(id: 2, package_id: 2, status: 3),
     OrderResponseModel(id: 3, package_id: 3, status: 4),
-    OrderResponseModel(id: 4, package_id: 4, status: 5),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +43,6 @@ class OrderListContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // decoration: BoxDecoration(color: Colors.amber),
       margin: EdgeInsets.only(top: 10),
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: GestureDetector(
@@ -55,18 +54,18 @@ class OrderListContent extends StatelessWidget {
           }));
         },
         child: Container(
-          // padding: EdgeInsets.all(5),
           decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: MyColor.colorMain.withOpacity(0.2),
-                  blurRadius: 10,
-                  spreadRadius: 1,
-                  offset: const Offset(0, 5),
-                )
-              ],
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(10))),
+            boxShadow: [
+              BoxShadow(
+                color: MyColor.colorMain.withOpacity(0.2),
+                blurRadius: 10,
+                spreadRadius: 1,
+                offset: const Offset(0, 5),
+              )
+            ],
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(15)), // Rounded corners
+          ),
           width: double.infinity,
           child: Column(
             children: [
@@ -75,8 +74,8 @@ class OrderListContent extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: MyColor.colorMain,
                     borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(10),
-                        topLeft: Radius.circular(10))),
+                        topRight: Radius.circular(15),
+                        topLeft: Radius.circular(15))),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -90,13 +89,10 @@ class OrderListContent extends StatelessWidget {
                     SizedBox(
                       width: 10,
                     ),
-                    // Ensure that the Column expands within the Row
                     Expanded(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment
-                            .end, // Align the text to the start
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          // Text will wrap to the next line if it exceeds the available width
                           Text(
                             textAlign: TextAlign.end,
                             "Harap Melakukan Pembayaran Awal",
@@ -104,9 +100,8 @@ class OrderListContent extends StatelessWidget {
                                 color: MyColor.textWhite,
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold),
-                            softWrap: true, // Enables text to wrap
-                            overflow: TextOverflow
-                                .visible, // Ensure overflow handling is visible
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
                           ),
                         ],
                       ),
@@ -114,7 +109,6 @@ class OrderListContent extends StatelessWidget {
                   ],
                 ),
               ),
-              // Divider(),
               Container(
                   height: 150,
                   child: Image.asset(
@@ -125,9 +119,7 @@ class OrderListContent extends StatelessWidget {
                 width: 10,
               ),
               Container(
-                decoration: BoxDecoration(
-              
-                ),
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -135,8 +127,9 @@ class OrderListContent extends StatelessWidget {
                       child: Text("The Grand Karunia Function Hall - Bogor",
                           softWrap: true,
                           style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold)),
+                              fontSize: 14, fontWeight: FontWeight.bold)),
                     ),
+                    SizedBox(height: 5),
                     Text("ID Pesanan : xxx-xxx-xxx",
                         style: TextStyle(fontSize: 12)),
                     Text("Tanggal Pernikahan : 24 Oktober 2024",
@@ -144,7 +137,24 @@ class OrderListContent extends StatelessWidget {
                     Text("Total harga : Rp. 10.000.000",
                         style: TextStyle(fontSize: 12)),
                     Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                      ElevatedButton(
+                      Container(
+                        decoration: BoxDecoration(
+                          color: MyColor.colorMain,
+                          borderRadius: BorderRadius.circular(30),
+                          // gradient: LinearGradient(
+                          //   colors: [Colors.purple, Colors.blue],
+                          //   begin: Alignment.topLeft,
+                          //   end: Alignment.bottomRight,
+                          // ),
+                        ),
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
                           onPressed: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
@@ -153,7 +163,16 @@ class OrderListContent extends StatelessWidget {
                               );
                             }));
                           },
-                          child: Text("KELENGKAPAN PERNIKAHAN"))
+                          child: Text(
+                            "KELENGKAPAN PERNIKAHAN",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
                     ])
                   ],
                 ),

@@ -186,58 +186,65 @@ class _ProfilState extends State<Profil> {
                           ),
                         ),
               SizedBox(
-                height: 20,
+                height: 5,
               ),
-              Column(
-                children: [
-                  isLoading
-                      ? ShimmerSkeleton()
-                      : Text("MENU",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  // MyButtonProfileMyAccount(
-                  //     loading: isLoading,
-                  //     icon: Icon(Icons.event),
-                  //     onPressed: () {
-                  //       Navigator.push(context,
-                  //           MaterialPageRoute(builder: (context) {
-                  //         return WeddingEssentials(profile: userData,);
-                  //       }));
-                  //     },
-                  //     title: "Kelengkapan Pernikahan"),
-                  // SizedBox(
-                  //   height: 10,
-                  // ),
-                  MyButtonProfileMyAccount(
-                      loading: isLoading,
-                      icon: Icon(Icons.shopping_bag_outlined),
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return OrderList();
-                        }));
-                      },
-                      title: "Pesanan Saya"),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  MyButtonProfileMyAccount(
-                      loading: isLoading,
-                      icon: Icon(Icons.history),
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return History();
-                        }));
-                      },
-                      title: "Riwayat"),
-                  SizedBox(
-                    height: 10,
-                  ),
-                ],
+              isLoading ? ShimmerSkeleton() : Divider(),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  children: [
+                    isLoading
+                        ? ShimmerSkeleton()
+                        : Text("MENU",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    // MyButtonProfileMyAccount(
+                    //     loading: isLoading,
+                    //     icon: Icon(Icons.event),
+                    //     onPressed: () {
+                    //       Navigator.push(context,
+                    //           MaterialPageRoute(builder: (context) {
+                    //         return WeddingEssentials(profile: userData,);
+                    //       }));
+                    //     },
+                    //     title: "Kelengkapan Pernikahan"),
+                    // SizedBox(
+                    //   height: 10,
+                    // ),
+                    MyButtonProfileMyAccount(
+                        loading: isLoading,
+                        icon: Icon(
+                          Icons.shopping_bag_outlined,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return OrderList();
+                          }));
+                        },
+                        title: "Pesanan Saya"),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    MyButtonProfileMyAccount(
+                        loading: isLoading,
+                        icon: Icon(Icons.history, color: Colors.white),
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return History();
+                          }));
+                        },
+                        title: "Riwayat"),
+                    SizedBox(
+                      height: 10,
+                    ),
+                  ],
+                ),
               ),
               isLoading ? ShimmerSkeleton() : Divider(),
               SizedBox(

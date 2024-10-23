@@ -53,7 +53,7 @@ class ApiServices {
       body: jsonEncode(requestModel.toJson()),
     );
 
-    if (response.statusCode == 200 || response.statusCode == 400) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       return SignupResponseModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to signup: ${response.body}');
@@ -231,13 +231,20 @@ class ApiServices {
     }
   }
 
-  Future<AIResponseModel> askAIOrder(AIRequestModel requestModel) async {
-    String url = "http://192.168.18.24:5000/api/ai/order";
+  Future<AIResponseModel> askAIOrder(
+      AIOrderRequestModel requestModel) async {
+    String token =
+        await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
+    // String url = "http://192.168.1.44:5000/api/ai/order";
+    String url = "https://0ae8-180-254-205-29.ngrok-free.app/api/ai/order";
     Uri finalURI = Uri.parse(url);
 
     final response = await http.post(
       finalURI,
-      headers: {"Content-Type": "application/json"},
+      headers: {
+        'Authorization': 'Bearer $token',
+        "Content-Type": "application/json"
+      },
       body: jsonEncode(requestModel.toJson()),
     );
 
@@ -252,7 +259,8 @@ class ApiServices {
   Future<AIResponseModel> askAIHomepage(AIRequestModel requestModel) async {
     String token =
         await SecureStorage().readSecureData("${dotenv.env["KEY_TOKEN"]}");
-    String url = "http://192.168.18.24:5000/api/ai/homepage";
+    // String url = "http://192.168.1.44:5000/api/ai/homepage";
+    String url = "https://0ae8-180-254-205-29.ngrok-free.app/api/ai/homepage";
     Uri finalURI = Uri.parse(url);
 
     final response = await http.post(

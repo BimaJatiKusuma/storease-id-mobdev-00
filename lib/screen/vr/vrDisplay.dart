@@ -29,7 +29,8 @@ class _VRDisplayState extends State<VRDisplay> {
         child:
         // Panorama
         PanoramaViewer(
-          animSpeed: 1,
+          animSpeed: 0,
+          sensitivity: 2,
           sensorControl: SensorControl.orientation,
           child: Image.asset("images/image360.jpg"),
         ),

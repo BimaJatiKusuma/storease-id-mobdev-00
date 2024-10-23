@@ -5,7 +5,8 @@ import 'package:storease_mobileapp_dev/model/aiModel.dart';
 import 'dart:convert';
 
 class AIPageOrder extends StatefulWidget {
-  const AIPageOrder({super.key});
+  final int package_id;
+  const AIPageOrder({required this.package_id,super.key});
 
   @override
   State<AIPageOrder> createState() => _AIPageOrderState();
@@ -23,6 +24,7 @@ final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
+    print(widget.package_id);
     _loadMessages(); // Load messages when the page is initialized
   }
 
@@ -71,11 +73,13 @@ void _scrollToBottom() {
     });
 
     // Create the AI request model
-    final requestModel = AIRequestModel(message: _controller.text);
+    final requestModel = AIOrderRequestModel(message: _controller.text, id_package: widget.package_id);
 
     try {
+      print("order page ${requestModel.message} ${widget.package_id}", );
       // Get the AI response
       final AIResponseModel response = await _apiServices.askAIOrder(requestModel);
+
 
       // Add AI response to the list
       safeSetState(() {

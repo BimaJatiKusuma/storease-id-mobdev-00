@@ -10,6 +10,21 @@ class AIRequestModel{
   }
 }
 
+class AIOrderRequestModel{
+  String message;
+  int id_package;
+  AIOrderRequestModel({
+    required this.message,
+    required this.id_package
+  });
+    Map<String, dynamic> toJson() {
+    return {
+      "message": message.trim(),
+      "id_package": id_package,
+    };
+  }
+}
+
 class AIResponseModel{
   final response;
   AIResponseModel({
@@ -19,3 +34,4 @@ class AIResponseModel{
     return AIResponseModel(response: json["response"]);
   }
 }
+

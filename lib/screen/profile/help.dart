@@ -27,7 +27,7 @@ class _HelpState extends State<Help> {
         children: [
           ElevatedButton.icon(
             onPressed: () async {
-              sendWhatsAppMessage(user_id, phone_number);
+              sendWhatsAppMessage();
             },
             icon: Icon(Icons.message, size: 18), // Use the desired icon
             label: Text("Chat Admin"),

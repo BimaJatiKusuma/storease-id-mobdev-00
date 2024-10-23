@@ -3,13 +3,15 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:storease_mobileapp_dev/color/color.dart';
 import 'package:storease_mobileapp_dev/internet/dependency_injection.dart';
+import 'package:storease_mobileapp_dev/method/secure_storage.dart';
 import 'package:storease_mobileapp_dev/splash.dart';
 
 void main() async {
     await dotenv.load(fileName: ".env", mergeWith: {
     'TEST_VAR': '5',
   }); // mergeWith optional, you can include Platform.environment for Mobile/Desktop app
-
+        await SecureStorage()
+            .writeSecureData("${dotenv.env['KEY_CUSTOMER_SERVICE']}", "+6285222685611");
   runApp(const MyApp());
   DependencyInjection.init();
 }

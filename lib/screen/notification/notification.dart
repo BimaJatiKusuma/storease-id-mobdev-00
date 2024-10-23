@@ -13,48 +13,97 @@ class _NotificationPageState extends State<NotificationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Notifikasi"),
+        title: const Text(
+          "Notifikasi",
+          style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            InkWell(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context){
-                  return NotificationDetail();
-                }));
-              },
-              child: Container(
-                width: double.infinity,
-                child: Row(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              // Notification card
+              _buildNotificationCard(context),
+              const SizedBox(height: 16),
+              _buildNotificationCard(context),
+              const SizedBox(height: 16),
+              _buildNotificationCard(context),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNotificationCard(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return const NotificationDetail();
+        }));
+      },
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        shadowColor: Colors.grey.withOpacity(0.3),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Add a placeholder for an avatar
+              CircleAvatar(
+                foregroundImage: const ExactAssetImage("images/icon_app_launcher.png"),
+                radius: 30,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Container(
-                    //   width: 75,
-                    //   height: 75,
-                    //   child: Image.asset("account_circle_blue.png"),
-                    // ),
-                    Expanded(
-                        child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(child: Text("Storease")),
-                            Text("Jan 2, 2024, 10.00"),
-                            Icon(Icons.circle)
-                          ],
+                    // Notification header
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text(
+                          "Storease",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            fontFamily: 'Poppins',
+                          ),
                         ),
                         Text(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in ligula in velit hendrerit malesuada. Donec lacinia quam a libero aliquet, quis fringilla nisi rhoncus.",
-                            softWrap: true,
-                            maxLines: 2,
-                            )
+                          "Jan 2, 2024, 10:00",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
                       ],
-                    ))
+                    ),
+                    const SizedBox(height: 8),
+                    // Notification body
+                    const Text(
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in ligula in velit hendrerit malesuada.",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Poppins',
+                        color: Colors.black87,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
                 ),
               ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );

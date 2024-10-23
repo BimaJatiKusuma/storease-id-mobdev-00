@@ -56,6 +56,7 @@ class _ListPackageState extends State<ListPackage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: _isLoading ? ShimmerSkeleton() : Text(currentCategory.name),
       ),
       body: _isLoading
@@ -82,7 +83,7 @@ class _ListPackageState extends State<ListPackage> {
               : packageList.isEmpty
                   ? const Center(
                       child: Text(
-                        "No packages available.",
+                        "Paket Belum Tersedia",
                         style: TextStyle(fontSize: 16),
                       ),
                     )

@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             onPressed: () {
               if (idUser != null) {
-                sendWhatsAppMessage(idUser, phoneNumber);
+                sendWhatsAppMessage();
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("User ID not loaded yet")),
@@ -156,7 +156,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 SizedBox(
-                  height: 175,
+                  height: MediaQuery.of(context).size.height * 0.25,
                   width: double.infinity,
                   child: isLoading
                       ? ShimmerSkeleton()

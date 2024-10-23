@@ -115,15 +115,94 @@ class _PackageDetailState extends State<PackageDetail> {
       symbol: 'Rp. ', // Currency symbol
       decimalDigits: 0, // No decimal places
     );
-    double value = (package?.price != null && package!.price.isNotEmpty) 
-    ? double.parse(package!.price) 
-    : 0.0;
-
+    double value = (package?.price != null && package!.price.isNotEmpty)
+        ? double.parse(package!.price)
+        : 0.0;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text("Detail Produk"),
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10), // Adjust to position buttons
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  sendWhatsAppMessage(id_pesanan: package!.id.toString(), nama_pesanan: package!.title);
+                },
+                borderRadius: BorderRadius.circular(
+                    8), // Ripple effect on the button's border
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                      vertical: 10.0), // Optional padding inside the button
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: MyColor.color1, // Background color of the button
+                  ),
+                  child: Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center, // Center icon and text
+                    children: [
+                      Icon(Icons.chat, color: Colors.white), // Chat icon
+                      SizedBox(width: 8), // Spacing between icon and text
+                      Text(
+                        "Chat",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 10), // Space between buttons
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  if (package != null) {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return PackageCheckout(id: package!.id);
+                    }));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Package data not available.')),
+                    );
+                  }
+                },
+                borderRadius: BorderRadius.circular(
+                    8), // Ripple effect on the button's border
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                      vertical: 10.0), // Optional padding inside the button
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: MyColor.color1, // Background color of the button
+                  ),
+                  child: Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center, // Center icon and text
+                    children: [
+                      Icon(Icons.shopping_cart,
+                          color: Colors.white), // Shopping cart icon
+                      SizedBox(width: 8), // Spacing between icon and text
+                      Text(
+                        "Buat Pesanan",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SafeArea(
         child: AbsorbPointer(
           absorbing: isLoading,
@@ -283,7 +362,9 @@ class _PackageDetailState extends State<PackageDetail> {
                                     onPressed: () {
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
-                                        return VRDisplay(title: package!.title,);
+                                        return VRDisplay(
+                                          title: package!.title,
+                                        );
                                       }));
                                     },
                                     child: Image.asset(
@@ -306,70 +387,10 @@ class _PackageDetailState extends State<PackageDetail> {
                               width: double.infinity,
                               height: 60,
                             )
-                          : Container(
-                              // child:Text(
-                              //   "MyContentHomepagePackage still on dev",
-                              // ),
+                          : Container(height: 60,
                               )
-                      // : MyContentHomepagePackage(
-                      //     // packageCategory: PackageCategoryModel(
-                      //     //     id: 1,
-                      //     //     name: "Gold",
-                      //     //     packages: <PackageModel>[
-                      //     //       PackageModel(
-                      //     //           description: "description",
-                      //     //           id: 1,
-                      //     //           category: "1",
-                      //     //           price: "75000",
-                      //     //           title: "test",
-                      //     //           thumbnail_url:
-                      //     //               "https://be.storease.id/media/12/Picsart_24-09-22_20-24-35-386.jpg",
-                      //     //           image_url: <String>[
-                      //     //             "https://be.storease.id/media/12/Picsart_24-09-22_20-24-35-386.jpg",
-                      //     //             "https://be.storease.id/media/13/Food-Truck-(HD).png",
-                      //     //             "https://be.storease.id/media/14/Food-Truck.png"
-                      //     //           ])
-                      //     //     ]),
-                      //     title: package!.category,
-                      //     packages: packages!,
-                      //     loading: isLoading,
-                      //   ),
                     ],
                   ),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(color: MyColor.colorSecondary),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        sendWhatsAppMessage(user_id, phone_number);
-                      },
-                      child: const Text("Chat"),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (package != null) {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return PackageCheckout(
-                              id: package!.id,
-                            );
-                          }));
-                        } else {
-                          // Optionally, show an error message
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text('Package data not available.')),
-                          );
-                        }
-                      },
-                      child: const Text("Buat Pesanan"),
-                    ),
-                  ],
                 ),
               ),
             ],

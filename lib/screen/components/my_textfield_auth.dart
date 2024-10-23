@@ -5,13 +5,21 @@ class MyTextfieldAuth extends StatefulWidget {
   final String hintText;
   final String labelText;
   final bool isPassword;
+  final String? regex;
+  final String? errorMessage;
+  final bool isRequired;
+  final TextInputType inputType; // New inputType field
 
   const MyTextfieldAuth({
     Key? key,
     required this.controller,
     required this.hintText,
     required this.labelText,
-    this.isPassword = false, // Default to false
+    this.isPassword = false,
+    this.regex,
+    this.errorMessage,
+    this.isRequired = false,
+    this.inputType = TextInputType.text, // Default input type is text
   }) : super(key: key);
 
   @override
@@ -19,12 +27,11 @@ class MyTextfieldAuth extends StatefulWidget {
 }
 
 class _MyTextfieldAuthState extends State<MyTextfieldAuth> {
-  bool _isObscured = true; // State to track obscure text
+  bool _isObscured = true;
 
   @override
   void initState() {
     super.initState();
-    // If it's not a password field, no need to obscure text
     if (!widget.isPassword) {
       _isObscured = false;
     }
@@ -34,6 +41,18 @@ class _MyTextfieldAuthState extends State<MyTextfieldAuth> {
     setState(() {
       _isObscured = !_isObscured;
     });
+  }
+
+  String? _validateInput(String? value) {
+    // Check if the field is required and empty
+    if (widget.isRequired && (value == null || value.isEmpty)) {
+      return 'Harap isi halaman ini';
+    }
+    // Check if a regex is provided and if the input matches
+    if (widget.regex != null && value != null && !RegExp(widget.regex!).hasMatch(value)) {
+      return widget.errorMessage ?? "Jawaban tidak valid";
+    }
+    return null;
   }
 
   @override
@@ -46,30 +65,29 @@ class _MyTextfieldAuthState extends State<MyTextfieldAuth> {
         TextFormField(
           controller: widget.controller,
           obscureText: widget.isPassword ? _isObscured : false,
+          keyboardType: widget.inputType, // Use the inputType here
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
-              borderSide:
-                  BorderSide(color: Color.fromRGBO(200, 200, 200, 1)),
+              borderSide: BorderSide(color: Color.fromRGBO(200, 200, 200, 1)),
             ),
             focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey.shade200)),
+              borderSide: BorderSide(color: Colors.grey.shade200),
+            ),
             fillColor: Colors.white,
             filled: true,
             hintText: widget.hintText,
             hintStyle: TextStyle(color: Colors.grey[500]),
-            // Show the toggle icon only if it's a password field
             suffixIcon: widget.isPassword
                 ? IconButton(
                     icon: Icon(
-                      _isObscured
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                      _isObscured ? Icons.visibility_off : Icons.visibility,
                       color: Colors.grey,
                     ),
                     onPressed: _toggleObscureText,
                   )
                 : null,
           ),
+          validator: _validateInput, // Call validation method
         ),
       ],
     );

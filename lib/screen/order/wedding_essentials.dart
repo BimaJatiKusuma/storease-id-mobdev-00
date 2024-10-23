@@ -87,17 +87,39 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
     }
   }
 
+description<String>(step) {
+    switch (step) {
+      case 0:
+        return "Tahap Penentuan Jadwal Perdana";
+      case 1:
+        return "Tahap Rapat Perdana";
+      case 2:
+        return "Tahap Pembayaran Awal";
+      case 3:
+        return "Tahap Persiapan Awal";
+      case 4:
+        return "Tahap Pembayaran Akhir";
+      case 5:
+        return "Tahap Persiapan Akhir";
+      case 6:
+        return "Tahap Hari Pernikahan";
+      case 7:
+        return "Tahap Pelaporan Akhir";
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
+        actions: _isLoading?[
+          ShimmerSkeleton()
+        ]: [
           Container(
             width: 50,
             child: IconButton(
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return AIPageOrder();
+                  return AIPageOrder(package_id: package.id,);
                 }));
               },
               icon: Image.asset("images/Ai.png"),
@@ -114,27 +136,46 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
               width: 30,
               child: ShimmerSkeleton(),
             )
-          : Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () async {
-                    sendWhatsAppMessage(id_user, phone_number,
-                        id_pesanan: id_pesanan);
-                  },
-                  icon: Icon(Icons.message, size: 18),
-                  label: Text("Chat Admin"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.blue,
-                    side: BorderSide(color: Colors.blue),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+          : Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 10), // Adjust to position buttons
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        sendWhatsAppMessage();
+                      },
+                      borderRadius: BorderRadius.circular(
+                          8), // Ripple effect on the button's border
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            vertical:
+                                10.0), // Optional padding inside the button
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color:
+                              MyColor.color1, // Background color of the button
+                        ),
+                        child: Row(
+                          mainAxisAlignment:
+                              MainAxisAlignment.center, // Center icon and text
+                          children: [
+                            Icon(Icons.chat,
+                                color: Colors.white), // Shopping cart icon
+                            SizedBox(width: 8), // Spacing between icon and text
+                            Text(
+                              "Hubungi Tim Storease",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 16),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
       body: _isLoading
           ? WeddingEssentialsLoading()
@@ -143,51 +184,143 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
                 children: [
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(5),
+                    padding: EdgeInsets.all(
+                        10), // Increased padding for a more spaced layout
+                    decoration: BoxDecoration(
+                      color: Colors.white, // Elegant background color
+                      borderRadius:
+                          BorderRadius.circular(15), // Rounded corners
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey
+                              .withOpacity(0.3), // Subtle shadow effect
+                          spreadRadius: 3,
+                          blurRadius: 10,
+                          offset: Offset(0, 3), // Shadow positioning
+                        ),
+                      ],
+                    ),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Diperbaharui 1 Januari 2024, 13.00"),
+                        // Updated text styling for a more elegant date display
+                        Text(
+                          "Diperbaharui 1 Januari 2024, 13.00",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey[
+                                700], // Softer text color for a fancy look
+                          ),
+                        ),
+                        SizedBox(height: 10), // Added space for better layout
                         Container(
-                          child: Column(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 20),
+                          decoration: BoxDecoration(
+                            color: Colors.blueGrey[
+                                50], // Soft background for inner container
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) {
-                                        return Order(
-                                          orderData: widget.orderData,
-                                        );
-                                      }));
-                                    },
-                                    child: Column(
-                                      children: [
-                                        Text("status"),
-                                        Text("${widget.orderData.status}/7"),
-                                      ],
-                                    ),
+                              // Fancy button with a gradient effect
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 15, horizontal: 20),
+                                  backgroundColor: Colors
+                                      .deepPurpleAccent, // Gradient color
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  Column(
-                                    children: [
-                                      Text("Menunggu Pembayaran Awal"),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                                  builder: (context) {
-                                            return Payment();
-                                          }));
-                                        },
-                                        child: Text("Bayar"),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return Order(
+                                        orderData: widget.orderData);
+                                  }));
+                                },
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "Status",
+                                      style: TextStyle(
+                                        color: Colors
+                                            .white, // White text for contrast
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                    ],
-                                  )
-                                ],
+                                    ),
+                                    Text(
+                                      "${widget.orderData.status}/7",
+                                      style: TextStyle(
+                                        color:
+                                            Colors.white.withOpacity(0.9),
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 10,),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: double.infinity,
+                                      child: Text(
+                                        description(widget.orderData.status),
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors
+                                              .black87, // Darker color for better contrast
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                        height:
+                                            5), // Space between text and button
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 12, horizontal: 20),
+                                        backgroundColor: Colors
+                                            .tealAccent, // Fancy button color
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return Payment();
+                                        }));
+                                      },
+                                      child: Text(
+                                        "Bayar",
+                                        style: TextStyle(
+                                          color: Colors
+                                              .black, // Text contrast for button
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -236,7 +369,7 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
                         const Color.fromARGB(255, 238, 243, 155),
                     collapsedBackgroundColor: MyColor.color1,
                     backgroundColor: MyColor.colorMain,
-                    title: Text(package.title),
+                    title: Text(package.title, style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),),
                     children: [
                       Container(
                         padding: EdgeInsets.all(5),
@@ -346,7 +479,10 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.blueGrey[100],
+                              boxShadow: [
+                                BoxShadow(color: Colors.grey, spreadRadius: 1, blurRadius: 1)
+                              ],
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Column(
@@ -369,15 +505,17 @@ class _WeddingEssentialsState extends State<WeddingEssentials> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         SupportDocumentProfile(
-                          pdfURL: "https://be.storease.id/media/31/Notulensi-Rapat-Perencanaan-Wedding.pdf",
+                          pdfURL:
+                              "https://be.storease.id/media/1/Notulensi-Rapat-Perencanaan-Wedding.pdf",
                           title: "Notulensi Rapat Perdana",
                         ),
                         SupportDocumentProfile(
-                          pdfURL: "https://be.storease.id/media/32/rundown.pdf",
+                          pdfURL: "https://be.storease.id/media/4/rundown.pdf",
                           title: "Rundown Acara",
                         ),
                         SupportDocumentProfile(
-                          pdfURL: "https://be.storease.id/media/37/DESAIN-VENUE.pdf",
+                          pdfURL:
+                              "https://be.storease.id/media/5/DESAIN-VENUE.pdf",
                           title: "Desain Venue",
                         ),
                       ],
@@ -480,7 +618,10 @@ class SupportDocumentProfile extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return OrderPDFView(url: pdfURL, title: title,);
+                        return OrderPDFView(
+                          url: pdfURL,
+                          title: title,
+                        );
                       }));
                     },
                     child: Text("Lihat PDF"),
@@ -570,4 +711,8 @@ class WeddingEssentialsLoading extends StatelessWidget {
       ),
     );
   }
+
+  
+  
+
 }

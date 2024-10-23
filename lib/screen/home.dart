@@ -14,7 +14,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   int _currentIndex = 0;
 
   final tabs = [
@@ -27,31 +26,84 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: tabs[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        selectedItemColor: MyColor.color1,
-        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-        unselectedItemColor: Colors.black,
-        type: BottomNavigationBarType.fixed,
-      items: [
-        BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: "Home",
-            backgroundColor: Colors.blue),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_outline),
-            label: "Inspirasi",
-            backgroundColor: Colors.blue),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle_outlined),
-            label: "Profil",
-            backgroundColor: Colors.blue),
-      ],
-      onTap: (index){
-        setState(() {
-          _currentIndex = index;
-        });
-      },
-    ));
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 241, 246, 255),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3), // Shadow color
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, -3), // Shadow position (upwards)
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          backgroundColor: const Color.fromARGB(255, 241, 246, 255),
+          currentIndex: _currentIndex,
+          selectedItemColor: MyColor.color1,
+          unselectedItemColor: Colors.black,
+          type: BottomNavigationBarType.fixed,
+          items: [
+            _buildBottomNavigationBarItem(
+              index: 0,
+              icon: Icons.home_outlined,
+              activeIcon: Icons.home,
+              label: "Beranda",
+            ),
+            _buildBottomNavigationBarItem(
+              index: 1,
+              icon: Icons.favorite_outline,
+              activeIcon: Icons.favorite,
+              label: "Inspirasi",
+            ),
+            _buildBottomNavigationBarItem(
+              index: 2,
+              icon: Icons.account_circle_outlined,
+              activeIcon: Icons.account_circle,
+              label: "Profil",
+            ),
+          ],
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  BottomNavigationBarItem _buildBottomNavigationBarItem({
+    required int index,
+    required IconData icon,
+    required IconData activeIcon,
+    required String label,
+  }) {
+    bool isSelected = _currentIndex == index;
+
+    return BottomNavigationBarItem(
+      icon: Column(
+        children: [
+          // Conditionally add a line above the icon if selected
+          // isSelected
+          //     ? Container(
+          //         height: 3,
+          //         width: 40,
+          //         color: MyColor.color1, // Line color
+          //       )
+          //     : const SizedBox(height: 3), // Empty space if not selected
+          Icon(isSelected ? activeIcon : icon),
+          isSelected
+              ? Container(
+                  height: 3,
+                  width: 40,
+                  color: MyColor.color1, // Line color
+                )
+              : const SizedBox(height: 3), // Empty space if not selected
+        ],
+      ),
+      label: label,
+    );
   }
 }

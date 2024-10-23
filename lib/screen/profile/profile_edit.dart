@@ -26,8 +26,9 @@ class _ProfileEditState extends State<ProfileEdit> {
 
   final emailController = TextEditingController();
   final usernameController = TextEditingController();
-  final locationController = TextEditingController();
+  final addressController = TextEditingController();
   final passwordController = TextEditingController();
+  final phoneController = TextEditingController();
 
   File? _imageFile;
 
@@ -42,7 +43,7 @@ class _ProfileEditState extends State<ProfileEdit> {
     // Dispose controllers when the widget is disposed
     emailController.dispose();
     usernameController.dispose();
-    locationController.dispose();
+    addressController.dispose();
     passwordController.dispose();
     super.dispose();
   }
@@ -55,10 +56,9 @@ class _ProfileEditState extends State<ProfileEdit> {
         userData = profile;
         emailController.text = profile.email;
         usernameController.text = profile.name;
-        // locationController.text =
-        //     profile.location ?? ''; // Assuming location field
-        passwordController.text =
-            "password"; // Ideally, handle passwords securely
+        phoneController.text = profile.phone;
+        addressController.text =
+            profile.address; // Assuming address field
         _isLoading = false;
       });
     } catch (e) {
@@ -126,7 +126,7 @@ class _ProfileEditState extends State<ProfileEdit> {
     if (usernameController.text.isEmpty ||
         emailController.text.isEmpty ||
         passwordController.text.isEmpty ||
-        locationController.text.isEmpty) {
+        addressController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please fill all fields')),
       );
@@ -142,7 +142,7 @@ class _ProfileEditState extends State<ProfileEdit> {
         name: usernameController.text,
         password: passwordController.text, // Use the password entered
         email: emailController.text,
-        // location: locationController.text, // Uncomment if location is used
+        // address: addressController.text, // Uncomment if address is used
         profile_img: _imageFile, // Handle if no image is selected
       );
 
@@ -255,17 +255,17 @@ class _ProfileEditState extends State<ProfileEdit> {
                 // Username Field
                 _isLoading ? ShimmerSkeleton(width: double.infinity, height: 40,) : MyTextfieldProfileEdit(
                   controller: usernameController,
-                  hintText: "Username",
-                  labelText: "Username",
+                  hintText: "Nama Pengguna",
+                  labelText: "Nama Pengguna",
                   obscureText: false,
                 ),
                 SizedBox(height: 16),
             
-                // Location Field
+                // address Field
                 _isLoading ? ShimmerSkeleton(width: double.infinity, height: 40,) : MyTextfieldProfileEdit(
-                  controller: locationController,
-                  hintText: "Lokasi",
-                  labelText: "Lokasi",
+                  controller: addressController,
+                  hintText: "Alamat",
+                  labelText: "Alamat",
                   obscureText: false,
                 ),
                 SizedBox(height: 16),
@@ -273,19 +273,26 @@ class _ProfileEditState extends State<ProfileEdit> {
                 // Email Field
                 _isLoading ? ShimmerSkeleton(width: double.infinity, height: 40,):MyTextfieldProfileEdit(
                   controller: emailController,
-                  hintText: "Alamat Email",
-                  labelText: "Alamat Email",
+                  hintText: "Email",
+                  labelText: "Email",
                   obscureText: false,
                   // keyboardType: TextInputType.emailAddress,
                 ),
-                SizedBox(height: 16),
+                // SizedBox(height: 16),
             
-                // Password Field
+                // // Password Field
+                // _isLoading ? ShimmerSkeleton(width: double.infinity, height: 40,): MyTextfieldProfileEdit(
+                //   controller: passwordController,
+                //   hintText: "Kata Sandi",
+                //   labelText: "Kata Sandi",
+                //   obscureText: true,
+                // ),
+                SizedBox(height: 24),
                 _isLoading ? ShimmerSkeleton(width: double.infinity, height: 40,): MyTextfieldProfileEdit(
-                  controller: passwordController,
-                  hintText: "Kata Sandi",
-                  labelText: "Kata Sandi",
-                  obscureText: true,
+                  controller: phoneController,
+                  hintText: "081xxxxxxxxx",
+                  labelText: "Nomor Telepon",
+                  obscureText: false,
                 ),
                 SizedBox(height: 24),
             
